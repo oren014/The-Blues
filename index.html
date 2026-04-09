@@ -1855,167 +1855,12 @@ body.portal-mode #home-subtitle{
 </style>
 
 
-<style id="oai-v58-strength-save-button-position">
-.exec-head{
-  display:none !important;
-}
-.exec-row .utog{
-  display:flex !important;
-  align-items:center !important;
-  gap:6px !important;
-  justify-self:start !important;
-  direction:ltr !important;
-}
-.exec-row .utog .exec-save-mini{
-  width:34px;height:34px;min-width:34px;
-  display:inline-flex;align-items:center;justify-content:center;
-  border:none;border-radius:10px;
-  background:#e8f0fa;color:#1a4f7a;
-  box-shadow:0 2px 6px rgba(13,27,42,.08);
-  font-size:1rem;font-weight:800;cursor:pointer;
-}
-</style>
 
 
-<style id="oai-v59-strength-save-left-separate">
-.exec-head{display:none !important}
-.exec-row .utog{
-  display:inline-flex !important;
-  align-items:center !important;
-  gap:6px !important;
-  justify-self:start !important;
-  direction:ltr !important;
-}
-.exec-save-row{
-  display:flex;
-  justify-content:flex-start;
-  margin-top:8px;
-  direction:ltr;
-}
-.exec-save-row .exec-save-mini{
-  width:34px;height:34px;min-width:34px;
-  display:inline-flex;align-items:center;justify-content:center;
-  border:none;border-radius:10px;
-  background:#e8f0fa;color:#1a4f7a;
-  box-shadow:0 2px 6px rgba(13,27,42,.08);
-  font-size:1rem;font-weight:800;cursor:pointer;
-}
-</style>
 
 
-<style id="oai-v60-strength-layout-refine">
-/* Save button back into weight-unit row, physically left */
-.exec-head{display:none !important}
-.exec-save-row{display:none !important}
-.exec-row .utog{
-  grid-column:1 / -1 !important;
-  width:100% !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:flex-start !important;
-  gap:6px !important;
-  direction:ltr !important;
-  margin-top:2px;
-}
-.exec-row .utog .exec-save-mini{
-  width:34px;height:34px;min-width:34px;
-  display:inline-flex;align-items:center;justify-content:center;
-  border:none;border-radius:10px;
-  background:#e8f0fa;color:#1a4f7a;
-  box-shadow:0 2px 6px rgba(13,27,42,.08);
-  font-size:1rem;font-weight:800;cursor:pointer;
-}
-
-/* Strength card header actions */
-#s1 .card .chead{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-#s1 .card .ctit{
-  flex:1;
-  min-width:0;
-}
-#s1 .card .chead-actions{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-  flex-shrink:0;
-}
-#s1 .card .chead-actions .bdemo,
-#s1 .card .chead-actions .binfo{
-  padding:7px 10px !important;
-  font-size:.64rem !important;
-  line-height:1 !important;
-  border-radius:10px !important;
-  white-space:nowrap;
-}
-#s1 .card .brow{
-  display:block !important;
-}
-#s1 .card .brow .bdemo,
-#s1 .card .brow .binfo{
-  display:none !important;
-}
-#s1 .card .brow .brest{
-  width:100% !important;
-  justify-content:center !important;
-  padding:12px 14px !important;
-  min-height:48px !important;
-  font-size:.82rem !important;
-  font-weight:900 !important;
-  border-radius:14px !important;
-  margin-top:4px;
-  box-shadow:0 8px 18px rgba(13,27,42,.10);
-}
-#s1 .card .rbox{
-  margin-top:10px !important;
-}
-@media (max-width:460px){
-  #s1 .card .chead{
-    gap:6px;
-  }
-  #s1 .card .chead-actions .bdemo,
-  #s1 .card .chead-actions .binfo{
-    padding:6px 8px !important;
-    font-size:.60rem !important;
-  }
-  #s1 .card .brow .brest{
-    font-size:.78rem !important;
-    min-height:46px !important;
-  }
-}
-</style>
 
 
-<style id="oai-v61-strength-save-same-row-separated">
-.exec-row .utog{
-  grid-column:1 / -1 !important;
-  width:100% !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:space-between !important;
-  gap:10px !important;
-  direction:ltr !important;
-  margin-top:4px;
-}
-.exec-row .utog .unit-choice-group{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  direction:ltr;
-  margin-left:auto;
-}
-.exec-row .utog .exec-save-mini{
-  width:34px;height:34px;min-width:34px;
-  display:inline-flex;align-items:center;justify-content:center;
-  border:none;border-radius:10px;
-  background:#e8f0fa;color:#1a4f7a;
-  box-shadow:0 2px 6px rgba(13,27,42,.08);
-  font-size:1rem;font-weight:800;cursor:pointer;
-}
-</style>
 
 
 <style id="oai-v62-exercise-title-layout">
@@ -7750,6 +7595,98 @@ body.run-timer-session-active #run-achievements{display:none !important}
 }
 </style>
 
+
+<style id="tb-clean-strength-unified">
+#ssub1 .exec-inline{
+  margin-top:12px;
+  padding:12px;
+  border:1px solid #e2eaf2;
+  border-radius:12px;
+  background:linear-gradient(180deg,#fbfdff 0%,#f7fafc 100%);
+}
+#ssub1 .exec-head{
+  display:flex !important;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  direction:ltr;
+  margin-bottom:10px;
+}
+#ssub1 .exec-head .ttl{
+  margin:0 !important;
+  direction:rtl;
+  text-align:right;
+  flex:1;
+  font-size:.74rem;
+  font-weight:800;
+  color:var(--muted);
+}
+#ssub1 .exec-save-mini{
+  width:34px;
+  height:34px;
+  min-width:34px;
+  border:none;
+  border-radius:10px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:#e8f0fa;
+  color:#1a4f7a;
+  box-shadow:0 2px 6px rgba(13,27,42,.08);
+  font-size:1rem;
+  font-weight:800;
+  cursor:pointer;
+  transition:transform .14s ease, box-shadow .18s ease, background .18s ease;
+}
+#ssub1 .exec-save-mini:hover{background:#dfeaf7;box-shadow:0 6px 14px rgba(13,27,42,.12)}
+#ssub1 .exec-save-mini:active{transform:scale(.96)}
+#ssub1 .exec-row{
+  display:grid !important;
+  grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr) minmax(0,.92fr) auto;
+  align-items:end;
+  gap:8px;
+  direction:ltr;
+}
+#ssub1 .exec-row[data-ex]{border-bottom:none !important;padding:0 !important;margin:0 !important}
+#ssub1 .exec-field{display:flex;flex-direction:column;gap:4px;min-width:0}
+#ssub1 .exec-field .lbl{
+  font-size:.6rem;
+  font-weight:800;
+  color:var(--muted);
+  direction:rtl;
+  text-align:right;
+}
+#ssub1 .exec-field .inp{width:100%}
+#ssub1 .exec-row .utog{
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  gap:6px !important;
+  direction:ltr !important;
+  align-self:end;
+  justify-self:start;
+  border:none;
+  background:transparent;
+  padding:0;
+}
+#ssub1 .exec-row .ut{
+  min-width:34px;
+  height:34px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid #d0dcea;
+  border-radius:9px;
+  padding:0 8px;
+}
+#ssub1 .exec-save-row{display:none !important}
+@media (max-width:460px){
+  #ssub1 .exec-row{grid-template-columns:1fr 1fr !important}
+  #ssub1 .exec-row .exec-field:nth-child(1){grid-column:1 / -1}
+  #ssub1 .exec-row .utog{grid-column:1 / -1}
+}
+</style>
+
 </head>
 <body>
 
@@ -11761,7 +11698,7 @@ function renderAtt(){
         txt === 'שמור';
 
       // Never touch real modals
-      if(btn.closest('#settings-modal') || btn.closest('#wo-end-modal') || btn.closest('#wt-edit-modal') || btn.closest('#wt-hist-modal')) return;
+      if(btn.closest('#settings-modal') || btn.closest('#wo-end-modal') || btn.closest('#wt-edit-modal') || btn.closest('#wt-hist-modal') || btn.closest('#wt-hist-edit-modal') || btn.closest('#wt-hist-delete-modal') || btn.closest('#wt-confirm-modal')) return;
 
       if(isSettingsAction && btn.closest('#s3')){
         var host = btn.parentElement;
@@ -12145,7 +12082,7 @@ function renderAtt(){
 
     // protect other modals, but remove leaked save/cancel rows outside settings modal
     document.querySelectorAll('button').forEach(function(btn){
-      if(btn.closest('#settings-modal') || btn.closest('#wo-end-modal') || btn.closest('#wt-edit-modal') || btn.closest('#wt-hist-modal')) return;
+      if(btn.closest('#settings-modal') || btn.closest('#wo-end-modal') || btn.closest('#wt-edit-modal') || btn.closest('#wt-hist-modal') || btn.closest('#wt-hist-edit-modal') || btn.closest('#wt-hist-delete-modal') || btn.closest('#wt-confirm-modal')) return;
       var txt = (btn.textContent || '').trim();
       if(txt === 'שמור' || txt === 'ביטול'){
         var host = btn.parentElement;
@@ -14403,531 +14340,12 @@ function renderAtt(){
 </script>
 
 
-<script id="oai-v58-strength-save-inline-position">
-(function(){
-  function draftToast(msg){
-    var t = document.getElementById('draft-toast');
-    if(!t){
-      t = document.createElement('div');
-      t.id = 'draft-toast';
-      t.style.position = 'fixed';
-      t.style.left = '50%';
-      t.style.bottom = '18px';
-      t.style.transform = 'translateX(-50%)';
-      t.style.background = '#0d1b2a';
-      t.style.color = '#fff';
-      t.style.border = '1px solid rgba(255,255,255,.12)';
-      t.style.borderRadius = '999px';
-      t.style.padding = '10px 16px';
-      t.style.fontFamily = "'Heebo',sans-serif";
-      t.style.fontSize = '.78rem';
-      t.style.fontWeight = '800';
-      t.style.boxShadow = '0 10px 24px rgba(0,0,0,.22)';
-      t.style.zIndex = '10001';
-      t.style.display = 'none';
-      document.body.appendChild(t);
-    }
-    t.textContent = msg || 'הטיוטה נשמרה';
-    t.style.display = 'block';
-    clearTimeout(draftToast._timer);
-    draftToast._timer = setTimeout(function(){ t.style.display='none'; }, 1800);
-  }
-
-  function inlineSaveDraft(){
-    try{
-      if(typeof collectE === 'function'){
-        lsSJ('wh_draft', {
-          date:(document.getElementById('log-date')||{}).value,
-          entries:collectE()
-        });
-      }
-      var db = document.getElementById('dbadge');
-      if(db) db.style.display = 'inline';
-      var msg = document.getElementById('msg-dr');
-      if(msg) msg.textContent = 'הטיוטה נשמרה';
-      if(typeof showMsg === 'function') showMsg('msg-dr');
-      draftToast('הטיוטה נשמרה');
-    }catch(e){}
-  }
-  window.saveExerciseDraft = inlineSaveDraft;
-
-  function moveSaveButtonsInline(){
-    var boxes = document.querySelectorAll('#ssub1 .card .exec-inline');
-    boxes.forEach(function(box){
-      var head = box.querySelector('.exec-head');
-      if(head) head.remove();
-
-      var row = box.querySelector('.exec-row');
-      if(!row) return;
-      var utog = row.querySelector('.utog');
-      if(!utog) return;
-
-      // remove any existing inline save button duplicates
-      utog.querySelectorAll('.exec-save-mini').forEach(function(btn){ btn.remove(); });
-
-      var btn = document.createElement('button');
-      btn.className = 'exec-save-mini';
-      btn.type = 'button';
-      btn.title = 'שמור טיוטה';
-      btn.textContent = '💾';
-      btn.addEventListener('click', function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        inlineSaveDraft();
-      });
-
-      // append first in ltr row so it sits visually on the left
-      utog.insertBefore(btn, utog.firstChild);
-    });
-  }
-
-  var _origInitStrengthLog = window.initStrengthLog;
-  if(typeof _origInitStrengthLog === 'function' && !_origInitStrengthLog._oaiV58Wrapped){
-    window.initStrengthLog = function(){
-      var r = _origInitStrengthLog.apply(this, arguments);
-      setTimeout(moveSaveButtonsInline, 0);
-      setTimeout(moveSaveButtonsInline, 150);
-      return r;
-    };
-    window.initStrengthLog._oaiV58Wrapped = true;
-  }
-
-  var _origStrSubSw = window.strSubSw;
-  if(typeof _origStrSubSw === 'function' && !_origStrSubSw._oaiV58Wrapped){
-    window.strSubSw = function(i){
-      var r = _origStrSubSw.apply(this, arguments);
-      if(i === 1){
-        setTimeout(moveSaveButtonsInline, 0);
-        setTimeout(moveSaveButtonsInline, 150);
-      }
-      return r;
-    };
-    window.strSubSw._oaiV58Wrapped = true;
-  }
-
-  var _origSaveDraft = window.saveDraft;
-  if(typeof _origSaveDraft === 'function' && !_origSaveDraft._oaiV58Wrapped){
-    window.saveDraft = function(){
-      var r = _origSaveDraft.apply(this, arguments);
-      draftToast('הטיוטה נשמרה');
-      return r;
-    };
-    window.saveDraft._oaiV58Wrapped = true;
-  }
-
-  function boot(){
-    setTimeout(moveSaveButtonsInline, 0);
-    setTimeout(moveSaveButtonsInline, 180);
-  }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-  else boot();
-})();
-</script>
 
 
-<script id="oai-v59-strength-save-separate-left">
-(function(){
-  function draftToast(msg){
-    var t = document.getElementById('draft-toast');
-    if(!t){
-      t = document.createElement('div');
-      t.id = 'draft-toast';
-      t.style.position = 'fixed';
-      t.style.left = '50%';
-      t.style.bottom = '18px';
-      t.style.transform = 'translateX(-50%)';
-      t.style.background = '#0d1b2a';
-      t.style.color = '#fff';
-      t.style.border = '1px solid rgba(255,255,255,.12)';
-      t.style.borderRadius = '999px';
-      t.style.padding = '10px 16px';
-      t.style.fontFamily = "'Heebo',sans-serif";
-      t.style.fontSize = '.78rem';
-      t.style.fontWeight = '800';
-      t.style.boxShadow = '0 10px 24px rgba(0,0,0,.22)';
-      t.style.zIndex = '10001';
-      t.style.display = 'none';
-      document.body.appendChild(t);
-    }
-    t.textContent = msg || 'הטיוטה נשמרה';
-    t.style.display = 'block';
-    clearTimeout(draftToast._timer);
-    draftToast._timer = setTimeout(function(){ t.style.display='none'; }, 1800);
-  }
-
-  function saveDraftInline(){
-    try{
-      if(typeof collectE === 'function'){
-        lsSJ('wh_draft', {
-          date:(document.getElementById('log-date')||{}).value,
-          entries:collectE()
-        });
-      }
-      var db = document.getElementById('dbadge');
-      if(db) db.style.display = 'inline';
-      var msg = document.getElementById('msg-dr');
-      if(msg) msg.textContent = 'הטיוטה נשמרה';
-      if(typeof showMsg === 'function') showMsg('msg-dr');
-      draftToast('הטיוטה נשמרה');
-    }catch(e){}
-  }
-  window.saveExerciseDraft = saveDraftInline;
-
-  function placeSaveButtonsLeftSeparate(){
-    var boxes = document.querySelectorAll('#ssub1 .card .exec-inline');
-    boxes.forEach(function(box){
-      var head = box.querySelector('.exec-head');
-      if(head) head.remove();
-
-      var row = box.querySelector('.exec-row');
-      if(!row) return;
-
-      // remove from unit row if present
-      row.querySelectorAll('.exec-save-mini').forEach(function(btn){ btn.remove(); });
-
-      // create/find dedicated save row
-      var saveRow = box.querySelector('.exec-save-row');
-      if(!saveRow){
-        saveRow = document.createElement('div');
-        saveRow.className = 'exec-save-row';
-        box.appendChild(saveRow);
-      }else{
-        saveRow.innerHTML = '';
-      }
-
-      var btn = document.createElement('button');
-      btn.className = 'exec-save-mini';
-      btn.type = 'button';
-      btn.title = 'שמור טיוטה';
-      btn.textContent = '💾';
-      btn.addEventListener('click', function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        saveDraftInline();
-      });
-      saveRow.appendChild(btn);
-    });
-  }
-
-  var _origInitStrengthLog = window.initStrengthLog;
-  if(typeof _origInitStrengthLog === 'function' && !_origInitStrengthLog._oaiV59Wrapped){
-    window.initStrengthLog = function(){
-      var r = _origInitStrengthLog.apply(this, arguments);
-      setTimeout(placeSaveButtonsLeftSeparate, 0);
-      setTimeout(placeSaveButtonsLeftSeparate, 150);
-      return r;
-    };
-    window.initStrengthLog._oaiV59Wrapped = true;
-  }
-
-  var _origStrSubSw = window.strSubSw;
-  if(typeof _origStrSubSw === 'function' && !_origStrSubSw._oaiV59Wrapped){
-    window.strSubSw = function(i){
-      var r = _origStrSubSw.apply(this, arguments);
-      if(i === 1){
-        setTimeout(placeSaveButtonsLeftSeparate, 0);
-        setTimeout(placeSaveButtonsLeftSeparate, 150);
-      }
-      return r;
-    };
-    window.strSubSw._oaiV59Wrapped = true;
-  }
-
-  function boot(){
-    setTimeout(placeSaveButtonsLeftSeparate, 0);
-    setTimeout(placeSaveButtonsLeftSeparate, 180);
-  }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-  else boot();
-})();
-</script>
 
 
-<script id="oai-v60-strength-header-actions-and-save-inline">
-(function(){
-  function draftToast(msg){
-    var t = document.getElementById('draft-toast');
-    if(!t){
-      t = document.createElement('div');
-      t.id = 'draft-toast';
-      t.style.position = 'fixed';
-      t.style.left = '50%';
-      t.style.bottom = '18px';
-      t.style.transform = 'translateX(-50%)';
-      t.style.background = '#0d1b2a';
-      t.style.color = '#fff';
-      t.style.border = '1px solid rgba(255,255,255,.12)';
-      t.style.borderRadius = '999px';
-      t.style.padding = '10px 16px';
-      t.style.fontFamily = "'Heebo',sans-serif";
-      t.style.fontSize = '.78rem';
-      t.style.fontWeight = '800';
-      t.style.boxShadow = '0 10px 24px rgba(0,0,0,.22)';
-      t.style.zIndex = '10001';
-      t.style.display = 'none';
-      document.body.appendChild(t);
-    }
-    t.textContent = msg || 'הטיוטה נשמרה';
-    t.style.display = 'block';
-    clearTimeout(draftToast._timer);
-    draftToast._timer = setTimeout(function(){ t.style.display='none'; }, 1800);
-  }
-
-  function saveDraftInline(){
-    try{
-      if(typeof collectE === 'function'){
-        lsSJ('wh_draft', {
-          date:(document.getElementById('log-date')||{}).value,
-          entries:collectE()
-        });
-      }
-      var db = document.getElementById('dbadge');
-      if(db) db.style.display = 'inline';
-      var msg = document.getElementById('msg-dr');
-      if(msg) msg.textContent = 'הטיוטה נשמרה';
-      if(typeof showMsg === 'function') showMsg('msg-dr');
-      draftToast('הטיוטה נשמרה');
-    }catch(e){}
-  }
-  window.saveExerciseDraft = saveDraftInline;
-
-  function moveSaveButtonsInlineLeft(){
-    var boxes = document.querySelectorAll('#ssub1 .card .exec-inline');
-    boxes.forEach(function(box){
-      var head = box.querySelector('.exec-head');
-      if(head) head.remove();
-
-      var saveRow = box.querySelector('.exec-save-row');
-      if(saveRow) saveRow.remove();
-
-      var row = box.querySelector('.exec-row');
-      if(!row) return;
-      var utog = row.querySelector('.utog');
-      if(!utog) return;
-
-      utog.querySelectorAll('.exec-save-mini').forEach(function(btn){ btn.remove(); });
-
-      var btn = document.createElement('button');
-      btn.className = 'exec-save-mini';
-      btn.type = 'button';
-      btn.title = 'שמור טיוטה';
-      btn.textContent = '💾';
-      btn.addEventListener('click', function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        saveDraftInline();
-      });
-
-      utog.insertBefore(btn, utog.firstChild);
-    });
-  }
-
-  function moveHeaderActionsUp(){
-    var cards = document.querySelectorAll('#s1 .card');
-    cards.forEach(function(card){
-      var chead = card.querySelector('.chead');
-      var brow = card.querySelector('.brow');
-      if(!chead || !brow) return;
-
-      var actions = chead.querySelector('.chead-actions');
-      if(!actions){
-        actions = document.createElement('div');
-        actions.className = 'chead-actions';
-        var carr = chead.querySelector('.carr');
-        if(carr) chead.insertBefore(actions, carr);
-        else chead.appendChild(actions);
-      }
-
-      var demo = brow.querySelector('.bdemo');
-      var info = brow.querySelector('.binfo');
-      if(demo && !actions.contains(demo)) actions.appendChild(demo);
-      if(info && !actions.contains(info)) actions.appendChild(info);
-    });
-  }
-
-  var _origInitStrengthLog = window.initStrengthLog;
-  if(typeof _origInitStrengthLog === 'function' && !_origInitStrengthLog._oaiV60Wrapped){
-    window.initStrengthLog = function(){
-      var r = _origInitStrengthLog.apply(this, arguments);
-      setTimeout(function(){
-        moveSaveButtonsInlineLeft();
-        moveHeaderActionsUp();
-      }, 0);
-      setTimeout(function(){
-        moveSaveButtonsInlineLeft();
-        moveHeaderActionsUp();
-      }, 180);
-      return r;
-    };
-    window.initStrengthLog._oaiV60Wrapped = true;
-  }
-
-  var _origStrSubSw = window.strSubSw;
-  if(typeof _origStrSubSw === 'function' && !_origStrSubSw._oaiV60Wrapped){
-    window.strSubSw = function(i){
-      var r = _origStrSubSw.apply(this, arguments);
-      if(i === 1){
-        setTimeout(function(){
-          moveSaveButtonsInlineLeft();
-          moveHeaderActionsUp();
-        }, 0);
-        setTimeout(function(){
-          moveSaveButtonsInlineLeft();
-          moveHeaderActionsUp();
-        }, 180);
-      }
-      return r;
-    };
-    window.strSubSw._oaiV60Wrapped = true;
-  }
-
-  function boot(){
-    setTimeout(function(){
-      moveSaveButtonsInlineLeft();
-      moveHeaderActionsUp();
-    }, 0);
-    setTimeout(function(){
-      moveSaveButtonsInlineLeft();
-      moveHeaderActionsUp();
-    }, 220);
-  }
-
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-  else boot();
-})();
-</script>
 
 
-<script id="oai-v61-strength-save-same-row-separated-script">
-(function(){
-  function draftToast(msg){
-    var t = document.getElementById('draft-toast');
-    if(!t){
-      t = document.createElement('div');
-      t.id = 'draft-toast';
-      t.style.position = 'fixed';
-      t.style.left = '50%';
-      t.style.bottom = '18px';
-      t.style.transform = 'translateX(-50%)';
-      t.style.background = '#0d1b2a';
-      t.style.color = '#fff';
-      t.style.border = '1px solid rgba(255,255,255,.12)';
-      t.style.borderRadius = '999px';
-      t.style.padding = '10px 16px';
-      t.style.fontFamily = "'Heebo',sans-serif";
-      t.style.fontSize = '.78rem';
-      t.style.fontWeight = '800';
-      t.style.boxShadow = '0 10px 24px rgba(0,0,0,.22)';
-      t.style.zIndex = '10001';
-      t.style.display = 'none';
-      document.body.appendChild(t);
-    }
-    t.textContent = msg || 'הטיוטה נשמרה';
-    t.style.display = 'block';
-    clearTimeout(draftToast._timer);
-    draftToast._timer = setTimeout(function(){ t.style.display='none'; }, 1800);
-  }
-
-  function saveDraftInline(){
-    try{
-      if(typeof collectE === 'function'){
-        lsSJ('wh_draft', {
-          date:(document.getElementById('log-date')||{}).value,
-          entries:collectE()
-        });
-      }
-      var db = document.getElementById('dbadge');
-      if(db) db.style.display = 'inline';
-      var msg = document.getElementById('msg-dr');
-      if(msg) msg.textContent = 'הטיוטה נשמרה';
-      if(typeof showMsg === 'function') showMsg('msg-dr');
-      draftToast('הטיוטה נשמרה');
-    }catch(e){}
-  }
-  window.saveExerciseDraft = saveDraftInline;
-
-  function placeSaveButtonSeparatedSameRow(){
-    var boxes = document.querySelectorAll('#ssub1 .card .exec-inline');
-    boxes.forEach(function(box){
-      var row = box.querySelector('.exec-row');
-      if(!row) return;
-      var utog = row.querySelector('.utog');
-      if(!utog) return;
-
-      // remove detached save rows or headers from previous iterations
-      var head = box.querySelector('.exec-head');
-      if(head) head.remove();
-      var saveRow = box.querySelector('.exec-save-row');
-      if(saveRow) saveRow.remove();
-
-      // remove any existing save buttons
-      utog.querySelectorAll('.exec-save-mini').forEach(function(btn){ btn.remove(); });
-
-      // wrap existing unit spans into a dedicated group
-      var unitGroup = utog.querySelector('.unit-choice-group');
-      if(!unitGroup){
-        unitGroup = document.createElement('div');
-        unitGroup.className = 'unit-choice-group';
-        var children = Array.from(utog.children);
-        children.forEach(function(ch){
-          if(!ch.classList.contains('exec-save-mini')) unitGroup.appendChild(ch);
-        });
-        utog.appendChild(unitGroup);
-      } else {
-        // keep only unit spans inside
-        Array.from(utog.children).forEach(function(ch){
-          if(ch !== unitGroup && !ch.classList.contains('exec-save-mini')) unitGroup.appendChild(ch);
-        });
-      }
-
-      var btn = document.createElement('button');
-      btn.className = 'exec-save-mini';
-      btn.type = 'button';
-      btn.title = 'שמור טיוטה';
-      btn.textContent = '💾';
-      btn.addEventListener('click', function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        saveDraftInline();
-      });
-
-      // first child in LTR flex => visually left; unit group stays right
-      utog.insertBefore(btn, utog.firstChild);
-    });
-  }
-
-  var _origInitStrengthLog = window.initStrengthLog;
-  if(typeof _origInitStrengthLog === 'function' && !_origInitStrengthLog._oaiV61Wrapped){
-    window.initStrengthLog = function(){
-      var r = _origInitStrengthLog.apply(this, arguments);
-      setTimeout(placeSaveButtonSeparatedSameRow, 0);
-      setTimeout(placeSaveButtonSeparatedSameRow, 180);
-      return r;
-    };
-    window.initStrengthLog._oaiV61Wrapped = true;
-  }
-
-  var _origStrSubSw = window.strSubSw;
-  if(typeof _origStrSubSw === 'function' && !_origStrSubSw._oaiV61Wrapped){
-    window.strSubSw = function(i){
-      var r = _origStrSubSw.apply(this, arguments);
-      if(i === 1){
-        setTimeout(placeSaveButtonSeparatedSameRow, 0);
-        setTimeout(placeSaveButtonSeparatedSameRow, 180);
-      }
-      return r;
-    };
-    window.strSubSw._oaiV61Wrapped = true;
-  }
-
-  function boot(){
-    setTimeout(placeSaveButtonSeparatedSameRow, 0);
-    setTimeout(placeSaveButtonSeparatedSameRow, 220);
-  }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-  else boot();
-})();
-</script>
 
 
 <script id="oai-v62-exercise-title-sync">
@@ -19997,6 +19415,1317 @@ if ('serviceWorker' in navigator && location.protocol !== 'file:') {
     });
   });
 }
+</script>
+
+
+<script id="tb-clean-app-core">
+(function(){
+  if(window.__TB_CLEAN_CORE__) return;
+  window.__TB_CLEAN_CORE__ = '2026-04-09';
+
+  function afterPaint(fn){
+    try{
+      requestAnimationFrame(function(){ setTimeout(fn, 0); });
+    }catch(e){
+      setTimeout(fn, 0);
+    }
+  }
+
+  function afterStrengthRender(){
+    afterPaint(normalizeStrengthExecution);
+    setTimeout(normalizeStrengthExecution, 120);
+    setTimeout(normalizeStrengthExecution, 260);
+  }
+
+  function showDraftToast(msg){
+    var t = document.getElementById('draft-toast');
+    if(!t){
+      t = document.createElement('div');
+      t.id = 'draft-toast';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg || 'הטיוטה נשמרה';
+    t.style.display = 'block';
+    clearTimeout(showDraftToast._timer);
+    showDraftToast._timer = setTimeout(function(){ t.style.display='none'; }, 1800);
+  }
+
+  function getDraftEntry(exId, draft){
+    if(!draft || !draft.entries) return null;
+    for(var i=0;i<draft.entries.length;i++) if(draft.entries[i] && draft.entries[i].id===exId) return draft.entries[i];
+    return null;
+  }
+
+  function ensureExecHead(box){
+    if(!box) return null;
+    var oldRows = box.querySelectorAll('.exec-save-row');
+    oldRows.forEach(function(node){ node.remove(); });
+
+    var heads = box.querySelectorAll('.exec-head');
+    for(var i=1;i<heads.length;i++) heads[i].remove();
+
+    var head = heads[0];
+    if(!head){
+      head = document.createElement('div');
+      head.className = 'exec-head';
+      box.insertBefore(head, box.firstChild);
+    }
+
+    var ttl = head.querySelector('.ttl');
+    if(!ttl){
+      ttl = document.createElement('div');
+      ttl.className = 'ttl';
+      head.appendChild(ttl);
+    }
+    ttl.textContent = 'רישום בפועל';
+
+    var btns = head.querySelectorAll('.exec-save-mini');
+    for(var j=1;j<btns.length;j++) btns[j].remove();
+    var btn = btns[0];
+    if(!btn){
+      btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'exec-save-mini';
+      btn.title = 'שמור טיוטה';
+      btn.textContent = '💾';
+      head.appendChild(btn);
+    }
+    btn.onclick = function(ev){
+      if(ev){ ev.preventDefault(); ev.stopPropagation(); }
+      saveStrengthDraft();
+    };
+    return head;
+  }
+
+  function applyUnitState(row, unit){
+    if(typeof window._applyUnitStateForRow === 'function'){
+      window._applyUnitStateForRow(row, unit);
+      return;
+    }
+    var kgInput = row ? row.querySelector('input[id^="kg-"]') : null;
+    if(!kgInput) return;
+    if(unit === 'bw'){
+      kgInput.placeholder = 'גוף';
+      kgInput.classList.add('unit-disabled');
+      kgInput.value = '';
+    }else{
+      kgInput.placeholder = 'KG';
+      kgInput.classList.remove('unit-disabled');
+    }
+  }
+
+  function normalizeStrengthExecution(){
+    var cards = document.querySelectorAll('#ssub1 .card');
+    cards.forEach(function(card){
+      var box = card.querySelector('.exec-inline');
+      if(!box) return;
+      ensureExecHead(box);
+
+      var row = box.querySelector('.exec-row');
+      if(!row) return;
+
+      row.querySelectorAll('.exec-save-mini').forEach(function(btn){
+        if(!btn.closest('.exec-head')) btn.remove();
+      });
+
+      var utog = row.querySelector('.utog');
+      if(utog){
+        utog.querySelectorAll('.exec-save-mini').forEach(function(btn){ btn.remove(); });
+      }
+
+      var active = row.querySelector('.ut.on');
+      var unit = active ? (active.textContent || '').trim().toLowerCase() : 'kg';
+      applyUnitState(row, unit);
+    });
+  }
+
+  function currentStrengthEntries(){
+    var entries = [];
+    var list = Array.isArray(window.EX) ? window.EX : [];
+    for(var i=0;i<list.length;i++){
+      var ex = list[i];
+      var row = document.querySelector('#ssub1 .exec-row[data-ex="'+ex.id+'"]');
+      if(!row) continue;
+      var utEl = row.querySelector('.ut.on');
+      var unit = utEl ? (utEl.textContent || '').trim().toLowerCase() : (ex.unit || (ex.kg ? 'kg' : 'bw'));
+      var kgEl = document.getElementById('kg-'+ex.id);
+      var stEl = document.getElementById('st-'+ex.id);
+      var rpEl = document.getElementById('rp-'+ex.id);
+      entries.push({
+        id: ex.id,
+        he: ex.he,
+        kg: unit === 'bw' ? '' : (kgEl ? kgEl.value : ''),
+        sets: stEl ? stEl.value : '',
+        reps: rpEl ? rpEl.value : '',
+        unit: unit
+      });
+    }
+    return entries;
+  }
+
+  function saveStrengthDraft(){
+    try{
+      var payload = {
+        date:(document.getElementById('log-date') || {}).value,
+        entries: currentStrengthEntries()
+      };
+      if(typeof lsSJ === 'function') lsSJ('wh_draft', payload);
+      else localStorage.setItem('wh_draft', JSON.stringify(payload));
+      var db = document.getElementById('dbadge');
+      if(db) db.style.display = 'inline';
+      var msg = document.getElementById('msg-dr');
+      if(msg) msg.textContent = 'הטיוטה נשמרה';
+      if(typeof showMsg === 'function') showMsg('msg-dr');
+      showDraftToast('הטיוטה נשמרה');
+    }catch(e){}
+  }
+
+  window.saveExerciseDraft = saveStrengthDraft;
+  window.tbRefreshStrengthExecution = afterStrengthRender;
+
+  if(typeof window.collectE === 'function' && !window.collectE._tbCleanWrapped){
+    window.collectE = function(){
+      return currentStrengthEntries();
+    };
+    window.collectE._tbCleanWrapped = true;
+  }
+
+  if(typeof window.saveDraft === 'function' && !window.saveDraft._tbCleanWrapped){
+    window.saveDraft = function(){
+      saveStrengthDraft();
+    };
+    window.saveDraft._tbCleanWrapped = true;
+  }
+
+  if(typeof window.setUnit === 'function' && !window.setUnit._tbCleanWrapped){
+    var _origSetUnit = window.setUnit;
+    window.setUnit = function(id, unit){
+      var r = _origSetUnit.apply(this, arguments);
+      afterPaint(normalizeStrengthExecution);
+      return r;
+    };
+    window.setUnit._tbCleanWrapped = true;
+  }
+
+  if(typeof window.initStrengthLog === 'function' && !window.initStrengthLog._tbCleanWrapped){
+    var _origInitStrengthLog = window.initStrengthLog;
+    window.initStrengthLog = function(){
+      var r = _origInitStrengthLog.apply(this, arguments);
+      afterStrengthRender();
+      return r;
+    };
+    window.initStrengthLog._tbCleanWrapped = true;
+  }
+
+  if(typeof window.strSubSw === 'function' && !window.strSubSw._tbCleanWrapped){
+    var _origStrSubSw = window.strSubSw;
+    window.strSubSw = function(i){
+      var r = _origStrSubSw.apply(this, arguments);
+      if(i === 1) afterStrengthRender();
+      return r;
+    };
+    window.strSubSw._tbCleanWrapped = true;
+  }
+
+  if(typeof window.openPortal === 'function' && !window.openPortal._tbCleanWrapped){
+    var _origOpenPortal = window.openPortal;
+    window.openPortal = function(){
+      var r = _origOpenPortal.apply(this, arguments);
+      try{ window.scrollTo({top:0, behavior:'smooth'}); }catch(e){ try{ window.scrollTo(0,0); }catch(_e){} }
+      return r;
+    };
+    window.openPortal._tbCleanWrapped = true;
+  }
+
+  if(typeof window.updatePortal === 'function' && !window.updatePortal._tbCleanWrapped){
+    var _origUpdatePortal = window.updatePortal;
+    window.updatePortal = function(){
+      var r = _origUpdatePortal.apply(this, arguments);
+      return r;
+    };
+    window.updatePortal._tbCleanWrapped = true;
+  }
+
+  function boot(){
+    afterStrengthRender();
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+
+
+<script id="tb-strength-dedupe-final">
+(function(){
+  if(window.__TB_STRENGTH_DEDUPE_FINAL__) return;
+  window.__TB_STRENGTH_DEDUPE_FINAL__ = true;
+
+  function bindSave(btn){
+    if(!btn || btn.dataset.tbBoundSave === '1') return;
+    btn.dataset.tbBoundSave = '1';
+    btn.type = 'button';
+    btn.title = 'שמור טיוטה';
+    btn.onclick = function(ev){
+      if(ev){ ev.preventDefault(); ev.stopPropagation(); }
+      if(typeof window.saveExerciseDraft === 'function') return window.saveExerciseDraft();
+      if(typeof window.saveDraft === 'function') return window.saveDraft();
+      return false;
+    };
+  }
+
+  function ensureBottomLayout(box){
+    if(!box) return;
+
+    box.querySelectorAll('.exec-head').forEach(function(el){ el.remove(); });
+    box.querySelectorAll('.exec-save-row').forEach(function(el){ el.remove(); });
+
+    var row = box.querySelector('.exec-row');
+    if(row){
+      row.querySelectorAll('.utog').forEach(function(el){ el.remove(); });
+    }
+
+    var bottoms = box.querySelectorAll('.exec-bottom-row');
+    var bottom = bottoms[0] || null;
+    for(var i=1;i<bottoms.length;i++) bottoms[i].remove();
+
+    if(!bottom){
+      bottom = document.createElement('div');
+      bottom.className = 'exec-bottom-row';
+      box.appendChild(bottom);
+    }
+
+    var saveSlot = bottom.querySelector('.save-slot');
+    var spacer = bottom.children[1] || null;
+    var unitSlot = bottom.querySelector('.unit-slot');
+    if(!saveSlot || !unitSlot || bottom.children.length < 3){
+      bottom.innerHTML = '<div class="save-slot"></div><div></div><div class="unit-slot"></div>';
+      saveSlot = bottom.querySelector('.save-slot');
+      spacer = bottom.children[1];
+      unitSlot = bottom.querySelector('.unit-slot');
+    }
+
+    var selects = box.querySelectorAll('.unit-select');
+    var select = selects[0] || null;
+    for(var j=1;j<selects.length;j++) selects[j].remove();
+    if(select && select.parentElement !== unitSlot) unitSlot.appendChild(select);
+
+    var btn = saveSlot.querySelector('.exec-save-mini') || null;
+    if(!btn){
+      var allBtns = box.querySelectorAll('.exec-save-mini');
+      btn = allBtns[0] || null;
+      for(var k=1;k<allBtns.length;k++) allBtns[k].remove();
+      if(!btn){
+        btn = document.createElement('button');
+        btn.className = 'exec-save-mini';
+        btn.textContent = '💾';
+      }
+      saveSlot.appendChild(btn);
+    } else {
+      box.querySelectorAll('.exec-save-mini').forEach(function(other){
+        if(other !== btn) other.remove();
+      });
+    }
+    bindSave(btn);
+  }
+
+  function dedupeStrengthUI(){
+    document.querySelectorAll('#ssub1 .card .exec-inline').forEach(ensureBottomLayout);
+  }
+
+  function schedule(){
+    setTimeout(dedupeStrengthUI, 0);
+    setTimeout(dedupeStrengthUI, 120);
+    setTimeout(dedupeStrengthUI, 260);
+  }
+
+  ['initStrengthLog','strSubSw','sw'].forEach(function(name){
+    var fn = window[name];
+    if(typeof fn !== 'function' || fn._tbStrengthDedupeWrapped) return;
+    var wrapped = function(){
+      var r = fn.apply(this, arguments);
+      schedule();
+      return r;
+    };
+    wrapped._tbStrengthDedupeWrapped = true;
+    window[name] = wrapped;
+  });
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', schedule);
+  else schedule();
+})();
+</script>
+
+
+<script id="oai-v81-strength-rest-per-exercise">
+(function(){
+  var KEY = 'strength_program_v1';
+  var state = { edit:false, draft:null, defaults:null };
+
+  function clone(v){
+    try{ return JSON.parse(JSON.stringify(v)); }
+    catch(e){ return v; }
+  }
+
+  function lsGet(key, fallback){
+    try{
+      if(typeof lsJ === 'function'){
+        var v = lsJ(key);
+        return v == null ? fallback : v;
+      }
+      var raw = localStorage.getItem(key);
+      return raw == null ? fallback : JSON.parse(raw);
+    }catch(e){ return fallback; }
+  }
+
+  function lsSet(key, value){
+    try{
+      if(typeof lsSJ === 'function') lsSJ(key, value);
+      else localStorage.setItem(key, JSON.stringify(value));
+    }catch(e){}
+  }
+
+  function toast(msg){
+    var t = document.getElementById('draft-toast');
+    if(!t){
+      t = document.createElement('div');
+      t.id = 'draft-toast';
+      t.style.position = 'fixed';
+      t.style.left = '50%';
+      t.style.bottom = '18px';
+      t.style.transform = 'translateX(-50%)';
+      t.style.background = '#0d1b2a';
+      t.style.color = '#fff';
+      t.style.border = '1px solid rgba(255,255,255,.12)';
+      t.style.borderRadius = '999px';
+      t.style.padding = '10px 16px';
+      t.style.fontFamily = "'Heebo',sans-serif";
+      t.style.fontSize = '.78rem';
+      t.style.fontWeight = '800';
+      t.style.boxShadow = '0 10px 24px rgba(0,0,0,.22)';
+      t.style.zIndex = '10001';
+      t.style.display = 'none';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.display = 'block';
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(function(){ t.style.display='none'; }, 1900);
+  }
+
+  function globalRestDefault(){
+    try{
+      var s = typeof getAppSettings === 'function' ? getAppSettings() : {};
+      var v = parseInt((s && s.restSec) || 60, 10);
+      if(isNaN(v)) return 60;
+      return Math.max(15, Math.min(300, v));
+    }catch(e){ return 60; }
+  }
+
+  function clampRestSec(v){
+    var n = parseInt(v, 10);
+    if(isNaN(n)) n = globalRestDefault();
+    return Math.max(15, Math.min(300, n));
+  }
+
+  function ensureDefaults(){
+    if(state.defaults || !window.EX || !Array.isArray(EX)) return;
+    state.defaults = clone(EX).map(function(ex){
+      if(ex && ex.restSec == null) ex.restSec = globalRestDefault();
+      return ex;
+    });
+  }
+
+  function savedPlan(){
+    var raw = lsGet(KEY, {});
+    if(!raw || typeof raw !== 'object') raw = {};
+    return raw;
+  }
+
+  function applySavedPlanToEX(){
+    ensureDefaults();
+    if(!window.EX || !Array.isArray(EX)) return;
+    var saved = savedPlan();
+    EX.forEach(function(ex, idx){
+      var base = (state.defaults && state.defaults[idx]) ? state.defaults[idx] : ex;
+      ex.sets = String(base.sets == null ? '' : base.sets);
+      ex.reps = String(base.reps == null ? '' : base.reps);
+      ex.kg = String(base.kg || '');
+      ex.unit = String(base.unit || (base.kg ? 'kg' : 'bw'));
+      ex.restSec = clampRestSec(base.restSec);
+      var s = saved[ex.id];
+      if(!s) return;
+      if(s.sets !== undefined) ex.sets = String(s.sets);
+      if(s.reps !== undefined) ex.reps = String(s.reps);
+      if(s.kg !== undefined) ex.kg = String(s.kg || '');
+      if(s.unit !== undefined) ex.unit = String(s.unit || (ex.kg ? 'kg' : 'bw'));
+      if(s.restSec !== undefined) ex.restSec = clampRestSec(s.restSec);
+    });
+  }
+
+  function exerciseById(id){
+    if(!window.EX || !Array.isArray(EX)) return null;
+    for(var i=0;i<EX.length;i++) if(EX[i] && EX[i].id === id) return EX[i];
+    return null;
+  }
+
+  function exerciseByCardId(cid){
+    var idx = parseInt(String(cid || '').replace('c',''), 10) - 1;
+    if(isNaN(idx) || !window.EX || !Array.isArray(EX) || !EX[idx]) return null;
+    return EX[idx];
+  }
+
+  function draftFromEX(){
+    var o = {};
+    if(!window.EX || !Array.isArray(EX)) return o;
+    EX.forEach(function(ex){
+      o[ex.id] = {
+        sets: String(ex.sets == null ? '' : ex.sets),
+        reps: String(ex.reps == null ? '' : ex.reps),
+        kg: String(ex.kg || ''),
+        unit: String(ex.unit || (ex.kg ? 'kg' : 'bw')),
+        restSec: clampRestSec(ex.restSec)
+      };
+    });
+    return o;
+  }
+
+  function groupsFromDOM(){
+    var exec = document.getElementById('ssub1');
+    if(!exec) return [];
+    var groups = [];
+    exec.querySelectorAll('.ghdr').forEach(function(gh){
+      var title = gh.querySelector('.glbl') ? gh.querySelector('.glbl').textContent : 'קבוצה';
+      var list = gh.nextElementSibling;
+      var cards = list ? list.querySelectorAll('.card') : [];
+      var items = [];
+      cards.forEach(function(card){
+        var cid = card.id || '';
+        var idx = parseInt(cid.replace('c',''), 10) - 1;
+        if(!isNaN(idx) && EX[idx]) items.push(EX[idx]);
+      });
+      groups.push({ title:title, items:items });
+    });
+    return groups;
+  }
+
+  function toolbarHtml(){
+    return '<div class="sp-toolbar">' +
+      (!state.edit
+        ? '<button class="gbtn primary" onclick="openStrengthPlanEdit()">✏️ ערוך תוכנית</button>'
+        : '<button class="gbtn primary" onclick="saveStrengthPlan()">💾 שמור</button>' +
+          '<button class="gbtn" onclick="cancelStrengthPlanEdit()">ביטול</button>'
+      ) +
+      '<span class="sp-mode">' + (state.edit ? 'מצב עריכה פעיל' : 'תצוגת תוכנית') + '</span>' +
+    '</div>';
+  }
+
+  function weightLabel(vals){
+    var unit = String(vals.unit || (vals.kg ? 'kg' : 'bw')).toUpperCase();
+    return vals.kg ? (vals.kg + ' ' + unit) : unit;
+  }
+
+  function syncExecutionCards(){
+    if(!window.EX || !Array.isArray(EX)) return;
+    EX.forEach(function(ex, idx){
+      var card = document.getElementById('c' + (idx+1));
+      if(!card) return;
+      card.setAttribute('data-rest-sec', String(clampRestSec(ex.restSec)));
+      var svs = card.querySelectorAll('.stats .sv');
+      if(svs[0]) svs[0].textContent = ex.sets;
+      if(svs[1]) svs[1].textContent = ex.reps;
+      if(svs[2]) svs[2].textContent = ex.kg ? (ex.kg + ' ' + String(ex.unit || 'kg').toUpperCase()) : String(ex.unit || 'bw').toUpperCase();
+      var box = card.querySelector('.rbox');
+      var num = box ? box.querySelector('.rnum') : null;
+      var sub = box ? box.querySelector('.rlbl span') : null;
+      if(box && !box.classList.contains('on')){
+        box.setAttribute('data-rest-sec', String(clampRestSec(ex.restSec)));
+        if(num) num.textContent = String(clampRestSec(ex.restSec));
+        if(sub) sub.textContent = ' ' + clampRestSec(ex.restSec) + 'שנ\'';
+      }
+    });
+    try{
+      if(typeof buildStrengthInlineRows === 'function') buildStrengthInlineRows();
+    }catch(e){}
+  }
+
+  window.buildStrengthPlanSimple = function(){
+    var host = document.getElementById('strength-plan-simple');
+    if(!host) return;
+
+    applySavedPlanToEX();
+    var groups = groupsFromDOM();
+
+    var out = toolbarHtml();
+    out += '<div class="sp-note"><b>תוכנית הכוח</b> — כאן ניתן לערוך בצורה פשוטה ונקייה את משקל היעד, מספר הסטים, מספר החזרות וזמן המנוחה לכל תרגיל.</div>';
+
+    groups.forEach(function(group){
+      out += '<div class="sp-group">';
+      out +=   '<div class="sp-group-h"><div><div class="sp-group-t">' + group.title + '</div><div class="sp-group-s">' + group.items.length + ' תרגילים</div></div><button class="gbtn" onclick="strSubSw(1)">לביצוע</button></div>';
+
+      group.items.forEach(function(ex){
+        var fallback = {
+          sets: ex.sets,
+          reps: ex.reps,
+          kg: ex.kg,
+          unit: ex.unit || (ex.kg ? 'kg' : 'bw'),
+          restSec: clampRestSec(ex.restSec)
+        };
+        var vals = state.edit ? (state.draft[ex.id] || fallback) : fallback;
+        vals.restSec = clampRestSec(vals.restSec);
+
+        out += '<div class="sp-item">';
+        out +=   '<div class="sp-top">';
+        out +=     '<div class="sp-name"><div class="nm">' + ex.he + '</div><div class="en">' + ex.en + '</div></div>';
+        out +=     '<div class="sp-meta">' +
+                      '<span class="sp-chip">' + vals.sets + ' סטים</span>' +
+                      '<span class="sp-chip">' + vals.reps + ' חזרות</span>' +
+                      '<span class="sp-chip">' + weightLabel(vals) + '</span>' +
+                      '<span class="sp-chip">מנוחה ' + vals.restSec + ' שנ׳</span>' +
+                    '</div>';
+        out +=   '</div>';
+
+        if(state.edit){
+          out += '<div class="sp-edit-wrap">' +
+                    '<div class="sp-edit-head"><div class="sp-edit-title">עריכת תוכנית</div><div class="sp-edit-sub">עדכן משקל, סטים, חזרות ומנוחה</div></div>' +
+                    '<div class="sp-edit">' +
+                      '<div class="fld"><div class="lbl">משקל יעד</div><input type="text" value="' + (vals.kg || '') + '" placeholder="מספר" oninput="updateStrengthPlanField(\'' + ex.id + '\',\'kg\',this.value)"></div>' +
+                      '<div class="fld"><div class="lbl">יחידת משקל</div><select class="sp-select" onchange="updateStrengthPlanField(\'' + ex.id + '\',\'unit\',this.value)"><option value="kg"' + ((vals.unit || 'kg')==='kg' ? ' selected' : '') + '>KG</option><option value="lb"' + ((vals.unit || 'kg')==='lb' ? ' selected' : '') + '>LB</option><option value="bw"' + ((vals.unit || 'kg')==='bw' ? ' selected' : '') + '>BW</option></select></div>' +
+                      '<div class="fld"><div class="lbl">סטים</div><input type="text" value="' + vals.sets + '" oninput="updateStrengthPlanField(\'' + ex.id + '\',\'sets\',this.value)"></div>' +
+                      '<div class="fld"><div class="lbl">חזרות</div><input type="text" value="' + vals.reps + '" oninput="updateStrengthPlanField(\'' + ex.id + '\',\'reps\',this.value)"></div>' +
+                      '<div class="fld"><div class="lbl">מנוחה (שנ׳)</div><input type="number" min="15" max="300" step="5" value="' + vals.restSec + '" oninput="updateStrengthPlanField(\'' + ex.id + '\',\'restSec\',this.value)"></div>' +
+                    '</div>' +
+                  '</div>';
+        }
+
+        out += '</div>';
+      });
+
+      out += '</div>';
+    });
+
+    host.innerHTML = out;
+  };
+
+  window.openStrengthPlanEdit = function(){
+    applySavedPlanToEX();
+    state.edit = true;
+    state.draft = draftFromEX();
+    buildStrengthPlanSimple();
+  };
+
+  window.cancelStrengthPlanEdit = function(){
+    state.edit = false;
+    state.draft = null;
+    buildStrengthPlanSimple();
+  };
+
+  window.updateStrengthPlanField = function(id, field, value){
+    if(!state.draft) state.draft = draftFromEX();
+    if(!state.draft[id]) state.draft[id] = { restSec: globalRestDefault() };
+    if(field === 'restSec') value = clampRestSec(value);
+    state.draft[id][field] = value;
+  };
+
+  window.saveStrengthPlan = function(){
+    if(!state.draft) return;
+    var clean = {};
+    Object.keys(state.draft).forEach(function(id){
+      var ex = exerciseById(id) || {};
+      var cur = state.draft[id] || {};
+      clean[id] = {
+        kg: String(cur.kg == null ? (ex.kg || '') : cur.kg),
+        unit: String(cur.unit || ex.unit || ((cur.kg || ex.kg) ? 'kg' : 'bw')),
+        sets: String(cur.sets == null ? (ex.sets || '') : cur.sets),
+        reps: String(cur.reps == null ? (ex.reps || '') : cur.reps),
+        restSec: clampRestSec(cur.restSec)
+      };
+    });
+    lsSet(KEY, clean);
+    applySavedPlanToEX();
+    syncExecutionCards();
+    state.edit = false;
+    state.draft = null;
+    buildStrengthPlanSimple();
+    toast('התוכנית נשמרה');
+  };
+
+  window.doRest = function(rid,cid,total,btn){
+    var brId = btn.id;
+    if(RT[brId]){ cancelRest(rid,brId,total); return; }
+    try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
+    ensureCountdownOverlay();
+    btn.setAttribute('data-total', total);
+    if(!SC[brId]) SC[brId]=0;
+    SC[brId]++;
+    var cur = SC[brId];
+    var box = document.getElementById(rid),
+        num = document.getElementById('rn'+rid.replace('r','')),
+        lbl = document.getElementById('rl'+rid.replace('r','')),
+        sub = document.getElementById('rs'+rid.replace('r',''));
+    var ex = exerciseByCardId(cid);
+    var restSec = clampRestSec(ex && ex.restSec);
+    if(box){
+      box.className='rbox on';
+      box.classList.remove('countdown-hot');
+      box.setAttribute('data-rest-sec', String(restSec));
+    }
+    var s = restSec;
+    if(num){ num.textContent = s; num.style.color=''; num.style.transform=''; }
+    if(lbl) lbl.textContent = 'סט ' + cur + '/' + total + ' הושלם';
+    if(sub) sub.textContent = ' ' + restSec + 'שנ\'';
+    btn.innerHTML='⏱ מנוחה...';
+    try{ btn.classList.add('active-rest'); }catch(e){}
+    resetCountdownCues(brId);
+
+    RT[brId] = setInterval(function(){
+      s--;
+      if(num){
+        num.textContent = s;
+        if(s<=5 && s>0){
+          num.style.color = '#ffffff';
+          num.style.transform = 'scale(1.15)';
+        }else{
+          num.style.color = '';
+          num.style.transform = '';
+        }
+      }
+      if(sub) sub.textContent = ' ' + s + 'שנ\'';
+      scheduleCountdownCue(brId, s, box);
+
+      if(s<=0){
+        clearInterval(RT[brId]); delete RT[brId];
+        if(box) box.classList.remove('countdown-hot');
+        if(navigator.vibrate) navigator.vibrate([250,100,250,100,250]);
+        resetCountdownCues(brId);
+        if(cur>=total){
+          SC[brId]=0;
+          var card=document.getElementById(cid);
+          if(card && !card.classList.contains('done')){
+            card.classList.add('done');
+            var p=lsJ('wp')||{}; p[cid]=true; lsSJ('wp',p);
+          }
+          btn.innerHTML='✅ הושלם!';
+          try{ btn.classList.remove('active-rest'); }catch(e){}
+          if(lbl) lbl.textContent='כל הסטים הושלמו!';
+          if(sub) sub.textContent='';
+          setTimeout(function(){ if(box) box.className='rbox'; }, 2600);
+        }else{
+          btn.innerHTML='⏱ סיים סט ('+(cur+1)+'/'+total+')';
+          try{ btn.classList.remove('active-rest'); }catch(e){}
+          if(lbl) lbl.textContent='מוכן לסט ' + (cur+1) + '/' + total;
+          if(sub) sub.textContent=' לחץ כשמוכן';
+          setTimeout(function(){ if(box) box.className='rbox'; }, 3200);
+        }
+      }
+    },1000);
+  };
+
+  window.cancelRest = function(rid,brId,total){
+    if(RT[brId]){ clearInterval(RT[brId]); delete RT[brId]; }
+    try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
+    resetCountdownCues(brId);
+    SC[brId]=Math.max(0,(SC[brId]||1)-1);
+    var cid = 'c' + String(brId || '').replace('br','');
+    var ex = exerciseByCardId(cid);
+    var restSec = clampRestSec(ex && ex.restSec);
+    var box=document.getElementById(rid),num=document.getElementById('rn'+rid.replace('r','')),sub=document.getElementById('rs'+rid.replace('r',''));
+    if(box){ box.className='rbox'; box.classList.remove('countdown-hot'); box.setAttribute('data-rest-sec', String(restSec)); }
+    if(num){ num.textContent=String(restSec); num.style.color=''; num.style.transform=''; }
+    if(sub) sub.textContent=' ' + restSec + 'שנ\'';
+    var btn=document.getElementById(brId),next=(SC[brId]||0)+1;
+    if(btn){
+      btn.innerHTML='⏱ סיים סט ('+next+'/'+total+')';
+      try{ btn.classList.remove('active-rest'); }catch(e){}
+    }
+  };
+
+  function boot(){
+    applySavedPlanToEX();
+    syncExecutionCards();
+    setTimeout(function(){
+      if(typeof buildStrengthPlanSimple === 'function') buildStrengthPlanSimple();
+    }, 0);
+  }
+
+  ['initStrengthLayout','strSubSw','initStrengthLog'].forEach(function(name){
+    var fn = window[name];
+    if(typeof fn !== 'function' || fn._oaiV81Wrapped) return;
+    var wrapped = function(){
+      var r = fn.apply(this, arguments);
+      if(name === 'strSubSw'){
+        if(arguments[0] === 0){ setTimeout(boot, 0); }
+      }else{
+        setTimeout(boot, 0);
+      }
+      return r;
+    };
+    wrapped._oaiV81Wrapped = true;
+    window[name] = wrapped;
+  });
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+
+
+<style id="oai-v86-rest-defaults-and-toolbar-fix">
+#strength-plan-simple .sp-toolbar{
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:8px !important;
+  align-items:stretch !important;
+}
+#strength-plan-simple .sp-toolbar .gbtn{
+  width:100% !important;
+  min-width:0 !important;
+  margin:0 !important;
+  justify-content:center !important;
+}
+#strength-plan-simple .sp-mode{
+  grid-column:1 / -1 !important;
+  margin-inline-start:0 !important;
+  justify-self:start !important;
+}
+@media (max-width:540px){
+  #strength-plan-simple .sp-toolbar{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+}
+</style>
+
+<script id="oai-v86-rest-defaults-and-toolbar-fix-script">
+(function(){
+  var PLAN_KEY = 'strength_program_v1';
+  var SETTINGS_KEY = 'app_settings';
+
+  function lsGetJson(key, fallback){
+    try{
+      if(typeof lsJ === 'function'){
+        var v = lsJ(key);
+        return v == null ? fallback : v;
+      }
+      var raw = localStorage.getItem(key);
+      return raw == null ? fallback : JSON.parse(raw);
+    }catch(e){ return fallback; }
+  }
+
+  function lsSetJson(key, value){
+    try{
+      if(typeof lsSJ === 'function') lsSJ(key, value);
+      else localStorage.setItem(key, JSON.stringify(value));
+    }catch(e){}
+  }
+
+  function clampRest(v){
+    var n = parseInt(v, 10);
+    if(isNaN(n)) n = 60;
+    return Math.max(15, Math.min(300, n));
+  }
+
+  function normalizeSettings(){
+    var s = lsGetJson(SETTINGS_KEY, {}) || {};
+    if(s.restSec !== 60){
+      s.restSec = 60;
+      lsSetJson(SETTINGS_KEY, s);
+    }
+  }
+
+  function normalizeExerciseRestDefaults(){
+    var saved = lsGetJson(PLAN_KEY, {}) || {};
+    var changed = false;
+
+    if(window.EX && Array.isArray(EX)){
+      EX.forEach(function(ex){
+        if(!ex) return;
+        if(ex.restSec == null){
+          ex.restSec = 60;
+        }else{
+          ex.restSec = clampRest(ex.restSec);
+        }
+
+        var row = saved[ex.id];
+        if(!row){
+          return;
+        }
+        if(row.restSec == null){
+          row = Object.assign({}, row, { restSec: 60 });
+          saved[ex.id] = row;
+          changed = true;
+        }else{
+          var nextRest = clampRest(row.restSec);
+          if(String(row.restSec) !== String(nextRest)){
+            row = Object.assign({}, row, { restSec: nextRest });
+            saved[ex.id] = row;
+            changed = true;
+          }
+        }
+      });
+    }
+
+    if(changed){
+      lsSetJson(PLAN_KEY, saved);
+    }
+  }
+
+  function syncExecutionRestDisplay(){
+    if(!window.EX || !Array.isArray(EX)) return;
+    EX.forEach(function(ex, idx){
+      if(!ex) return;
+      var restSec = clampRest(ex.restSec == null ? 60 : ex.restSec);
+      ex.restSec = restSec;
+
+      var card = document.getElementById('c' + (idx + 1));
+      if(!card) return;
+      card.setAttribute('data-rest-sec', String(restSec));
+
+      var box = card.querySelector('.rbox');
+      if(!box) return;
+
+      box.setAttribute('data-rest-sec', String(restSec));
+      if(!box.classList.contains('on')){
+        var num = box.querySelector('.rnum');
+        var sub = box.querySelector('.rlbl span');
+        if(num) num.textContent = String(restSec);
+        if(sub) sub.textContent = ' ' + restSec + 'שנ\'';
+      }
+    });
+  }
+
+  function hideGlobalRestSetting(){
+    var modal = document.getElementById('settings-modal');
+    if(!modal) return;
+
+    modal.querySelectorAll('.settings-row').forEach(function(row){
+      var label = row.querySelector('.setting-label');
+      var txt = label ? (label.textContent || '').replace(/\s+/g, ' ').trim() : '';
+      if(txt.indexOf('מנוחה בכוח') >= 0){
+        row.style.display = 'none';
+      }
+    });
+  }
+
+  function hardenSettingsSave(){
+    var input = document.getElementById('set-rest-sec');
+    if(input) input.value = '60';
+  }
+
+  function refreshStrengthProgramUI(){
+    normalizeSettings();
+    normalizeExerciseRestDefaults();
+    syncExecutionRestDisplay();
+    hideGlobalRestSetting();
+    if(typeof buildStrengthPlanSimple === 'function'){
+      try{ buildStrengthPlanSimple(); }catch(e){}
+    }
+  }
+
+  function patchSettingsFunctions(){
+    var origOpen = window.openSettingsModal;
+    if(typeof origOpen === 'function' && !origOpen._oaiV86Wrapped){
+      var wrappedOpen = function(){
+        normalizeSettings();
+        var r = origOpen.apply(this, arguments);
+        hideGlobalRestSetting();
+        return r;
+      };
+      wrappedOpen._oaiV86Wrapped = true;
+      window.openSettingsModal = wrappedOpen;
+    }
+
+    var origSave = window.saveAppSettingsFromUI;
+    if(typeof origSave === 'function' && !origSave._oaiV86Wrapped){
+      var wrappedSave = function(){
+        hardenSettingsSave();
+        var r = origSave.apply(this, arguments);
+        refreshStrengthProgramUI();
+        return r;
+      };
+      wrappedSave._oaiV86Wrapped = true;
+      window.saveAppSettingsFromUI = wrappedSave;
+    }
+  }
+
+  function boot(){
+    patchSettingsFunctions();
+    refreshStrengthProgramUI();
+    setTimeout(refreshStrengthProgramUI, 0);
+    setTimeout(refreshStrengthProgramUI, 180);
+    setTimeout(refreshStrengthProgramUI, 600);
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  }else{
+    boot();
+  }
+})();
+</script>
+
+
+<style id="oai-v87-weight-history-editor-style">
+.wt-actions-grid,.wt-premium-actions-row{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px !important;
+}
+.wt-actions-grid .full,.wt-premium-actions-row .full{grid-column:1 / -1}
+.wt-hist-modebar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  background:#f7fafc;
+  border:1px solid #e3ebf4;
+  border-radius:12px;
+  padding:9px 10px;
+  margin-bottom:10px;
+}
+.wt-hist-modebar .txt{font-size:.72rem;color:#5f7589;line-height:1.5}
+.wt-hist-modebar .chip{display:inline-flex;align-items:center;justify-content:center;padding:4px 9px;border-radius:999px;font-size:.62rem;font-weight:800;background:#eef5fc;color:#1a4f7a}
+.wt-hist-modebar .chip.edit{background:#fff4e0;color:#7a5000}
+.wt-hist-modebar button{border:none;border-radius:10px;background:#0d1b2a;color:#fff;font-family:'Heebo',sans-serif;font-size:.72rem;font-weight:800;padding:8px 12px;cursor:pointer;white-space:nowrap}
+.wt-hist-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #f0f4f8}
+.wt-hist-row:last-child{border-bottom:none}
+.wt-hist-main{min-width:0;flex:1}
+.wt-hist-weight{font-size:.8rem;font-weight:800;color:#0d1b2a}
+.wt-hist-date{font-size:.64rem;color:#6b7e94;line-height:1.5}
+.wt-hist-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.wt-hist-tag{font-size:.6rem;font-weight:800;padding:3px 8px;border-radius:999px;background:#eef5fc;color:#1a4f7a}
+.wt-hist-edit-btn{border:none;border-radius:10px;background:#fff4e0;color:#7a5000;font-family:'Heebo',sans-serif;font-size:.68rem;font-weight:800;padding:7px 10px;cursor:pointer}
+.wt-hist-del-icon{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:10px;background:#fff1f0;color:#c0392b;font-family:'Heebo',sans-serif;font-size:.95rem;font-weight:900;cursor:pointer;box-shadow:inset 0 0 0 1px #f0b7b2}
+.wt-hist-del-icon:hover{background:#ffe5e2}
+.wt-hist-del-btn{flex:1;padding:10px;border:none;border-radius:10px;background:linear-gradient(180deg,#d84a3a,#b62f22);color:#fff;font-family:'Heebo',sans-serif;font-size:.8rem;font-weight:900;cursor:pointer;box-shadow:0 10px 24px rgba(192,57,43,.20)}
+.wt-save-toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(12px);background:#0f6e56;color:#fff;border-radius:999px;padding:11px 16px;font-size:.78rem;font-weight:800;box-shadow:0 16px 34px rgba(15,110,86,.28);z-index:1400;opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease}
+.wt-save-toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.wt-save-flash{animation:wtSavedPulse .95s ease}
+@keyframes wtSavedPulse{
+  0%{box-shadow:0 0 0 0 rgba(29,158,117,.00)}
+  20%{box-shadow:0 0 0 3px rgba(29,158,117,.20),0 12px 28px rgba(29,158,117,.12)}
+  100%{box-shadow:0 0 0 0 rgba(29,158,117,.00)}
+}
+#wt-confirm-modal{z-index:30050;align-items:center;justify-content:center;padding:16px;touch-action:manipulation}
+#wt-confirm-modal .modal-box{max-width:330px;position:relative;z-index:30051;pointer-events:auto;box-shadow:0 24px 56px rgba(0,0,0,.32)}
+#wt-confirm-modal button{pointer-events:auto;touch-action:manipulation}
+#wt-confirm-modal .modal-box *{pointer-events:auto}
+#wt-hist-edit-modal .modal-box{max-width:350px}
+</style>
+
+<div class="modal" id="wt-hist-edit-modal">
+  <div class="modal-box">
+    <div style="font-size:.93rem;font-weight:800;color:#0d1b2a;margin-bottom:14px;text-align:center">✏ עריכת רשומת משקל</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px">
+      <div><div class="flbl">משקל (ק&quot;ג)</div><input id="wt-hist-inp-weight" type="number" step="0.1" class="finput" style="font-size:1rem;font-weight:700;text-align:center" onclick="this.select()"></div>
+      <div><div class="flbl">תאריך</div><input id="wt-hist-inp-date" type="date" class="finput" style="font-size:.8rem;font-weight:700"></div>
+    </div>
+    <div style="margin-bottom:14px"><div class="flbl">הערה</div><input id="wt-hist-inp-note" type="text" class="finput" placeholder="למשל: תיקון, שקילה בוקר"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <button onclick="closeWtHistEdit()" style="padding:10px;border:1px solid #d0dcea;border-radius:10px;background:#f0f4f8;font-family:'Heebo',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;color:#6b7e94">ביטול</button>
+      <button onclick="saveWtHistoryEdit()" style="padding:10px;border:none;border-radius:10px;background:#0d1b2a;color:white;font-family:'Heebo',sans-serif;font-size:.8rem;font-weight:800;cursor:pointer">שמור שינוי</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="wt-hist-delete-modal">
+  <div class="modal-box">
+    <div style="font-size:.95rem;font-weight:900;color:#b62f22;margin-bottom:8px;text-align:center">אזהרת מחיקה חמורה</div>
+    <div id="wt-hist-delete-text" style="font-size:.76rem;color:#7c1f16;line-height:1.7;text-align:center;margin-bottom:16px">לא ניתן יהיה לשחזר את המשקל שנמחק וזו פעולה בלתי הפיכה.</div>
+    <div style="display:flex;gap:8px">
+      <button onclick="closeWtHistDelete()" style="flex:1;padding:10px;border:1px solid #d0dcea;border-radius:10px;background:#f0f4f8;font-family:'Heebo',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;color:#6b7e94">ביטול</button>
+      <button onclick="confirmDeleteWtHistoryEntry()" class="wt-hist-del-btn">אישור מחיקה</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="wt-confirm-modal">
+  <div class="modal-box">
+    <div id="wt-confirm-title" style="font-size:.95rem;font-weight:800;color:#0d1b2a;margin-bottom:8px;text-align:center">האם אתה מאשר?</div>
+    <div id="wt-confirm-text" style="font-size:.76rem;color:#6b7e94;line-height:1.6;text-align:center;margin-bottom:16px">הפעולה תישמר במערכת.</div>
+    <div style="display:flex;gap:8px">
+      <button onclick="closeWtConfirm()" style="flex:1;padding:10px;border:1px solid #d0dcea;border-radius:10px;background:#f0f4f8;font-family:'Heebo',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;color:#6b7e94">ביטול</button>
+      <button onclick="confirmWtAction()" style="flex:1;padding:10px;border:none;border-radius:10px;background:#0d1b2a;color:white;font-family:'Heebo',sans-serif;font-size:.8rem;font-weight:800;cursor:pointer">כן, אשר</button>
+    </div>
+  </div>
+</div>
+
+<div id="wt-save-toast" class="wt-save-toast">הפעולה נשמרה</div>
+
+<script id="oai-v87-weight-history-editor">
+(function(){
+  var DEFAULT_WT = {cur:103.5,goal:80,height:175,dob:'1990-09-04',log:[]};
+  var pendingWtAction = null;
+  var histEditIndex = null;
+  var histDeleteIndex = null;
+  var historyEditMode = false;
+
+  function gid(id){ return document.getElementById(id); }
+  function todayIso(){
+    var t = new Date();
+    return t.getFullYear() + '-' + String(t.getMonth()+1).padStart(2,'0') + '-' + String(t.getDate()).padStart(2,'0');
+  }
+  function parseNum(v){ return parseFloat(v); }
+  function cloneWt(){
+    var d = (typeof lsJ === 'function' ? lsJ('wt') : null) || JSON.parse(JSON.stringify(DEFAULT_WT));
+    if(!Array.isArray(d.log)) d.log = [];
+    return d;
+  }
+  function normalizeWt(d){
+    if(!d) d = cloneWt();
+    if(!Array.isArray(d.log)) d.log = [];
+    d.log = d.log.filter(function(e){ return e && e.date && !isNaN(parseFloat(e.weight)); }).map(function(e){
+      return {date:String(e.date), weight:parseFloat(e.weight), note:e.note || ''};
+    }).sort(function(a,b){ return String(a.date).localeCompare(String(b.date)); });
+    if(d.log.length){
+      d.cur = parseFloat(d.log[d.log.length - 1].weight);
+    }
+    return d;
+  }
+  function persistWt(d){
+    d = normalizeWt(d);
+    if(typeof lsSJ === 'function') lsSJ('wt', d);
+    if(typeof window.wtRender === 'function'){
+      try{ window.wtRender(d); }catch(e){}
+    }
+    return d;
+  }
+  function formatLongDate(ds){
+    try{
+      var dt = new Date(ds + 'T12:00:00');
+      if(isNaN(dt.getTime())) return ds;
+      return DAYS[dt.getDay()] + ', ' + dt.getDate() + ' ' + MONTHS[dt.getMonth()] + ' ' + dt.getFullYear();
+    }catch(e){ return ds; }
+  }
+  function diffHtml(curr, prev){
+    var delta = parseFloat(curr) - parseFloat(prev);
+    if(isNaN(delta) || !delta) return '';
+    if(delta < 0) return '<span style="color:#1D9E75;font-weight:700"> (' + delta.toFixed(1) + ')</span>';
+    return '<span style="color:#c0392b;font-weight:700"> (+' + delta.toFixed(1) + ')</span>';
+  }
+  function showWtToast(msg){
+    var t = gid('wt-save-toast');
+    if(!t) return;
+    t.textContent = msg || 'הפעולה נשמרה';
+    t.classList.add('on');
+    clearTimeout(showWtToast._timer);
+    showWtToast._timer = setTimeout(function(){ t.classList.remove('on'); }, 1800);
+    ['wt-actions-card','wt-premium-card','header-weight-block'].forEach(function(id){
+      var el = gid(id);
+      if(!el) return;
+      el.classList.remove('wt-save-flash');
+      void el.offsetWidth;
+      el.classList.add('wt-save-flash');
+      setTimeout(function(){ el.classList.remove('wt-save-flash'); }, 1000);
+    });
+  }
+  function showWtConfirm(title, text, cb){
+    pendingWtAction = null;
+    var m = gid('wt-confirm-modal');
+    if(m) m.style.display = 'none';
+    if(typeof cb === 'function') cb();
+  }
+  window.closeWtConfirm = function(){
+    pendingWtAction = null;
+    var m = gid('wt-confirm-modal');
+    if(m) m.style.display = 'none';
+    ['wt-edit-modal','wt-hist-modal','wt-hist-edit-modal'].forEach(function(id){
+      var el = gid(id);
+      if(el){
+        el.style.pointerEvents = '';
+        delete el.dataset.wtConfirmWasOpen;
+      }
+    });
+  };
+  window.confirmWtAction = function(){
+    var cb = pendingWtAction;
+    window.closeWtConfirm();
+    if(typeof cb === 'function') cb();
+  };
+
+  function ensureMainActions(){
+    var card = gid('wt-actions-card');
+    if(!card) return;
+    var row = card.querySelector('div[style*="display:flex"][style*="gap:8px"]') || card.querySelector('.wt-actions-grid');
+    if(!row) return;
+    row.className = 'wt-actions-grid';
+    row.innerHTML = '' +
+      '<button type="button" onclick="openWtEdit()" style="padding:10px 12px;border:none;border-radius:10px;background:#0d1b2a;color:white;font-family:\'Heebo\',sans-serif;font-size:.78rem;font-weight:800;cursor:pointer">✏ עדכן משקל</button>' +
+      '<button type="button" onclick="openWtHistory(false)" style="padding:10px 12px;border:1px solid #d0dcea;border-radius:10px;background:#f8fafc;color:#1a4f7a;font-family:\'Heebo\',sans-serif;font-size:.78rem;font-weight:800;cursor:pointer">📊 היסטוריה</button>' +
+      '<button type="button" class="full" onclick="openWtHistoryEditor()" style="padding:10px 12px;border:1px solid #f0c890;border-radius:10px;background:#fff4e0;color:#7a5000;font-family:\'Heebo\',sans-serif;font-size:.78rem;font-weight:800;cursor:pointer">📝 עריכת היסטוריה</button>';
+  }
+  function ensurePremiumActions(){
+    var row = document.querySelector('.wt-premium-actions-row');
+    if(!row) return;
+    row.className = 'wt-premium-actions-row';
+    row.innerHTML = '' +
+      '<button class="primary" type="button" onclick="openWtEdit()">✏ עדכן משקל</button>' +
+      '<button class="secondary" type="button" onclick="openWtHistory(false)">📊 היסטוריה</button>' +
+      '<button class="secondary full" type="button" onclick="openWtHistoryEditor()" style="background:#fff4e0;border-color:#f0c890;color:#7a5000">📝 עריכת היסטוריה</button>';
+  }
+  function refreshWeightActionButtons(){
+    ensureMainActions();
+    ensurePremiumActions();
+  }
+
+  function renderWtHistoryList(){
+    var d = normalizeWt(cloneWt());
+    var list = gid('wt-hist-list');
+    if(!list) return;
+    var head = '<div class="wt-hist-modebar">' +
+      '<div><div class="chip ' + (historyEditMode ? 'edit' : '') + '">' + (historyEditMode ? 'מצב עריכה' : 'מצב צפייה') + '</div><div class="txt">' + (historyEditMode ? 'כאן ניתן לערוך רשומות קיימות לפני השמירה.' : 'כאן ניתן לעיין בהתפתחות המשקל לאורך הזמן.') + '</div></div>' +
+      '<button type="button" onclick="' + (historyEditMode ? 'openWtHistory(false)' : 'openWtHistoryEditor()') + '">' + (historyEditMode ? 'חזור לצפייה' : 'ערוך רשומות') + '</button>' +
+    '</div>';
+    if(!d.log.length){
+      list.innerHTML = head + '<div style="text-align:center;color:#8fa8c0;padding:1rem">אין היסטוריה</div>';
+      return;
+    }
+    var out = head;
+    for(var i=d.log.length - 1; i>=0; i--){
+      var e = d.log[i];
+      var prev = i > 0 ? d.log[i-1] : null;
+      out += '<div class="wt-hist-row">' +
+        '<div class="wt-hist-main">' +
+          '<div class="wt-hist-weight">' + e.weight.toFixed(1) + ' ק"ג' + (prev ? diffHtml(e.weight, prev.weight) : '') + '</div>' +
+          '<div class="wt-hist-date">' + formatLongDate(e.date) + (e.note ? ' · ' + e.note : '') + '</div>' +
+        '</div>' +
+        '<div class="wt-hist-actions">' +
+          (i === 0 ? '<span class="wt-hist-tag">התחלה</span>' : '') +
+          (historyEditMode ? '<button class="wt-hist-edit-btn" type="button" onclick="editWtHistoryEntry(' + i + ')" title="עריכה">✏ ערוך</button>' : '') +
+          (historyEditMode ? '<button class="wt-hist-del-icon" type="button" onclick="promptDeleteWtHistoryEntry(' + i + ')" title="מחיקה">🗑</button>' : '') +
+        '</div>' +
+      '</div>';
+    }
+    list.innerHTML = out;
+  }
+
+  window.openWtHistory = function(editMode){
+    if(typeof editMode === 'boolean') historyEditMode = editMode;
+    renderWtHistoryList();
+    if(gid('wt-hist-modal')) gid('wt-hist-modal').style.display = 'flex';
+  };
+  window.openWtHistoryEditor = function(){
+    historyEditMode = true;
+    window.openWtHistory(true);
+  };
+  window.closeWtHistory = function(){
+    if(gid('wt-hist-modal')) gid('wt-hist-modal').style.display = 'none';
+  };
+
+  window.editWtHistoryEntry = function(idx){
+    var d = normalizeWt(cloneWt());
+    if(idx < 0 || idx >= d.log.length) return;
+    histEditIndex = idx;
+    gid('wt-hist-inp-weight').value = parseFloat(d.log[idx].weight).toFixed(1);
+    gid('wt-hist-inp-date').value = d.log[idx].date || todayIso();
+    gid('wt-hist-inp-note').value = d.log[idx].note || '';
+    if(gid('wt-hist-edit-modal')) gid('wt-hist-edit-modal').style.display = 'flex';
+  };
+  window.closeWtHistEdit = function(){
+    histEditIndex = null;
+    if(gid('wt-hist-edit-modal')) gid('wt-hist-edit-modal').style.display = 'none';
+  };
+  window.promptDeleteWtHistoryEntry = function(idx){
+    var d = normalizeWt(cloneWt());
+    if(idx === null || idx === undefined || idx < 0 || idx >= d.log.length) return;
+    histDeleteIndex = idx;
+    var entry = d.log[idx];
+    var label = (entry && !isNaN(parseFloat(entry.weight)) ? parseFloat(entry.weight).toFixed(1) + ' ק"ג' : 'הרשומה');
+    var dateLabel = entry && entry.date ? formatLongDate(entry.date) : '';
+    var txt = 'מחיקת ' + label + (dateLabel ? ' מתאריך ' + dateLabel : '') + ' תסיר אותה לצמיתות מהיסטוריית המשקל. לא ניתן יהיה לשחזר את המשקל שנמחק וזו פעולה בלתי הפיכה.';
+    if(gid('wt-hist-delete-text')) gid('wt-hist-delete-text').textContent = txt;
+    if(gid('wt-hist-delete-modal')) gid('wt-hist-delete-modal').style.display = 'flex';
+  };
+  window.closeWtHistDelete = function(){
+    histDeleteIndex = null;
+    if(gid('wt-hist-delete-modal')) gid('wt-hist-delete-modal').style.display = 'none';
+  };
+  window.confirmDeleteWtHistoryEntry = function(){
+    if(histDeleteIndex === null || histDeleteIndex === undefined) return;
+    var d = normalizeWt(cloneWt());
+    if(histDeleteIndex < 0 || histDeleteIndex >= d.log.length) return;
+    d.log.splice(histDeleteIndex, 1);
+    d = persistWt(d);
+    window.closeWtHistDelete();
+    renderWtHistoryList();
+    showWtToast('רשומת המשקל נמחקה');
+  };
+
+  window.saveWtHistoryEdit = function(){
+    if(histEditIndex === null || histEditIndex === undefined) return;
+    var newWeight = parseNum(gid('wt-hist-inp-weight').value);
+    var newDate = gid('wt-hist-inp-date').value;
+    var newNote = (gid('wt-hist-inp-note').value || '').trim();
+    if(isNaN(newWeight) || newWeight <= 0){ alert('הזן משקל תקין'); return; }
+    if(!newDate){ alert('בחר תאריך'); return; }
+    showWtConfirm('לשמור את עריכת הרשומה?', 'השינוי יעדכן את היסטוריית המשקל וישפיע גם על המשקל הנוכחי אם זו הרשומה האחרונה.', function(){
+      var d = normalizeWt(cloneWt());
+      if(histEditIndex < 0 || histEditIndex >= d.log.length) return;
+      d.log[histEditIndex] = {date:newDate, weight:newWeight, note:newNote};
+      d = persistWt(d);
+      window.closeWtHistEdit();
+      renderWtHistoryList();
+      showWtToast('היסטוריית המשקל עודכנה');
+    });
+  };
+
+  window.saveWt = function(){
+    var nc = parseNum(gid('wt-inp-cur').value);
+    var ng = parseNum(gid('wt-inp-goal').value);
+    var nh = parseNum(gid('wt-inp-height').value);
+    var nd = gid('wt-inp-dob').value;
+    if(isNaN(nc) || isNaN(ng) || nc <= 0 || ng <= 0){ alert('הזן ערכים תקינים'); return; }
+    if(isNaN(nh) || nh < 100 || nh > 250){ alert('הזן גובה תקין'); return; }
+    if(!nd){ alert('הזן תאריך לידה'); return; }
+    showWtConfirm('לשמור את עדכון המשקל?', 'העדכון יתווסף להיסטוריית המשקל וירענן את התקדמות היעד, ה‑BMI והגרף.', function(){
+      var d = cloneWt();
+      if(!Array.isArray(d.log)) d.log = [];
+      d.log.push({date:todayIso(), weight:nc, note:'עדכון'});
+      d.goal = ng;
+      d.height = nh;
+      d.dob = nd;
+      d.cur = nc;
+      d = persistWt(d);
+      if(typeof window.closeWtEdit === 'function') window.closeWtEdit();
+      renderWtHistoryList();
+      showWtToast('המשקל נשמר');
+    });
+  };
+
+  function wireWtConfirmModal(){
+    var m = gid('wt-confirm-modal');
+    if(!m || m.dataset.wtConfirmWired === '1') return;
+    m.dataset.wtConfirmWired = '1';
+    m.addEventListener('click', function(ev){
+      if(ev.target === m) window.closeWtConfirm();
+    }, true);
+    m.querySelectorAll('button').forEach(function(btn){
+      btn.addEventListener('touchend', function(ev){ ev.stopPropagation(); }, true);
+      btn.addEventListener('click', function(ev){ ev.stopPropagation(); }, true);
+    });
+  }
+
+  function boot(){
+    wireWtConfirmModal();
+    refreshWeightActionButtons();
+    setTimeout(refreshWeightActionButtons, 0);
+    setTimeout(refreshWeightActionButtons, 180);
+    setTimeout(refreshWeightActionButtons, 700);
+  }
+
+  var origWtRender = window.wtRender;
+  if(typeof origWtRender === 'function' && !origWtRender._oaiV87Wrapped){
+    var wrapped = function(){
+      var r = origWtRender.apply(this, arguments);
+      setTimeout(refreshWeightActionButtons, 0);
+      return r;
+    };
+    wrapped._oaiV87Wrapped = true;
+    window.wtRender = wrapped;
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
 </script>
 
 </body>
