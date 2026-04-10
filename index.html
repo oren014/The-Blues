@@ -5092,31 +5092,9 @@ body.portal-mode #home-subtitle{
 }
 </style>
 
-
-<style id="oai-v114-run-complete-save-visibility-fix">
-.runcomp-modal{
-  display:flex !important;
-  flex-direction:column !important;
-}
+<style id="oai-v144-run-complete-consolidated">
 .runcomp-actions{
-  position:sticky !important;
-  bottom:-16px;
-  margin:14px -16px -16px !important;
-  padding:12px 16px 16px !important;
-  background:linear-gradient(180deg, rgba(251,253,255,.94) 0%, #ffffff 42%) !important;
-  border-top:1px solid #e8eff6;
-  box-shadow:0 -10px 22px rgba(13,27,42,.06);
-  justify-content:stretch !important;
-}
-.runcomp-actions .runcomp-btn{
-  flex:1 1 140px;
-  min-height:48px !important;
-  font-size:.78rem !important;
-}
-.runcomp-actions .runcomp-btn.primary{
-  flex:2 1 220px;
-  min-height:52px !important;
-  font-size:.82rem !important;
+  display:none !important;
 }
 .runcomp-savehint{
   margin-top:10px;
@@ -5129,250 +5107,6 @@ body.portal-mode #home-subtitle{
   color:#185b43;
   line-height:1.7;
 }
-@media (max-width:560px){
-  .runcomp-actions{
-    bottom:-16px;
-  }
-  .runcomp-actions .runcomp-btn{
-    width:100%;
-    flex:1 1 100%;
-  }
-  .runcomp-actions .runcomp-btn.primary{
-    order:-1;
-  }
-}
-</style>
-
-
-<style id="oai-v115-run-complete-modal-mobile-actions-fix">
-.runcomp-modal{
-  padding-bottom:14px !important;
-}
-.runcomp-savehint{
-  margin-top:12px !important;
-  margin-bottom:10px !important;
-}
-.runcomp-actions{
-  position:sticky !important;
-  bottom:0 !important;
-  margin:0 !important;
-  padding:12px 0 0 !important;
-  background:linear-gradient(180deg, rgba(255,255,255,.92) 0%, #ffffff 42%) !important;
-  border-top:1px solid #e8eff6 !important;
-  box-shadow:0 -8px 18px rgba(13,27,42,.05) !important;
-  display:grid !important;
-  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-  gap:8px !important;
-  z-index:5 !important;
-}
-.runcomp-actions .runcomp-btn{
-  width:100% !important;
-  min-height:48px !important;
-  padding:10px 12px !important;
-  font-size:.78rem !important;
-}
-.runcomp-actions .runcomp-btn.primary{
-  grid-column:1 / -1 !important;
-  order:-1 !important;
-  min-height:54px !important;
-  font-size:.84rem !important;
-}
-@media (max-width:560px){
-  .runcomp-actions{
-    grid-template-columns:1fr !important;
-  }
-  .runcomp-actions .runcomp-btn.primary{
-    grid-column:auto !important;
-  }
-}
-</style>
-
-
-<style id="oai-v116-run-complete-floating-savebar">
-.runcomp-modal{
-  padding-bottom:150px !important;
-}
-.runcomp-savehint{
-  margin-top:12px !important;
-  margin-bottom:8px !important;
-}
-.runcomp-actions{
-  position:fixed !important;
-  left:50% !important;
-  transform:translateX(-50%) !important;
-  bottom:max(12px, env(safe-area-inset-bottom)) !important;
-  width:min(528px, calc(100vw - 36px)) !important;
-  margin:0 !important;
-  padding:12px !important;
-  background:linear-gradient(180deg, rgba(255,255,255,.97) 0%, #ffffff 50%) !important;
-  border:1px solid #e2ebf4 !important;
-  border-radius:18px !important;
-  box-shadow:0 16px 32px rgba(13,27,42,.16) !important;
-  display:grid !important;
-  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-  gap:8px !important;
-  z-index:10040 !important;
-}
-.runcomp-actions .runcomp-btn{
-  width:100% !important;
-  min-height:48px !important;
-  padding:10px 12px !important;
-  font-size:.78rem !important;
-}
-.runcomp-actions .runcomp-btn.primary{
-  grid-column:1 / -1 !important;
-  order:-1 !important;
-  min-height:54px !important;
-  font-size:.84rem !important;
-}
-@media (max-width:560px){
-  .runcomp-modal{
-    padding-bottom:168px !important;
-  }
-  .runcomp-actions{
-    width:calc(100vw - 24px) !important;
-    grid-template-columns:1fr !important;
-    bottom:max(8px, env(safe-area-inset-bottom)) !important;
-    padding:10px !important;
-  }
-  .runcomp-actions .runcomp-btn.primary{
-    grid-column:auto !important;
-  }
-}
-</style>
-
-
-<style id="oai-v117-run-complete-inline-save-fix">
-.runcomp-inline-save{
-  margin-top:12px;
-}
-.runcomp-inline-save .runcomp-btn.primary{
-  width:100%;
-  min-height:54px !important;
-  font-size:.84rem !important;
-}
-</style>
-
-
-<style id="oai-v118-run-complete-real-inline-save">
-/* hide the old bottom action area completely */
-.runcomp-actions{
-  display:none !important;
-}
-
-/* visible inline save area inside the modal body */
-.runcomp-inline-save-real{
-  margin-top:12px;
-  margin-bottom:8px;
-}
-.runcomp-inline-save-real .save-main{
-  width:100%;
-  min-height:56px;
-  border:none;
-  border-radius:14px;
-  padding:12px 14px;
-  font-size:.84rem;
-  font-weight:900;
-  background:linear-gradient(180deg,#0f2135 0%, #1b3956 100%);
-  color:#fff;
-  box-shadow:0 10px 22px rgba(13,27,42,.22);
-  cursor:pointer;
-  font-family:'Heebo',sans-serif;
-}
-.runcomp-inline-save-real .save-main:active{
-  transform:translateY(1px);
-}
-.runcomp-inline-save-real .save-sub{
-  margin-top:8px;
-  font-size:.68rem;
-  color:#5f748b;
-  line-height:1.7;
-  text-align:center;
-}
-.runcomp-inline-secondary{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:8px;
-  margin-top:8px;
-}
-.runcomp-inline-secondary .runcomp-btn{
-  width:100%;
-  min-height:44px;
-  border-radius:12px;
-  padding:9px 12px;
-  font-size:.74rem;
-  font-weight:900;
-  border:1px solid #dce8f3;
-  background:#f8fbff;
-  color:#32516b;
-  cursor:pointer;
-  font-family:'Heebo',sans-serif;
-}
-@media (max-width:560px){
-  .runcomp-inline-secondary{
-    grid-template-columns:1fr;
-  }
-}
-</style>
-
-
-<style id="oai-v119-run-complete-secondary-actions-jswired">
-.runcomp-inline-save-real{
-  display:none !important;
-}
-.runcomp-inline-save-real-v2{
-  margin-top:12px;
-  margin-bottom:8px;
-}
-.runcomp-inline-save-real-v2 .save-main{
-  width:100%;
-  min-height:56px;
-  border:none;
-  border-radius:14px;
-  padding:12px 14px;
-  font-size:.84rem;
-  font-weight:900;
-  background:linear-gradient(180deg,#0f2135 0%, #1b3956 100%);
-  color:#fff;
-  box-shadow:0 10px 22px rgba(13,27,42,.22);
-  cursor:pointer;
-  font-family:'Heebo',sans-serif;
-}
-.runcomp-inline-save-real-v2 .save-sub{
-  margin-top:8px;
-  font-size:.68rem;
-  color:#5f748b;
-  line-height:1.7;
-  text-align:center;
-}
-.runcomp-inline-secondary-v2{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:8px;
-  margin-top:8px;
-}
-.runcomp-inline-secondary-v2 .runcomp-btn{
-  width:100%;
-  min-height:44px;
-  border-radius:12px;
-  padding:9px 12px;
-  font-size:.74rem;
-  font-weight:900;
-  border:1px solid #dce8f3;
-  background:#f8fbff;
-  color:#32516b;
-  cursor:pointer;
-  font-family:'Heebo',sans-serif;
-}
-@media (max-width:560px){
-  .runcomp-inline-secondary-v2{
-    grid-template-columns:1fr;
-  }
-}
-</style>
-
-
-<style id="oai-v120-run-complete-native-inline-actions">
 .runcomp-inline-save-native{
   margin-top:12px;
   margin-bottom:6px;
@@ -5417,20 +5151,16 @@ body.portal-mode #home-subtitle{
   cursor:pointer;
   font-family:'Heebo',sans-serif;
 }
-@media (max-width:560px){
-  .runcomp-inline-secondary-native{
-    grid-template-columns:1fr;
-  }
-}
-</style>
-
-
-<style id="oai-v120-hide-old-inline-run-actions">
 .runcomp-inline-save,
 .runcomp-inline-save-real,
 .runcomp-inline-save-real-v2,
 .runcomp-inline-save-real-v3{
   display:none !important;
+}
+@media (max-width:560px){
+  .runcomp-inline-secondary-native{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 
@@ -8105,10 +7835,10 @@ body.run-timer-focus-landscape #run-timer-card > .rt-live-grid{
   </div>
 
   <div class="run-subsec" id="rsub2">
-    <div class="sdiv">📈 גרף קצב ריצה</div>
+    <div class="sdiv">📊 גרף עמודות — 4 עד 6 הריצות האחרונות</div>
     <div style="background:white;border-radius:12px;padding:13px;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:14px">
       <canvas id="run-chart" height="130" style="width:100%;display:none"></canvas>
-      <div id="run-chart-empty" style="text-align:center;color:#8fa8c0;padding:1.5rem;font-size:.8rem">רשום ריצות כדי לראות את ההתקדמות</div>
+      <div id="run-chart-empty" style="text-align:center;color:#8fa8c0;padding:1.5rem;font-size:.8rem">שמור לפחות 4 ריצות כדי לראות מגמה בגרף</div>
     </div>
 
     <div class="sdiv">📝 תיעוד ריצה</div>
@@ -9865,7 +9595,7 @@ function renderAtt(){
     if(host) return host;
     host = document.createElement('div');
     host.id = 'run-chart-summary';
-    host.innerHTML = '<div class="ttl">מגמת קצב ריצה</div><div class="msg"></div><div class="sub"></div>';
+    host.innerHTML = '<div class="ttl">מגמת קצב — 6 הריצות האחרונות</div><div class="msg"></div><div class="sub"></div>';
     canvas.parentNode.insertBefore(host, canvas);
     return host;
   }
@@ -10143,38 +9873,106 @@ function renderAtt(){
     renderOverallStats();
   };
 
-  // ===== Sportier chart + motivational summary =====
+  // ===== Bar chart + motivational summary =====
   window.drawRunChart = function(runs){
     var canvas=document.getElementById('run-chart'),
         emptyEl=document.getElementById('run-chart-empty'),
         summary=ensureRunChartSummary();
     if(!canvas) return;
 
-    var f=(runs||[]).filter(function(r){ return r.dist && r.time; }).slice(0,12).reverse();
-    if(f.length<2){
+    function shortDateLabel(dateLike, fallbackIndex){
+      if(!dateLike) return 'ריצה ' + fallbackIndex;
+      var m = String(dateLike).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if(m) return m[3] + '/' + m[2];
+      var d = new Date(dateLike);
+      if(isNaN(d)) return 'ריצה ' + fallbackIndex;
+      return pad2(d.getDate()) + '/' + pad2(d.getMonth()+1);
+    }
+
+    function paceTextMin(v){
+      var totalSec=Math.round(v*60);
+      if(!isFinite(totalSec) || totalSec<=0) return '—';
+      var m=Math.floor(totalSec/60), s=totalSec%60;
+      return m+':' + (s<10?'0':'') + s;
+    }
+
+    function paceFromRun(r){
+      if(!r) return 0;
+      if(r.treadmillPace){
+        var ps = parsePaceSec(r.treadmillPace);
+        if(ps >= 150 && ps <= 1200) return ps/60;
+      }
+      if(r.pace){
+        var ps2 = parsePaceSec(r.pace);
+        if(ps2 >= 150 && ps2 <= 1200) return ps2/60;
+      }
+      var dist=parseFloat(r.dist), time=parseFloat(r.time);
+      if(isFinite(dist) && isFinite(time) && dist>0 && time>0){
+        var computed=time/dist;
+        if(computed >= 2.5 && computed <= 20) return computed;
+      }
+      return 0;
+    }
+
+    function fmtTrend(diff){
+      var totalSec=Math.round(Math.abs(diff)*60);
+      var m=Math.floor(totalSec/60), s=totalSec%60;
+      return m + ':' + (s<10?'0':'') + s + ' לק״מ';
+    }
+
+    function roundRect(ctx, x, y, w, h, r, fill, stroke){
+      if (w < 2 * r) r = w / 2;
+      if (h < 2 * r) r = h / 2;
+      ctx.beginPath();
+      ctx.moveTo(x+r, y);
+      ctx.arcTo(x+w, y,   x+w, y+h, r);
+      ctx.arcTo(x+w, y+h, x,   y+h, r);
+      ctx.arcTo(x,   y+h, x,   y,   r);
+      ctx.arcTo(x,   y,   x+w, y,   r);
+      ctx.closePath();
+      if (fill) ctx.fill();
+      if (stroke) ctx.stroke();
+    }
+
+    var source=(runs||[]).slice().filter(function(r){ return r && (r.date || r.time || r.dist || r.pace || r.treadmillPace); });
+    source.sort(function(a,b){ return new Date(a.date||0) - new Date(b.date||0); });
+    var cleaned=[];
+    for(var si=0; si<source.length; si++){
+      var pace=paceFromRun(source[si]);
+      if(!pace) continue;
+      cleaned.push({ raw: source[si], pace: pace });
+    }
+    cleaned = cleaned.slice(-6);
+
+    if(cleaned.length < 4){
       canvas.style.display='none';
       if(emptyEl) emptyEl.style.display='block';
       if(summary){
         summary.style.display='block';
-        summary.querySelector('.msg').textContent='התחל לשמור ריצות כדי לראות מגמה חיה.';
-        summary.querySelector('.sub').textContent='אחרי שתי ריצות לפחות נציג כאן קצב, מגמה והאם אתה בכיוון טוב.';
+        summary.querySelector('.msg').textContent='התחל לשמור ריצות כדי לראות מגמת קצב אמינה.';
+        summary.querySelector('.sub').textContent='נציג כאן עד 6 ריצות אחרונות עם תאריכים וקצבים תקינים בלבד, כדי למנוע גרף מטעה.';
       }
       return;
     }
 
-    var values = f.map(function(r){ return parseFloat(r.time)/parseFloat(r.dist); }); // min/km
-    var first = values[0], last = values[values.length-1], diff = last - first;
+    var values = cleaned.map(function(x){ return x.pace; });
+    var labels = cleaned.map(function(x, idx){ return shortDateLabel(x.raw.date, idx+1); });
+    var last = values[values.length-1], first = values[0], diff = last - first;
+
     if(summary){
       summary.style.display='block';
-      if(diff < -0.02){
-        summary.querySelector('.msg').textContent='בכיוון טוב 💪 שיפרת '+fmtPaceDiff(diff)+' לק״מ';
-        summary.querySelector('.sub').textContent='קצב נמוך יותר הוא מהיר יותר. הריצה האחרונה הייתה חדה יותר מהנקודה הראשונה בגרף.';
-      }else if(diff > 0.02){
-        summary.querySelector('.msg').textContent='קצב רגוע יותר היום — וזה בסדר';
-        summary.querySelector('.sub').textContent='לא כל ריצה חייבת להיות מהירה. התאוששות, עומס, מזג אוויר וחימום משפיעים על הקצב.';
+      if(values.length === 1){
+        summary.querySelector('.msg').textContent='נרשמה ריצה אחת — זה בסיס טוב להתחלה';
+        summary.querySelector('.sub').textContent='אחרי עוד כמה ריצות נוכל לזהות מגמת שיפור או יציבות. בינתיים מוצג הקצב התקין האחרון.';
+      }else if(diff < -0.08){
+        summary.querySelector('.msg').textContent='מגמת שיפור של ' + fmtTrend(diff) + ' מהריצה הראשונה לגרף';
+        summary.querySelector('.sub').textContent='העמודה הימנית היא הריצה החדשה ביותר. שיפור כאן אומר שהקצב נעשה מהיר יותר.';
+      }else if(diff > 0.08){
+        summary.querySelector('.msg').textContent='הקצב האחרון איטי יותר ב-' + fmtTrend(diff);
+        summary.querySelector('.sub').textContent='זה יכול לנבוע מעומס, התאוששות, אינטרוולים או ריצה רגועה. עדיין שווה לעקוב אם זו מגמה.';
       }else{
-        summary.querySelector('.msg').textContent='שומר על יציבות יפה';
-        summary.querySelector('.sub').textContent='הקצב נשאר עקבי. זה בסיס טוב להמשך שיפור בטיימינג ובסבולת.';
+        summary.querySelector('.msg').textContent='מגמת קצב יציבה לאורך ' + values.length + ' ריצות';
+        summary.querySelector('.sub').textContent='זהו בסיס טוב להמשך. אפשר לשאוף לשיפור מתון מבלי להגדיל עומס מהר מדי.';
       }
     }
 
@@ -10182,89 +9980,80 @@ function renderAtt(){
     if(emptyEl) emptyEl.style.display='none';
 
     var DPR = window.devicePixelRatio || 1;
-    var W = canvas.offsetWidth || 300, H = 150;
+    var W = canvas.offsetWidth || 320, H = 220;
     canvas.width = W * DPR;
     canvas.height = H * DPR;
     var ctx = canvas.getContext('2d');
     ctx.setTransform(DPR,0,0,DPR,0,0);
-
-    var pad = 26, gW = W - pad*2, gH = H - pad*2;
-    var mn = Math.min.apply(null, values), mx = Math.max.apply(null, values);
-    if(mn===mx){ mn*=0.98; mx*=1.02; }
-    var span = (mx-mn)||1;
-    mn -= span*0.18; mx += span*0.12;
-
-    function py(v){ return pad + gH - ((v-mn)/(mx-mn))*gH; }
-    function px(i){ return pad + (i/(values.length-1))*gW; }
-
     ctx.clearRect(0,0,W,H);
 
-    // Grid
+    var padTop = 34, padLeft = 48, padRight = 18, padBottom = 56;
+    var gW = Math.max(40, W - padLeft - padRight), gH = Math.max(70, H - padTop - padBottom);
+
+    var mx = Math.max.apply(null, values);
+    var mn = Math.min.apply(null, values);
+    var gridMin = Math.max(0, mn - 0.3);
+    var gridMax = mx + 0.4;
+    if(gridMax <= gridMin) gridMax = gridMin + 1;
+
+    function py(v){ return padTop + gH - ((v-gridMin)/(gridMax-gridMin))*gH; }
+
+    ctx.fillStyle='#ffffff';
+    ctx.fillRect(0,0,W,H);
+
     ctx.strokeStyle = '#e6edf5';
     ctx.lineWidth = 1;
+    ctx.fillStyle = '#8aa0b5';
+    ctx.font = '700 10px Heebo, sans-serif';
+    ctx.textAlign = 'right';
     for(var gi=0; gi<=4; gi++){
-      var gy = pad + (gH/4)*gi;
-      ctx.beginPath(); ctx.moveTo(pad,gy); ctx.lineTo(W-pad,gy); ctx.stroke();
+      var ratio = gi/4;
+      var gv = gridMax - ratio*(gridMax-gridMin);
+      var gy = padTop + ratio*gH;
+      ctx.beginPath();
+      ctx.moveTo(padLeft, gy);
+      ctx.lineTo(W-padRight, gy);
+      ctx.stroke();
+      ctx.fillText(paceTextMin(gv), padLeft-8, gy+3);
     }
 
-    // Gradient area
-    var gradient = ctx.createLinearGradient(0,pad,0,H-pad);
-    gradient.addColorStop(0,'rgba(29,158,117,.28)');
-    gradient.addColorStop(1,'rgba(29,158,117,0)');
+    ctx.strokeStyle = '#d7e3ef';
     ctx.beginPath();
-    for(var i=0;i<values.length;i++){
-      var x=px(i), y=py(values[i]);
-      if(i===0) ctx.moveTo(x,y);
-      else ctx.lineTo(x,y);
-    }
-    ctx.lineTo(px(values.length-1), H-pad);
-    ctx.lineTo(px(0), H-pad);
-    ctx.closePath();
-    ctx.fillStyle = gradient;
-    ctx.fill();
-
-    // Main line
-    ctx.beginPath();
-    ctx.lineWidth = 3.5;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.strokeStyle = '#1D9E75';
-    for(var j=0;j<values.length;j++){
-      var lx=px(j), ly=py(values[j]);
-      if(j===0) ctx.moveTo(lx,ly);
-      else ctx.lineTo(lx,ly);
-    }
+    ctx.moveTo(padLeft, H - padBottom + 0.5);
+    ctx.lineTo(W - padRight, H - padBottom + 0.5);
     ctx.stroke();
 
-    // Points + labels
-    for(var k=0;k<values.length;k++){
-      var qx=px(k), qy=py(values[k]);
-      ctx.beginPath();
-      ctx.arc(qx,qy,k===values.length-1?6:4.5,0,Math.PI*2);
-      ctx.fillStyle = k===values.length-1 ? '#0d1b2a' : '#1D9E75';
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(qx,qy,k===values.length-1?3:2.2,0,Math.PI*2);
-      ctx.fillStyle = '#fff';
-      ctx.fill();
+    var slotW = gW / values.length;
+    var barW = Math.max(24, Math.min(42, slotW * 0.56));
 
-      var valText = (function(v){
-        var totalSec=Math.round(v*60), m=Math.floor(totalSec/60), s=totalSec%60;
-        return m+':'+(s<10?'0':'')+s;
-      })(values[k]);
+    for(var i=0;i<values.length;i++){
+      var cx = padLeft + slotW*i + slotW/2;
+      var topY = py(values[i]);
+      var baseY = H - padBottom;
+      var barH = Math.max(10, baseY - topY);
+      var barX = cx - barW/2;
+      var isLast = i === values.length-1;
 
-      ctx.fillStyle = '#6b7e94';
-      ctx.font = '700 10px Heebo, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(valText, qx, qy-10);
+      var grad = ctx.createLinearGradient(0, topY, 0, baseY);
+      if(isLast){
+        grad.addColorStop(0, '#0d1b2a');
+        grad.addColorStop(1, '#1a4f7a');
+      }else{
+        grad.addColorStop(0, '#35b989');
+        grad.addColorStop(1, '#1D9E75');
+      }
+      ctx.fillStyle = grad;
+      roundRect(ctx, barX, topY, barW, barH, 12, true, false);
+
+      ctx.fillStyle = isLast ? '#0d1b2a' : '#35526d';
+      ctx.font = '800 11px Heebo, sans-serif';
+      ctx.textAlign='center';
+      ctx.fillText(paceTextMin(values[i]), cx, Math.max(16, topY - 8));
+
+      ctx.fillStyle = '#71859b';
+      ctx.font = '800 10px Heebo, sans-serif';
+      ctx.fillText(labels[i], cx, H - 18);
     }
-
-    // Last point callout
-    var lx = px(values.length-1), ly = py(values[values.length-1]);
-    ctx.fillStyle = '#0d1b2a';
-    ctx.font = '800 11px Heebo, sans-serif';
-    ctx.textAlign = 'right';
-    ctx.fillText('האחרונה', Math.max(lx-10, 55), Math.max(ly-16, 16));
   };
 
   window.renderRunExtras = function(){
@@ -11728,7 +11517,7 @@ function renderAtt(){
         txt === 'שמור';
 
       // Never touch real modals
-      if(btn.closest('#settings-modal') || btn.closest('#wo-end-modal') || btn.closest('#wt-edit-modal') || btn.closest('#wt-hist-modal') || btn.closest('#wt-hist-edit-modal') || btn.closest('#wt-hist-delete-modal') || btn.closest('#wt-confirm-modal')) return;
+      if(btn.closest('#settings-modal') || btn.closest('#wo-end-modal') || btn.closest('#wt-edit-modal') || btn.closest('#wt-hist-modal') || btn.closest('#wt-hist-edit-modal') || btn.closest('#wt-hist-delete-modal') || btn.closest('#wt-confirm-modal') || btn.closest('#run-hist-delete-modal')) return;
 
       if(isSettingsAction && btn.closest('#s3')){
         var host = btn.parentElement;
@@ -12112,7 +11901,7 @@ function renderAtt(){
 
     // protect other modals, but remove leaked save/cancel rows outside settings modal
     document.querySelectorAll('button').forEach(function(btn){
-      if(btn.closest('#settings-modal') || btn.closest('#wo-end-modal') || btn.closest('#wt-edit-modal') || btn.closest('#wt-hist-modal') || btn.closest('#wt-hist-edit-modal') || btn.closest('#wt-hist-delete-modal') || btn.closest('#wt-confirm-modal')) return;
+      if(btn.closest('#settings-modal') || btn.closest('#wo-end-modal') || btn.closest('#wt-edit-modal') || btn.closest('#wt-hist-modal') || btn.closest('#wt-hist-edit-modal') || btn.closest('#wt-hist-delete-modal') || btn.closest('#wt-confirm-modal') || btn.closest('#run-hist-delete-modal')) return;
       var txt = (btn.textContent || '').trim();
       if(txt === 'שמור' || txt === 'ביטול'){
         var host = btn.parentElement;
@@ -16498,6 +16287,23 @@ function renderAtt(){
     window.saveRun._oaiV83Wrapped = true;
   }
 
+  var runHistoryEditMode = false;
+
+  function readRunHistoryEditMode(){
+    try{ return localStorage.getItem('run_history_edit_mode') === '1'; }catch(e){ return false; }
+  }
+
+  function saveRunHistoryEditMode(value){
+    runHistoryEditMode = !!value;
+    try{ localStorage.setItem('run_history_edit_mode', runHistoryEditMode ? '1' : '0'); }catch(e){}
+  }
+
+  window.toggleRunHistoryEditMode = function(forceValue){
+    var next = (typeof forceValue === 'boolean') ? forceValue : !runHistoryEditMode;
+    saveRunHistoryEditMode(next);
+    if(typeof renderRunH === 'function') renderRunH();
+  };
+
   window.renderRunH = function(){
     var runs = lsJ('runs') || [], el = document.getElementById('hist-r');
     if(!el) return;
@@ -16513,6 +16319,11 @@ function renderAtt(){
     }
 
     var out = '';
+    out += '<div class="run-hist-toolbar">';
+    out +=   '<div><div class="chip ' + (runHistoryEditMode ? 'edit' : '') + '">' + (runHistoryEditMode ? 'מצב עריכה' : 'מצב צפייה') + '</div><div class="txt">' + (runHistoryEditMode ? 'כעת אפשר למחוק ריצות בודדות מההיסטוריה.' : 'הרשומות מוגנות ממחיקה. לחץ על ערוך רשומות כדי לאפשר מחיקה.') + '</div></div>';
+    out +=   '<button type="button" class="run-hist-main-btn' + (runHistoryEditMode ? ' editing' : '') + '" onclick="toggleRunHistoryEditMode()">' + (runHistoryEditMode ? 'חזור לצפייה' : 'ערוך רשומות') + '</button>';
+    out += '</div>';
+
     for(var i=0;i<runs.length;i++){
       var r = runs[i];
       var dtInfo = fmtRunDateTime(r.date);
@@ -16522,7 +16333,7 @@ function renderAtt(){
       out += '<div class="runcard">';
       out +=   '<div class="runhd">';
       out +=     '<div><div class="hwdt">🏃 ' + dtInfo.day + '</div><div class="runsub">' + dtInfo.time + (isAuto ? ' · נשמר אוטומטית' : ' · נשמר ידנית') + '</div></div>';
-      out +=     '<div class="runbadges">' + sourceBadge(r) + kindBadge(r) + '<button class="hwbtn" onclick="delRun(' + i + ')">🗑</button></div>';
+      out +=     '<div class="runbadges">' + sourceBadge(r) + kindBadge(r) + (runHistoryEditMode ? '<button class="run-hist-del-icon" type="button" onclick="event.stopPropagation();delRun(' + i + ')" title="מחיקה">🗑</button>' : '') + '</div>';
       out +=   '</div>';
       out +=   '<div class="runbd">';
       out +=     '<div class="runtitle">' + title + '</div>';
@@ -16573,6 +16384,7 @@ function renderAtt(){
 
   function boot(){
     normalizeExistingRuns();
+    runHistoryEditMode = readRunHistoryEditMode();
     setTimeout(function(){ renderRunH(); }, 0);
   }
   if(document.readyState === 'loading'){
@@ -18344,138 +18156,6 @@ function renderAtt(){
   }
 })();
 </script>
-
-
-<script id="oai-v118-run-complete-real-inline-save-script">
-(function(){
-  function ensureVisibleSaveBlock(){
-    var overlay = document.getElementById('runcomp-overlay');
-    if(!overlay) return;
-
-    var feelsWrap = overlay.querySelector('.runcomp-feels');
-    if(!feelsWrap) return;
-
-    var field = feelsWrap.closest('.runcomp-field');
-    if(!field) return;
-
-    var existing = field.querySelector('.runcomp-inline-save-real');
-    if(existing) return;
-
-    var box = document.createElement('div');
-    box.className = 'runcomp-inline-save-real';
-    box.innerHTML =
-      '<button type="button" class="save-main" onclick="saveRunCompletionWithNotes()">💾 שמור את הריצה בהיסטוריה</button>' +
-      '<div class="save-sub">התחושה וההערה יישמרו בהיסטוריית הריצות רק אחרי לחיצה על כפתור השמירה.</div>' +
-      '<div class="runcomp-inline-secondary">' +
-        '<button type="button" class="runcomp-btn" onclick="saveRunCompletionQuick()">דלג ושמור</button>' +
-        '<button type="button" class="runcomp-btn" onclick="closeRunCompleteModal()">ביטול</button>' +
-      '</div>';
-
-    field.appendChild(box);
-  }
-
-  var _origOpenRunCompleteModal = window.openRunCompleteModal;
-  if(typeof _origOpenRunCompleteModal === 'function' && !_origOpenRunCompleteModal._oaiV118Wrapped){
-    window.openRunCompleteModal = function(payload){
-      var r = _origOpenRunCompleteModal.apply(this, arguments);
-      setTimeout(ensureVisibleSaveBlock, 0);
-      return r;
-    };
-    window.openRunCompleteModal._oaiV118Wrapped = true;
-  }
-
-  function boot(){
-    ensureVisibleSaveBlock();
-  }
-
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', function(){ setTimeout(boot, 0); });
-  } else {
-    setTimeout(boot, 0);
-  }
-})();
-</script>
-
-
-<script id="oai-v119-run-complete-secondary-actions-jswired-script">
-(function(){
-  function ensureV2Buttons(){
-    var overlay = document.getElementById('runcomp-overlay');
-    if(!overlay) return;
-
-    var feelsWrap = overlay.querySelector('.runcomp-feels');
-    if(!feelsWrap) return;
-
-    var field = feelsWrap.closest('.runcomp-field');
-    if(!field) return;
-
-    var existing = field.querySelector('.runcomp-inline-save-real-v2');
-    if(existing) return;
-
-    var box = document.createElement('div');
-    box.className = 'runcomp-inline-save-real-v2';
-
-    var saveBtn = document.createElement('button');
-    saveBtn.type = 'button';
-    saveBtn.className = 'save-main';
-    saveBtn.textContent = '💾 שמור את הריצה בהיסטוריה';
-    saveBtn.addEventListener('click', function(){
-      if(typeof window.saveRunCompletionWithNotes === 'function') window.saveRunCompletionWithNotes();
-    });
-
-    var sub = document.createElement('div');
-    sub.className = 'save-sub';
-    sub.innerHTML = 'התחושה וההערה יישמרו בהיסטוריית הריצות רק אחרי לחיצה על כפתור השמירה.';
-
-    var secondary = document.createElement('div');
-    secondary.className = 'runcomp-inline-secondary-v2';
-
-    var skipBtn = document.createElement('button');
-    skipBtn.type = 'button';
-    skipBtn.className = 'runcomp-btn';
-    skipBtn.textContent = 'דלג ושמור';
-    skipBtn.addEventListener('click', function(){
-      if(typeof window.saveRunCompletionQuick === 'function') window.saveRunCompletionQuick();
-    });
-
-    var cancelBtn = document.createElement('button');
-    cancelBtn.type = 'button';
-    cancelBtn.className = 'runcomp-btn';
-    cancelBtn.textContent = 'ביטול';
-    cancelBtn.addEventListener('click', function(){
-      if(typeof window.closeRunCompleteModal === 'function') window.closeRunCompleteModal();
-    });
-
-    secondary.appendChild(skipBtn);
-    secondary.appendChild(cancelBtn);
-
-    box.appendChild(saveBtn);
-    box.appendChild(sub);
-    box.appendChild(secondary);
-    field.appendChild(box);
-  }
-
-  var _origOpenRunCompleteModal = window.openRunCompleteModal;
-  if(typeof _origOpenRunCompleteModal === 'function' && !_origOpenRunCompleteModal._oaiV119Wrapped){
-    window.openRunCompleteModal = function(payload){
-      var r = _origOpenRunCompleteModal.apply(this, arguments);
-      setTimeout(ensureV2Buttons, 0);
-      return r;
-    };
-    window.openRunCompleteModal._oaiV119Wrapped = true;
-  }
-
-  function boot(){
-    ensureV2Buttons();
-  }
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', function(){ setTimeout(boot, 0); });
-  } else {
-    setTimeout(boot, 0);
-  }
-})();
-</script>
-
 
 <script id="oai-v122-run-extend-prompt-before-summary-script">
 (function(){
@@ -22563,6 +22243,896 @@ if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   }else{
     boot();
   }
+})();
+</script>
+
+
+<style id="oai-v139-run-landscape-and-history-compact">
+@media (orientation: landscape) and (max-height: 620px){
+  body.run-timer-session-active #run-timer-card .rta-live,
+  body.run-timer-session-active #run-timer-card > .rt-live-grid,
+  body.run-timer-session-active #run-timer-card .rt-live-grid,
+  body.run-timer-focus-landscape #run-timer-card .rta-live,
+  body.run-timer-focus-landscape #run-timer-card > .rt-live-grid,
+  body.run-timer-focus-landscape #run-timer-card .rt-live-grid{
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:8px !important;
+  }
+  body.run-timer-session-active #run-timer-card .rt-live-box,
+  body.run-timer-focus-landscape #run-timer-card .rt-live-box{
+    min-height:54px !important;
+    padding:8px 10px !important;
+  }
+  body.run-timer-session-active #run-timer-card .rt-live-box.main,
+  body.run-timer-focus-landscape #run-timer-card .rt-live-box.main{
+    min-height:54px !important;
+  }
+}
+
+.run-fold{
+  margin-bottom:14px;
+}
+.run-fold-btn{
+  width:100%;
+  border:1px solid #dbe4ee;
+  background:linear-gradient(180deg,#fbfdff 0%,#f4f8fc 100%);
+  border-radius:16px;
+  padding:12px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  font-family:'Heebo',sans-serif;
+  cursor:pointer;
+  box-shadow:0 1px 4px rgba(0,0,0,.06);
+  text-align:right;
+}
+.run-fold-btn:active{transform:scale(.995)}
+.run-fold-btn-main{
+  min-width:0;
+  flex:1;
+}
+.run-fold-btn-title{
+  font-size:.86rem;
+  font-weight:800;
+  color:#10233a;
+  line-height:1.2;
+}
+.run-fold-btn-sub{
+  font-size:.68rem;
+  color:#6b7e94;
+  line-height:1.55;
+  margin-top:4px;
+}
+.run-fold-btn-icon{
+  width:34px;
+  height:34px;
+  min-width:34px;
+  border-radius:999px;
+  background:#e8f0fa;
+  color:#1a4f7a;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1rem;
+  font-weight:800;
+  transition:transform .18s ease, background .18s ease, color .18s ease;
+}
+.run-fold.open .run-fold-btn{
+  border-color:#cddbea;
+  background:linear-gradient(180deg,#ffffff 0%,#f6faff 100%);
+}
+.run-fold.open .run-fold-btn-icon{
+  transform:rotate(180deg);
+  background:#0d1b2a;
+  color:#fff;
+}
+.run-fold-body{
+  display:none;
+  margin-top:10px;
+}
+.run-fold.open .run-fold-body{
+  display:block;
+}
+.run-fold-body > .box{
+  margin-bottom:0;
+}
+
+#hist-r .runcard{
+  border:1px solid #e2eaf2;
+}
+#hist-r .runhd{
+  cursor:pointer;
+  position:relative;
+  padding-inline-end:46px;
+}
+#hist-r .runhd-arrow{
+  position:absolute;
+  inset-inline-end:12px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#8fa0b3;
+  font-size:1rem;
+  line-height:1;
+  transition:transform .18s ease, color .18s ease;
+  pointer-events:none;
+}
+#hist-r .runcard.open .runhd-arrow{
+  transform:translateY(-50%) rotate(180deg);
+  color:#0d1b2a;
+}
+#hist-r .runbd{
+  display:none;
+}
+#hist-r .runcard.open .runbd{
+  display:block;
+}
+#hist-r .runhd .hwbtn{
+  position:relative;
+  z-index:2;
+}
+
+#hist-r .run-hist-toolbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:12px 14px;
+  border:1px solid #dbe4ee;
+  border-radius:14px;
+  background:linear-gradient(180deg,#fbfdff 0%,#f5f9fd 100%);
+  box-shadow:0 1px 4px rgba(0,0,0,.05);
+  margin-bottom:10px;
+}
+#hist-r .run-hist-toolbar .chip{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:4px 10px;
+  border-radius:999px;
+  background:#e8f0fa;
+  color:#1a4f7a;
+  font-size:.66rem;
+  font-weight:800;
+  margin-bottom:6px;
+}
+#hist-r .run-hist-toolbar .chip.edit{
+  background:#fff0ee;
+  color:#b33a2d;
+}
+#hist-r .run-hist-toolbar .txt{
+  font-size:.72rem;
+  color:#5f7288;
+  line-height:1.6;
+}
+#hist-r .run-hist-main-btn{
+  border:none;
+  border-radius:12px;
+  padding:10px 14px;
+  min-width:108px;
+  background:#0d1b2a;
+  color:#fff;
+  font-family:'Heebo',sans-serif;
+  font-size:.74rem;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow:0 6px 14px rgba(13,27,42,.16);
+}
+#hist-r .run-hist-main-btn.editing{
+  background:#eef3f8;
+  color:#16314e;
+  border:1px solid #d4dfeb;
+  box-shadow:none;
+}
+#hist-r .run-hist-del-icon{
+  width:34px;
+  height:34px;
+  min-width:34px;
+  border:none;
+  border-radius:10px;
+  background:#fff1ef;
+  color:#b62f22;
+  font-size:1rem;
+  cursor:pointer;
+}
+#hist-r .run-hist-del-icon:active,
+#hist-r .run-hist-main-btn:active{
+  transform:scale(.98);
+}
+@media (max-width:520px){
+  #hist-r .run-hist-toolbar{
+    flex-direction:column;
+    align-items:stretch;
+  }
+  #hist-r .run-hist-main-btn{
+    width:100%;
+  }
+}
+</style>
+
+<style id="oai-v145-run-history-stable">
+#hist-r .run-hist-del-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+#hist-r .runhd{
+  user-select:none;
+}
+#run-hist-delete-modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.72);
+  z-index:1300;
+  align-items:center;
+  justify-content:center;
+}
+#run-hist-delete-modal .modal-box{
+  background:white;
+  border-radius:16px;
+  padding:18px;
+  width:88%;
+  max-width:340px;
+  font-family:'Heebo',sans-serif;
+}
+#run-hist-delete-modal .danger-pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:4px 10px;
+  border-radius:999px;
+  background:#fdecea;
+  color:#a52118;
+  border:1px solid #f3c1bc;
+  font-size:.66rem;
+  font-weight:800;
+  margin:0 auto 12px;
+}
+#run-hist-delete-modal .danger-title{
+  font-size:.92rem;
+  font-weight:800;
+  color:#7c1f16;
+  text-align:center;
+  margin-bottom:8px;
+}
+#run-hist-delete-modal .danger-text{
+  font-size:.78rem;
+  color:#7c1f16;
+  line-height:1.75;
+  text-align:center;
+  margin-bottom:16px;
+}
+#run-hist-delete-modal .danger-actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+#run-hist-delete-modal .danger-actions button{
+  border:none;
+  border-radius:10px;
+  padding:10px 8px;
+  font-family:'Heebo',sans-serif;
+  font-size:.78rem;
+  font-weight:800;
+  cursor:pointer;
+}
+#run-hist-delete-modal .cancel-btn{
+  background:#eef2f7;
+  color:#44546a;
+}
+#run-hist-delete-modal .confirm-btn{
+  background:#c0392b;
+  color:#fff;
+}
+</style>
+
+<div class="modal" id="run-hist-delete-modal">
+  <div class="modal-box">
+    <div class="danger-pill">מחיקה לצמיתות</div>
+    <div class="danger-title">למחוק את הריצה הזו?</div>
+    <div class="danger-text" id="run-hist-delete-text">פעולה זו תמחק את הריצה מההיסטוריה ולא ניתן יהיה לשחזר אותה לאחר מכן.</div>
+    <div class="danger-actions">
+      <button type="button" class="cancel-btn" onclick="closeRunDeleteModal()">ביטול</button>
+      <button type="button" class="confirm-btn" onclick="confirmRunDelete()">אישור מחיקה</button>
+    </div>
+  </div>
+</div>
+
+<script id="oai-v145-run-history-stable-script">
+(function(){
+  var FEEL_LOCAL = window.FEEL || ['','😢 קשה','😐 סביר','😊 טוב','💪 מעולה'];
+  var pendingDeleteIdx = null;
+
+  function esc(v){
+    return String(v == null ? '' : v)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#39;');
+  }
+
+  function readRuns(){
+    try{
+      if(typeof window.lsJ === 'function') return lsJ('runs') || [];
+      return JSON.parse(localStorage.getItem('runs') || '[]') || [];
+    }catch(e){
+      return [];
+    }
+  }
+
+  function saveRuns(runs){
+    try{
+      if(typeof window.lsSJ === 'function') lsSJ('runs', runs || []);
+      else localStorage.setItem('runs', JSON.stringify(runs || []));
+    }catch(e){}
+  }
+
+  function getMode(){
+    return !!window.runHistoryEditMode;
+  }
+
+  function setMode(v){
+    window.runHistoryEditMode = !!v;
+    try{ localStorage.setItem('run_history_edit_mode', v ? '1' : '0'); }catch(e){}
+  }
+
+  function readFoldState(key, fallback){
+    try{
+      var raw = localStorage.getItem(key);
+      if(raw == null) return !!fallback;
+      return raw === '1';
+    }catch(e){
+      return !!fallback;
+    }
+  }
+
+  function saveFoldState(key, value){
+    try{ localStorage.setItem(key, value ? '1' : '0'); }catch(e){}
+  }
+
+  function fmtDayTime(dateIso){
+    try{
+      if(typeof window.fmtRunDateTime === 'function') return window.fmtRunDateTime(dateIso);
+    }catch(e){}
+    var d = dateIso ? new Date(dateIso) : new Date();
+    return {
+      day: d.toLocaleDateString('he-IL'),
+      time: d.toLocaleTimeString('he-IL', {hour:'2-digit', minute:'2-digit'})
+    };
+  }
+
+  function inferTitle(r){
+    try{
+      if(r && r.runTitle) return r.runTitle;
+      if(typeof window.inferRunTitle === 'function') return window.inferRunTitle(r);
+    }catch(e){}
+    return (r && r.source === 'auto_timer') ? 'ריצת טיימר' : 'ריצה ידנית';
+  }
+
+  function sourceBadge(r){
+    var isAuto = r && r.source === 'auto_timer';
+    return '<span class="runbadge ' + (isAuto ? 'auto' : 'manual') + '">' + (isAuto ? 'טיימר' : 'ידני') + '</span>';
+  }
+
+  function kindBadge(r){
+    if(!r) return '';
+    var label = r.ivl || r.structureLabel || r.programStageLabel || '';
+    return label ? '<span class="runbadge kind">' + esc(label) + '</span>' : '';
+  }
+
+  function metaHtml(r, isAuto){
+    var lines = [];
+    if(isAuto){
+      if(r.structure) lines.push('<div class="runline"><b>מבנה:</b> ' + esc(r.structure) + '</div>');
+      if(r.runOnlyMin || r.walkOnlyMin) lines.push('<div class="runline"><b>פירוק:</b> ריצה ' + esc(r.runOnlyMin || '0') + ' דק׳ · הליכה ' + esc(r.walkOnlyMin || '0') + ' דק׳</div>');
+      if(r.dist) lines.push('<div class="runline"><b>מרחק:</b> ' + esc(r.dist) + ' ק"מ</div>');
+      if(r.pace) lines.push('<div class="runline"><b>קצב מחושב:</b> ' + esc(r.pace) + '</div>');
+      if(r.treadmillPace) lines.push('<div class="runline"><b>קצב מההליכון:</b> ' + esc(r.treadmillPace) + '</div>');
+      if(r.feel) lines.push('<div class="runline"><b>תחושה:</b> ' + esc(FEEL_LOCAL[r.feel] || '') + '</div>');
+      if(r.notes) lines.push('<div class="runline"><b>הערות:</b> ' + esc(r.notes) + '</div>');
+    }else{
+      if(r.hr) lines.push('<div class="runline"><b>דופק:</b> ' + esc(r.hr) + ' bpm</div>');
+      if(r.dist) lines.push('<div class="runline"><b>מרחק:</b> ' + esc(r.dist) + ' ק"מ</div>');
+      if(r.feel) lines.push('<div class="runline"><b>תחושה:</b> ' + esc(FEEL_LOCAL[r.feel] || '') + '</div>');
+      if(r.notes) lines.push('<div class="runline"><b>הערות:</b> ' + esc(r.notes) + '</div>');
+      if(r.treadmillPace) lines.push('<div class="runline"><b>קצב מההליכון:</b> ' + esc(r.treadmillPace) + '</div>');
+      if(r.pace) lines.push('<div class="runline"><b>קצב מחושב:</b> ' + esc(r.pace) + '</div>');
+    }
+    return lines.join('');
+  }
+
+  function historySubtitle(){
+    var runs = readRuns();
+    if(!runs.length) return 'עדיין אין ריצות שמורות. בלחיצה תוכל לראות כרטיס ריק עם הסבר.';
+    return runs.length + ' ריצות שמורות. כל רשומה נפתחת רק בלחיצה עליה.';
+  }
+
+  function updateRunHistoryFoldSubtitle(){
+    var sub = document.querySelector('.run-fold[data-fold-key="run_history_fold"] [data-fold-sub]');
+    if(sub) sub.textContent = historySubtitle();
+  }
+
+  function makeFold(titleEl, nodes, key, title, subtitle, defaultOpen){
+    var wrap = document.createElement('div');
+    wrap.className = 'run-fold';
+    wrap.dataset.foldKey = key;
+    var isOpen = readFoldState(key, defaultOpen);
+    if(isOpen) wrap.classList.add('open');
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'run-fold-btn';
+    btn.innerHTML =
+      '<span class="run-fold-btn-main">' +
+        '<span class="run-fold-btn-title">' + title + '</span>' +
+        '<span class="run-fold-btn-sub" data-fold-sub>' + subtitle + '</span>' +
+      '</span>' +
+      '<span class="run-fold-btn-icon">⌄</span>';
+
+    var body = document.createElement('div');
+    body.className = 'run-fold-body';
+
+    nodes.forEach(function(node){
+      if(node) body.appendChild(node);
+    });
+
+    btn.addEventListener('click', function(){
+      var open = !wrap.classList.contains('open');
+      wrap.classList.toggle('open', open);
+      saveFoldState(key, open);
+    });
+
+    wrap.appendChild(btn);
+    wrap.appendChild(body);
+    titleEl.insertAdjacentElement('afterend', wrap);
+  }
+
+  function ensureRunFolds(){
+    var rsub = document.getElementById('rsub2');
+    if(!rsub) return;
+
+    var sdivs = Array.prototype.slice.call(rsub.children).filter(function(node){
+      return node && node.classList && node.classList.contains('sdiv');
+    });
+
+    var manualTitle = sdivs.find(function(el){ return /תיעוד ריצה/.test((el.textContent || '').trim()); });
+    var historyTitle = sdivs.find(function(el){ return /היסטוריית ריצות/.test((el.textContent || '').trim()); });
+
+    if(manualTitle){
+      var manualBox = manualTitle.nextElementSibling;
+      if(manualBox && !manualBox.closest('.run-fold')){
+        makeFold(manualTitle, [manualBox], 'run_manual_log_fold', 'תיעוד ריצה ידני', 'הטופס שמור כאן אך נשאר סגור עד שלוחצים לפתיחה.', false);
+      }
+    }
+
+    if(historyTitle){
+      var info = historyTitle.nextElementSibling;
+      var list = info && info.nextElementSibling && info.nextElementSibling.id === 'hist-r' ? info.nextElementSibling : null;
+      var nodes = [];
+      if(info) nodes.push(info);
+      if(list) nodes.push(list);
+      if(nodes.length && !nodes[0].closest('.run-fold')){
+        saveFoldState('run_history_fold', false);
+        makeFold(historyTitle, nodes, 'run_history_fold', 'היסטוריית ריצות', historySubtitle(), false);
+      }else{
+        updateRunHistoryFoldSubtitle();
+      }
+    }
+  }
+
+  function setCardOpen(card, open){
+    if(!card) return;
+    card.classList.toggle('open', !!open);
+    var header = card.querySelector('.runhd');
+    if(header) header.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  function toggleCardFromHeader(header){
+    if(!header) return;
+    var card = header.closest('.runcard');
+    if(!card) return;
+    var willOpen = !card.classList.contains('open');
+    var all = document.querySelectorAll('#hist-r .runcard.open');
+    all.forEach(function(other){
+      if(other !== card) setCardOpen(other, false);
+    });
+    setCardOpen(card, willOpen);
+  }
+
+  function runCardHtml(r, i, editMode){
+    var info = fmtDayTime(r.date);
+    var isAuto = r.source === 'auto_timer';
+    var title = inferTitle(r);
+    var out = '';
+    out += '<div class="runcard" data-run-idx="' + i + '">';
+    out +=   '<div class="runhd" role="button" tabindex="0" aria-expanded="false">';
+    out +=     '<div><div class="hwdt">🏃 ' + esc(info.day) + '</div><div class="runsub">' + esc(info.time) + (isAuto ? ' · נשמר אוטומטית' : ' · נשמר ידנית') + '</div></div>';
+    out +=     '<div class="runbadges">' + sourceBadge(r) + kindBadge(r);
+    if(editMode){
+      out +=   '<button class="run-hist-del-icon" data-run-delete="' + i + '" type="button" title="מחיקה">🗑</button>';
+    }
+    out +=     '</div>';
+    out +=     '<span class="runhd-arrow">⌄</span>';
+    out +=   '</div>';
+    out +=   '<div class="runbd">';
+    out +=     '<div class="runtitle">' + esc(title) + '</div>';
+    out +=     '<div class="runsts">';
+    if(isAuto){
+      out +=   '<div class="runst"><div class="rsv">' + esc(r.warmupMin || '0') + '</div><div class="rsl">חימום</div></div>';
+      out +=   '<div class="runst"><div class="rsv">' + esc(r.activeMin || r.time || '—') + '</div><div class="rsl">ריצה/הליכה</div></div>';
+      out +=   '<div class="runst"><div class="rsv">' + esc(r.totalMin || r.time || '—') + '</div><div class="rsl">סה"כ דקות</div></div>';
+    }else{
+      out +=   '<div class="runst"><div class="rsv">' + esc(r.dist || '—') + '</div><div class="rsl">ק"מ</div></div>';
+      out +=   '<div class="runst"><div class="rsv">' + esc(r.time || '—') + '</div><div class="rsl">דקות</div></div>';
+      out +=   '<div class="runst"><div class="rsv">' + esc(r.pace || '—') + '</div><div class="rsl">קצב</div></div>';
+    }
+    out +=     '</div>';
+    out +=     '<div class="runmeta">' + metaHtml(r, isAuto) + '</div>';
+    out +=   '</div>';
+    out += '</div>';
+    return out;
+  }
+
+  function renderRunHistory(){
+    var el = document.getElementById('hist-r');
+    if(!el) return;
+    var runs = readRuns();
+    var editMode = getMode();
+    var out = '';
+    out += '<div class="run-hist-toolbar">';
+    out +=   '<div><div class="chip ' + (editMode ? 'edit' : '') + '">' + (editMode ? 'מצב עריכה' : 'מצב צפייה') + '</div><div class="txt">' + (editMode ? 'כעת אפשר למחוק ריצות בודדות מההיסטוריה.' : 'הרשומות מוגנות ממחיקה. לחץ על ערוך רשומות כדי לאפשר מחיקה.') + '</div></div>';
+    out +=   '<button type="button" class="run-hist-main-btn' + (editMode ? ' editing' : '') + '" data-run-edit-toggle="1">' + (editMode ? 'חזור לצפייה' : 'ערוך רשומות') + '</button>';
+    out += '</div>';
+
+    if(!runs.length){
+      out += '<div style="background:white;border-radius:12px;padding:18px 16px;box-shadow:0 1px 4px rgba(0,0,0,.07);text-align:center">' +
+               '<div style="font-size:1.4rem;margin-bottom:8px">🏃</div>' +
+               '<div style="font-size:.86rem;font-weight:800;color:#1a2332;margin-bottom:6px">עדיין אין היסטוריית ריצות</div>' +
+               '<div style="font-size:.74rem;color:#6b7e94;line-height:1.7">כאן יופיעו הריצות האוטומטיות מהטיימר וגם הריצות שתוסיף ידנית.</div>' +
+             '</div>';
+      el.innerHTML = out;
+      updateRunHistoryFoldSubtitle();
+      return;
+    }
+
+    for(var i=0;i<runs.length;i++){
+      out += runCardHtml(runs[i] || {}, i, editMode);
+    }
+
+    el.innerHTML = out;
+    updateRunHistoryFoldSubtitle();
+  }
+
+  function bindHistoryDelegation(){
+    var el = document.getElementById('hist-r');
+    if(!el || el.dataset.oaiV145Bound === '1') return;
+    el.dataset.oaiV145Bound = '1';
+
+    el.addEventListener('click', function(ev){
+      var toggleBtn = ev.target.closest('[data-run-edit-toggle]');
+      if(toggleBtn){
+        ev.preventDefault();
+        window.toggleRunHistoryEditMode();
+        return;
+      }
+
+      var deleteBtn = ev.target.closest('[data-run-delete]');
+      if(deleteBtn){
+        ev.preventDefault();
+        ev.stopPropagation();
+        var idx = parseInt(deleteBtn.getAttribute('data-run-delete'), 10);
+        if(!isNaN(idx)) openRunDeleteModal(idx);
+        return;
+      }
+
+      var header = ev.target.closest('.runhd');
+      if(header && el.contains(header)){
+        if(ev.target.closest('button')) return;
+        toggleCardFromHeader(header);
+      }
+    });
+
+    el.addEventListener('keydown', function(ev){
+      var header = ev.target.closest('.runhd');
+      if(!header || !el.contains(header)) return;
+      if(ev.key === 'Enter' || ev.key === ' '){
+        ev.preventDefault();
+        toggleCardFromHeader(header);
+      }
+    });
+  }
+
+  window.openRunDeleteModal = function(idx){
+    if(!getMode()) return;
+    var runs = readRuns();
+    if(idx == null || idx < 0 || idx >= runs.length) return;
+    pendingDeleteIdx = idx;
+    var r = runs[idx] || {};
+    var label = inferTitle(r);
+    var dateLabel = '';
+    try{
+      if(r.date){
+        var d = new Date(r.date);
+        dateLabel = d.toLocaleDateString('he-IL') + ' ' + d.toLocaleTimeString('he-IL', {hour:'2-digit', minute:'2-digit'});
+      }
+    }catch(e){}
+    var text = 'מחיקת ' + label + (dateLabel ? ' מתאריך ' + dateLabel : '') + ' תסיר אותה לצמיתות מהיסטוריית הריצות. לא ניתן יהיה לשחזר את האימון שנמחק.';
+    var textEl = document.getElementById('run-hist-delete-text');
+    if(textEl) textEl.textContent = text;
+    var modal = document.getElementById('run-hist-delete-modal');
+    if(modal) modal.style.display = 'flex';
+  };
+
+  window.closeRunDeleteModal = function(){
+    pendingDeleteIdx = null;
+    var modal = document.getElementById('run-hist-delete-modal');
+    if(modal) modal.style.display = 'none';
+  };
+
+  window.confirmRunDelete = function(){
+    var runs = readRuns();
+    if(pendingDeleteIdx == null || pendingDeleteIdx < 0 || pendingDeleteIdx >= runs.length){
+      closeRunDeleteModal();
+      return;
+    }
+    runs.splice(pendingDeleteIdx, 1);
+    saveRuns(runs);
+    pendingDeleteIdx = null;
+    closeRunDeleteModal();
+    try{ if(typeof window.syncAttendanceFromLogs === 'function') window.syncAttendanceFromLogs(); }catch(e){}
+    try{ if(typeof window.renderRunExtras === 'function') window.renderRunExtras(); }catch(e){}
+    try{ if(typeof window.renderAtt === 'function') window.renderAtt(); }catch(e){}
+    try{ if(typeof window.renderOverallStats === 'function') window.renderOverallStats(); }catch(e){}
+    renderRunHistory();
+  };
+
+  window.delRun = function(idx){
+    window.openRunDeleteModal(idx);
+  };
+
+  window.toggleRunHistoryEditMode = function(forceValue){
+    var next = (typeof forceValue === 'boolean') ? forceValue : !getMode();
+    setMode(next);
+    renderRunHistory();
+  };
+
+  window.renderRunH = function(){
+    renderRunHistory();
+  };
+
+  document.addEventListener('click', function(ev){
+    var modal = document.getElementById('run-hist-delete-modal');
+    if(modal && modal.style.display === 'flex' && ev.target === modal){
+      closeRunDeleteModal();
+    }
+  });
+
+  function boot(){
+    setMode(false);
+    ensureRunFolds();
+    bindHistoryDelegation();
+    renderRunHistory();
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', function(){ setTimeout(boot, 0); });
+  }else{
+    setTimeout(boot, 0);
+  }
+})();
+</script>
+
+
+<script id="oai-v146-run-delete-modal-protect">
+(function(){
+  function ensureRunDeleteModalButtons(){
+    var modal = document.getElementById('run-hist-delete-modal');
+    if(!modal) return;
+    var box = modal.querySelector('.modal-box');
+    if(!box) return;
+    var actions = box.querySelector('.danger-actions');
+    if(!actions){
+      actions = document.createElement('div');
+      actions.className = 'danger-actions';
+      box.appendChild(actions);
+    }
+    var cancel = actions.querySelector('.cancel-btn');
+    if(!cancel){
+      cancel = document.createElement('button');
+      cancel.type = 'button';
+      cancel.className = 'cancel-btn';
+      cancel.textContent = 'ביטול';
+      actions.appendChild(cancel);
+    }
+    var confirmBtn = actions.querySelector('.confirm-btn');
+    if(!confirmBtn){
+      confirmBtn = document.createElement('button');
+      confirmBtn.type = 'button';
+      confirmBtn.className = 'confirm-btn';
+      confirmBtn.textContent = 'אישור מחיקה';
+      actions.appendChild(confirmBtn);
+    }
+    cancel.onclick = function(ev){
+      if(ev) ev.stopPropagation();
+      if(typeof window.closeRunDeleteModal === 'function') window.closeRunDeleteModal();
+    };
+    confirmBtn.onclick = function(ev){
+      if(ev) ev.stopPropagation();
+      if(typeof window.confirmRunDelete === 'function') window.confirmRunDelete();
+    };
+  }
+
+  function boot(){
+    ensureRunDeleteModalButtons();
+    setTimeout(ensureRunDeleteModalButtons, 0);
+    setTimeout(ensureRunDeleteModalButtons, 250);
+    setTimeout(ensureRunDeleteModalButtons, 1000);
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+
+
+
+<style id="oai-v6d-run-chart-bars-polish">
+#run-chart{display:block;min-height:220px}
+#run-chart-summary{margin-bottom:10px}
+</style>
+<script id="oai-v6d-run-chart-bars-force-refresh">
+(function(){
+  function pad2(n){ return (n<10?'0':'')+n; }
+  function parsePaceSecLocal(v){
+    if(v==null) return 0;
+    var s=String(v).trim();
+    var m=s.match(/^(\d{1,2}):(\d{2})$/);
+    if(m) return parseInt(m[1],10)*60 + parseInt(m[2],10);
+    var num=parseFloat(s);
+    if(isFinite(num) && num>0) return Math.round(num*60);
+    return 0;
+  }
+  function paceText(vMin){
+    var totalSec=Math.round(vMin*60);
+    if(!isFinite(totalSec) || totalSec<=0) return '—';
+    var m=Math.floor(totalSec/60), s=totalSec%60;
+    return m + ':' + (s<10?'0':'') + s;
+  }
+  function shortDateLabel(dateLike, idx){
+    if(!dateLike) return 'ריצה ' + idx;
+    var m = String(dateLike).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if(m) return m[3] + '/' + m[2];
+    var d = new Date(dateLike);
+    if(isNaN(d)) return 'ריצה ' + idx;
+    return pad2(d.getDate()) + '/' + pad2(d.getMonth()+1);
+  }
+  function getRuns(){
+    try{ return JSON.parse(localStorage.getItem('runs')||'[]')||[]; }catch(e){ return []; }
+  }
+  function paceFromRun(r){
+    if(!r) return 0;
+    var ps=parsePaceSecLocal(r.treadmillPace);
+    if(ps>=150 && ps<=1200) return ps/60;
+    ps=parsePaceSecLocal(r.pace);
+    if(ps>=150 && ps<=1200) return ps/60;
+    var dist=parseFloat(r.dist), time=parseFloat(r.time);
+    if(isFinite(dist)&&isFinite(time)&&dist>0&&time>0){
+      var computed=time/dist;
+      if(computed>=2.5 && computed<=20) return computed;
+    }
+    return 0;
+  }
+  function ensureSummary(){
+    var canvas=document.getElementById('run-chart');
+    if(!canvas||!canvas.parentNode) return null;
+    var host=document.getElementById('run-chart-summary');
+    if(!host){
+      host=document.createElement('div');
+      host.id='run-chart-summary';
+      host.innerHTML='<div class="ttl">מגמת קצב</div><div class="msg"></div><div class="sub"></div>';
+      canvas.parentNode.insertBefore(host, canvas);
+    }
+    return host;
+  }
+  function roundRect(ctx, x, y, w, h, r){
+    if(w < 2 * r) r = w / 2;
+    if(h < 2 * r) r = h / 2;
+    ctx.beginPath();
+    ctx.moveTo(x+r, y);
+    ctx.arcTo(x+w, y,   x+w, y+h, r);
+    ctx.arcTo(x+w, y+h, x,   y+h, r);
+    ctx.arcTo(x,   y+h, x,   y,   r);
+    ctx.arcTo(x,   y,   x+w, y,   r);
+    ctx.closePath();
+  }
+  function drawBarsNow(){
+    var canvas=document.getElementById('run-chart'), emptyEl=document.getElementById('run-chart-empty'), summary=ensureSummary();
+    if(!canvas) return;
+    var runs=getRuns().slice().sort(function(a,b){ return new Date(a.date||0)-new Date(b.date||0); });
+    var cleaned=[];
+    for(var i=0;i<runs.length;i++){
+      var p=paceFromRun(runs[i]);
+      if(!p) continue;
+      cleaned.push({raw:runs[i], pace:p});
+    }
+    cleaned=cleaned.slice(-6);
+    if(cleaned.length < 4){
+      canvas.style.display='none';
+      if(emptyEl) emptyEl.style.display='block';
+      if(summary){
+        summary.style.display='block';
+        summary.querySelector('.msg').textContent='הגרף יוצג לאחר שיישמרו לפחות 4 ריצות עם נתוני קצב תקינים.';
+        summary.querySelector('.sub').textContent='כעת נשמרות פחות מ-4 ריצות תקינות, ולכן עדיין אין מספיק נתונים להצגה.';
+      }
+      return;
+    }
+    var values=cleaned.map(function(x){return x.pace;});
+    var labels=cleaned.map(function(x, idx){return shortDateLabel(x.raw.date, idx+1);});
+    var summaryMsg='מוצגות ' + values.length + ' ריצות אחרונות בגרף העמודות.';
+    if(summary){
+      summary.style.display='block';
+      summary.querySelector('.msg').textContent=summaryMsg;
+      summary.querySelector('.sub').textContent='מוצגת העדפה לקצב מההליכון, ואם אין כזה — לקצב המחושב.';
+    }
+    var historyOpen=document.getElementById('rsub2');
+    if(historyOpen && !historyOpen.classList.contains('on')){
+      // render later when tab becomes visible
+      return;
+    }
+    var DPR=window.devicePixelRatio||1;
+    var W=Math.max(canvas.parentNode.clientWidth-2, 320), H=220;
+    canvas.style.display='block';
+    if(emptyEl) emptyEl.style.display='none';
+    canvas.width=W*DPR; canvas.height=H*DPR;
+    var ctx=canvas.getContext('2d');
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#ffffff';
+    ctx.fillRect(0,0,W,H);
+    var padTop=28,padLeft=46,padRight=16,padBottom=54;
+    var gW=W-padLeft-padRight, gH=H-padTop-padBottom, baseY=H-padBottom;
+    var mx=Math.max.apply(null, values), mn=Math.min.apply(null, values);
+    var gridMin=Math.max(0, mn-0.3), gridMax=mx+0.4;
+    if(gridMax<=gridMin) gridMax=gridMin+1;
+    function py(v){ return padTop + gH - ((v-gridMin)/(gridMax-gridMin))*gH; }
+    ctx.strokeStyle='#e6edf5'; ctx.lineWidth=1; ctx.fillStyle='#8aa0b5'; ctx.font='700 10px Heebo, sans-serif'; ctx.textAlign='right';
+    for(var gi=0;gi<=4;gi++){
+      var ratio=gi/4, gy=padTop+ratio*gH, gv=gridMax-ratio*(gridMax-gridMin);
+      ctx.beginPath(); ctx.moveTo(padLeft, gy); ctx.lineTo(W-padRight, gy); ctx.stroke();
+      ctx.fillText(paceText(gv), padLeft-8, gy+3);
+    }
+    ctx.strokeStyle='#d7e3ef'; ctx.beginPath(); ctx.moveTo(padLeft, baseY+0.5); ctx.lineTo(W-padRight, baseY+0.5); ctx.stroke();
+    var slotW=gW/values.length, barW=Math.max(28, Math.min(44, slotW*0.58));
+    for(var bi=0;bi<values.length;bi++){
+      var cx=padLeft+slotW*bi+slotW/2, topY=py(values[bi]), barH=Math.max(14, baseY-topY), barX=cx-barW/2;
+      var isLast=bi===values.length-1;
+      var grad=ctx.createLinearGradient(0, topY, 0, baseY);
+      if(isLast){ grad.addColorStop(0,'#0d1b2a'); grad.addColorStop(1,'#1a4f7a'); }
+      else { grad.addColorStop(0,'#35b989'); grad.addColorStop(1,'#1D9E75'); }
+      ctx.fillStyle=grad; roundRect(ctx, barX, topY, barW, barH, 12); ctx.fill();
+      ctx.fillStyle=isLast ? '#0d1b2a' : '#35526d'; ctx.font='800 11px Heebo, sans-serif'; ctx.textAlign='center';
+      ctx.fillText(paceText(values[bi]), cx, Math.max(16, topY-8));
+      ctx.fillStyle='#71859b'; ctx.font='800 10px Heebo, sans-serif'; ctx.fillText(labels[bi], cx, H-18);
+    }
+  }
+  window.drawRunChart = function(){ drawBarsNow(); };
+  var prevRender = window.renderRunExtras;
+  window.renderRunExtras = function(){
+    if(typeof prevRender === 'function'){ try{ prevRender(); }catch(e){} }
+    setTimeout(drawBarsNow, 0);
+    setTimeout(drawBarsNow, 120);
+  };
+  var prevRunSubSw = window.runSubSw;
+  window.runSubSw = function(i){
+    if(typeof prevRunSubSw === 'function') prevRunSubSw(i);
+    if(i===2){ setTimeout(drawBarsNow, 0); setTimeout(drawBarsNow, 120); }
+  };
+  window.addEventListener('resize', function(){ setTimeout(drawBarsNow, 50); });
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(drawBarsNow, 120); });
+  else setTimeout(drawBarsNow, 120);
 })();
 </script>
 

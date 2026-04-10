@@ -1,4 +1,4 @@
-const CACHE_NAME = 'the-blues-shell-v3';
+const CACHE_NAME = 'the-blues-shell-v6e';
 const APP_SHELL = [
   './',
   './index.html',
