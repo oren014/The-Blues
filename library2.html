@@ -464,7 +464,7 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
           <div class="card-note">משתמש פעיל קובע על מי נבנית הטיוטה.</div>
           <div id="users-list" class="user-list"></div>
         </div>
-        <div class="card dark">
+        <div class="card dark" id="builder-library-card">
           <div class="card-title"><h2>הקמה / עריכת משתמש</h2><span class="badge green">בסיס לבניית תוכנית</span></div>
           <div class="form-grid">
             <div class="field"><label for="u-name">שם משתמש</label><input id="u-name" type="text" placeholder="לדוגמה: אורן"></div>
@@ -486,7 +486,7 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
             <label for="u-notes">הערות / מגבלות</label>
             <textarea id="u-notes" placeholder="לדוגמה: עדיפות למכונות, עומס נמוך על גב תחתון, זמן מוגבל בימי חול..."></textarea>
           </div>
-          <div class="toolbar" style="margin-top:12px">
+          <div class="toolbar" id="builder-main-toolbar" style="margin-top:12px">
             <button class="btn green" onclick="saveUser()">שמור משתמש</button>
             <button class="btn secondary" onclick="resetUserForm()">נקה טופס</button>
             <button class="btn warn" onclick="deleteSelectedUser()">מחק משתמש נבחר</button>
@@ -531,15 +531,15 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
         <div class="section-lead">
           <div class="section-kicker">Workbench</div>
           <h2 class="section-title">בניית תוכנית</h2>
-          <div class="section-copy">כאן יוצרים טיוטה, עורכים ימי אימון ומוסיפים תרגילים מתוך הספרייה.</div>
+          <div class="section-copy" id="builder-section-copy">כאן יוצרים טיוטה, עורכים ימי אימון ומוסיפים תרגילים מתוך הספרייה.</div>
         </div>
       </div>
       <div class="card" style="margin-bottom:14px">
-        <div class="card-title"><h2>טיוטה פעילה</h2><span class="badge" id="draft-status-badge">אין טיוטה</span></div>
-        <div class="helper-line">השלב הזה בנוי להרגיש כמו חדר עבודה אחד: יום אימון נבחר בצד אחד, וספריית התרגילים בצד השני.</div>
+        <div class="card-title"><h2 id="builder-main-title">טיוטה פעילה</h2><span class="badge" id="draft-status-badge">אין טיוטה</span></div>
+        <div class="helper-line" id="builder-main-helper">השלב הזה בנוי להרגיש כמו חדר עבודה אחד: יום אימון נבחר בצד אחד, וספריית התרגילים בצד השני.</div>
         <div class="toolbar" style="margin-top:12px">
-          <button class="btn primary" onclick="generateProgramDraft()">צור טיוטת תוכנית</button>
-          <button class="btn secondary" onclick="resetDraft()">איפוס טיוטה</button>
+          <button class="btn primary" id="builder-generate-btn" onclick="generateProgramDraft()">צור טיוטת תוכנית</button>
+          <button class="btn secondary" id="builder-reset-btn" onclick="resetDraft()">איפוס טיוטה</button>
           <button class="btn ghost" onclick="goStep(3)">עבור לשמירה וסיכום</button>
         </div>
       </div>
@@ -1286,6 +1286,29 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
   function selectedProgram(){
     return state.programs.find(function(p){ return p.id === state.activeProgramId; }) || null;
   }
+  function importedProgramForUser(userId){
+    if(!userId) return null;
+    var exact = state.programs.find(function(p){ return p.userId === userId && p.importedLegacy; }) || null;
+    if(exact) return exact;
+    var candidates = state.programs.filter(function(p){ return p.userId === userId; }).sort(function(a,b){
+      return String(b.updatedAt || '').localeCompare(String(a.updatedAt || ''));
+    });
+    return candidates[0] || null;
+  }
+  function importedUserMode(){
+    var user = selectedUser();
+    return !!(user && user.importedLegacy);
+  }
+  function syncImportedUserDraft(){
+    if(!importedUserMode()) return;
+    var program = importedProgramForUser(state.activeUserId);
+    if(!program) return;
+    state.activeProgramId = program.id;
+    state.draft = clone(program);
+    if(!state.draft.name) state.draft.name = 'התוכנית המיובאת שלי';
+    if(!state.draft.sessions || !state.draft.sessions.length) return;
+    if(state.activeDayIndex > state.draft.sessions.length - 1) state.activeDayIndex = 0;
+  }
 
   function setupOptionChips(){
     var equipWrap = document.getElementById('equip-wrap');
@@ -1469,6 +1492,13 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
 
   function generateProgramDraft(){
     var user = selectedUser();
+    if(importedUserMode()){
+      syncImportedUserDraft();
+      renderAll();
+      goStep(2);
+      toast('מוצגת רק התוכנית המיובאת שלך');
+      return;
+    }
     if(!user){ toast('יש לבחור או לשמור משתמש לפני יצירת תוכנית'); goStep(0); return; }
     var split = splitForUser(user);
     var targetCount = user.duration <= 45 ? 4 : user.duration <= 60 ? 5 : 6;
@@ -1508,6 +1538,12 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
   }
 
   function resetDraft(){
+    if(importedUserMode()){
+      syncImportedUserDraft();
+      renderAll();
+      toast('התוכנית המיובאת נשארת פעילה');
+      return;
+    }
     state.draft = null;
     state.activeDayIndex = 0;
     renderAll();
@@ -1579,10 +1615,24 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
   }
 
   function renderBuilder(){
+    var importedMode = importedUserMode();
+    if(importedMode) syncImportedUserDraft();
     var hasDraft = !!state.draft;
     document.getElementById('draft-empty').style.display = hasDraft ? 'none' : 'block';
     document.getElementById('builder-wrap').style.display = hasDraft ? 'block' : 'none';
-    document.getElementById('draft-status-badge').textContent = hasDraft ? 'טיוטה פעילה' : 'אין טיוטה';
+    document.getElementById('draft-status-badge').textContent = hasDraft ? (importedMode ? 'תוכנית מיובאת' : 'טיוטה פעילה') : 'אין טיוטה';
+    var titleEl = document.getElementById('builder-main-title');
+    var helperEl = document.getElementById('builder-main-helper');
+    var copyEl = document.getElementById('builder-section-copy');
+    var genBtn = document.getElementById('builder-generate-btn');
+    var resetBtn = document.getElementById('builder-reset-btn');
+    var libraryCard = document.getElementById('builder-library-card');
+    if(titleEl) titleEl.textContent = importedMode ? 'התוכנית המיובאת שלי' : 'טיוטה פעילה';
+    if(helperEl) helperEl.textContent = importedMode ? 'כאן מוצגת רק התוכנית שיובאה מהאפליקציה הראשית שלך, בלי טיוטות אוטומטיות ובלי ספריית תרגילים פתוחה.' : 'השלב הזה בנוי להרגיש כמו חדר עבודה אחד: יום אימון נבחר בצד אחד, וספריית התרגילים בצד השני.';
+    if(copyEl) copyEl.textContent = importedMode ? 'כאן מוצגת רק התוכנית המיובאת שלך. אפשר לעדכן סטים, חזרות, משקל ומנוחה בלי לערבב טיוטות חדשות.' : 'כאן יוצרים טיוטה, עורכים ימי אימון ומוסיפים תרגילים מתוך הספרייה.';
+    if(genBtn) genBtn.style.display = importedMode ? 'none' : '';
+    if(resetBtn) resetBtn.style.display = importedMode ? 'none' : '';
+    if(libraryCard) libraryCard.style.display = importedMode ? 'none' : '';
     if(!hasDraft){
       document.getElementById('day-tabs').innerHTML = '';
       document.getElementById('day-panels').innerHTML = '';
@@ -1591,7 +1641,7 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
     if(state.activeDayIndex > state.draft.sessions.length - 1) state.activeDayIndex = 0;
     renderDayTabs();
     renderDayPanels();
-    renderLibrary();
+    if(!importedMode) renderLibrary();
   }
 
   function renderDayTabs(){
@@ -1706,7 +1756,7 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
     var hasDraft = !!state.draft;
     document.getElementById('summary-empty').style.display = hasDraft ? 'none' : 'block';
     document.getElementById('program-summary').style.display = hasDraft ? 'block' : 'none';
-    document.getElementById('summary-badge').textContent = hasDraft ? 'מוכן לשמירה' : 'לא נשמרה';
+    document.getElementById('summary-badge').textContent = hasDraft ? (importedUserMode() ? 'תוכנית מיובאת' : 'מוכן לשמירה') : 'לא נשמרה';
     if(!hasDraft) return;
     var user = selectedUser();
     document.getElementById('program-name').value = state.draft.name || document.getElementById('program-name').value || '';
@@ -1723,6 +1773,9 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
   function renderPrograms(){
     var host = document.getElementById('programs-list');
     var programs = state.programs.slice().sort(function(a,b){ return String(b.updatedAt || '').localeCompare(String(a.updatedAt || '')); });
+    if(importedUserMode()){
+      programs = programs.filter(function(p){ return p.userId === state.activeUserId; });
+    }
     document.getElementById('saved-program-count').textContent = String(programs.length);
     if(!programs.length){
       host.innerHTML = '<div class="empty">עדיין אין תוכניות שמורות. שמור תוכנית אחת כדי להתחיל לצבור גרסאות.</div>';
@@ -2024,12 +2077,12 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
     setTextIf('state-user-val', user ? user.name : 'בחר משתמש');
     setTextIf('state-goal-val', user ? goalLabel(user.goal) : '—');
     setTextIf('state-split-val', user ? split.name : '—');
-    setTextIf('state-program-val', state.draft ? 'טיוטה פעילה' : (program ? 'תוכנית פעילה' : 'אין תוכנית'));
+    setTextIf('state-program-val', importedUserMode() ? 'תוכנית מיובאת' : (state.draft ? 'טיוטה פעילה' : (program ? 'תוכנית פעילה' : 'אין תוכנית')));
     setTextIf('state-bridge-val', bridge ? 'מוכן' : 'לא הוכן');
 
     setTextIf('hub-users-note', state.users.length ? ((user ? user.name : 'משתמש קיים') + ' פעיל כעת') : 'צור משתמש ראשון');
     setTextIf('hub-prefs-note', user ? (goalLabel(user.goal) + ' · ' + user.days + ' ימים') : 'הגדר מטרה, ציוד וימי אימון');
-    setTextIf('hub-build-note', state.draft ? (state.draft.sessions.length + ' ימי אימון בטיוטה') : 'צור טיוטה וערוך תרגילים');
+    setTextIf('hub-build-note', importedUserMode() ? 'מוצגת רק התוכנית המיובאת' : (state.draft ? (state.draft.sessions.length + ' ימי אימון בטיוטה') : 'צור טיוטה וערוך תרגילים'));
     setTextIf('hub-save-note', state.programs.length ? (state.programs.length + ' תוכניות שמורות') : 'שמור תוכנית והכן מעבר');
 
     paintWorkflowState();
@@ -2128,7 +2181,7 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
     return {
       id: uid('prg'),
       userId: userId,
-      name: seed.oneSessionProgramName || 'התוכנית הקיימת מהאפליקציה הראשית',
+      name: seed.oneSessionProgramName || 'התוכנית המיובאת שלי',
       split: 'Legacy Import',
       days: 1,
       duration: 60,
@@ -2137,10 +2190,11 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       updatedLabel: nowStr(),
+      importedLegacy: true,
       sessions: [{
         id: uid('day'),
         title: seed.sessionTitle || 'האימון הנוכחי',
-        focus: 'נתוני legacy מהאפליקציה הראשית',
+        focus: 'התוכנית שיובאה מהאפליקציה הראשית',
         items: items
       }]
     };
@@ -2272,6 +2326,7 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
       var user = upsertImportedUser(userName, backup);
       state.activeUserId = user.id;
       var program = buildImportedProgramFromBackup(backup, user.id);
+      state.programs = state.programs.filter(function(p){ return !(p.userId === user.id && p.importedLegacy); });
       state.programs.unshift(program);
       state.activeProgramId = program.id;
       state.draft = clone(program);
@@ -2353,11 +2408,13 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
     var user = selectedUser();
     if(user) fillUserForm(user);
     prefillFromSelectedUser();
+    syncImportedUserDraft();
     renderAll();
   };
   window.activateUserOnly = function(id){
     state.activeUserId = id;
     persistState();
+    syncImportedUserDraft();
     renderAll();
     toast('המשתמש סומן כפעיל');
   };
@@ -2454,6 +2511,7 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
     var user = selectedUser();
     if(user) fillUserForm(user);
     prefillFromSelectedUser();
+    syncImportedUserDraft();
     renderAll();
     closeUserDrawer();
     toast('המשתמש הוחלף');
