@@ -1,0 +1,2516 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Blues — ספרייה 2.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --navy:#0d1b2a;
+  --blue:#1a4f7a;
+  --accent:#e8a020;
+  --light:#f0f4f8;
+  --green:#1D9E75;
+  --red:#c0392b;
+  --text:#1a2332;
+  --muted:#6b7e94;
+  --card:#ffffff;
+  --line:#dfe8f1;
+  --soft:#eef4fb;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;font-family:'Heebo',sans-serif;background:linear-gradient(180deg,#0b1623 0%,#102238 20%,#eaf0f6 20%,#f0f4f8 100%);color:var(--text)}
+body{min-height:100vh}
+button,input,select,textarea{font-family:'Heebo',sans-serif}
+.topbar{position:sticky;top:0;z-index:200;background:rgba(13,27,42,.94);backdrop-filter:blur(12px);color:#fff;border-bottom:1px solid rgba(255,255,255,.09)}
+.topbar-inner{max-width:1200px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand-wrap{display:flex;align-items:center;gap:12px;min-width:0}
+.brand-badge{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,rgba(232,160,32,.30),rgba(255,255,255,.08));display:flex;align-items:center;justify-content:center;font-size:1.25rem;box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 8px 20px rgba(0,0,0,.18)}
+.brand-text{min-width:0}
+.brand-title{font-size:1rem;font-weight:800;letter-spacing:.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-sub{font-size:.7rem;color:#c7d7e8;line-height:1.4}
+.status-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10);padding:8px 12px;border-radius:999px;font-size:.72rem;font-weight:800;white-space:nowrap}
+.app{max-width:1200px;margin:0 auto;padding:16px}
+.crumb{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:.72rem;color:#edf3f9;background:rgba(13,27,42,.58);border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:8px 12px;width:max-content;max-width:100%;margin-bottom:14px}
+.crumb .sep{color:#9eb7d1}
+.hero{display:grid;grid-template-columns:1.2fr .9fr;gap:14px;margin-bottom:16px}
+.hero-card{background:linear-gradient(135deg,#0d1b2a,#173452);color:#fff;border-radius:20px;padding:18px;position:relative;overflow:hidden;box-shadow:0 18px 38px rgba(13,27,42,.22)}
+.hero-card::before{content:"";position:absolute;inset:auto -60px -60px auto;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(232,160,32,.22) 0%,rgba(232,160,32,0) 70%)}
+.hero-title{font-size:1.22rem;font-weight:800;margin-bottom:6px;position:relative}
+.hero-sub{font-size:.82rem;line-height:1.7;color:#d5e3f1;position:relative;max-width:720px}
+.hero-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px;position:relative}
+.kpi{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:12px}
+.kpi-v{font-size:1rem;font-weight:800;color:#fff}
+.kpi-l{font-size:.64rem;color:#c7d7e8;margin-top:2px}
+.hero-side{display:grid;gap:12px}
+.side-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 8px 24px rgba(13,27,42,.08)}
+.side-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.side-title{font-size:.83rem;font-weight:800}
+.side-sub{font-size:.72rem;color:var(--muted);line-height:1.6}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:.62rem;font-weight:800;padding:4px 9px;border-radius:999px;background:#eef5fc;color:var(--blue);border:1px solid #d7e7f6}
+.badge.green{background:#eaf8f2;color:#14664e;border-color:#cdebdc}
+.badge.warn{background:#fff5e6;color:#8a5a00;border-color:#f3d59d}
+.step-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0 18px}
+.step-btn{border:none;border-radius:18px;padding:14px;background:#e8f0fa;color:var(--blue);font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(13,27,42,.06);border:1px solid #dbe8f6;transition:transform .16s ease, box-shadow .18s ease, background .18s ease}
+.step-btn.on{background:linear-gradient(135deg,#0d1b2a,#173452);color:#fff;border-color:rgba(255,255,255,.08);box-shadow:0 12px 26px rgba(13,27,42,.18)}
+.step-btn small{display:block;font-size:.63rem;font-weight:700;opacity:.78;margin-top:2px}
+.section{display:none}
+.section.on{display:block}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 8px 24px rgba(13,27,42,.06)}
+.card.dark{background:linear-gradient(135deg,#0d1b2a,#173452);border-color:rgba(255,255,255,.08);color:#fff}
+.card-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.card-title h2,.card-title h3{margin:0;font-size:.95rem;font-weight:800}
+.card-title .muted{font-size:.7rem;color:var(--muted)}
+.card.dark .muted{color:#c7d7e8}
+.card-note{font-size:.75rem;color:var(--muted);line-height:1.7;margin-bottom:12px}
+.card.dark .card-note{color:#d6e3f0}
+.user-list{display:grid;gap:10px}
+.user-item{border:1px solid var(--line);border-radius:18px;padding:12px;background:linear-gradient(180deg,#fff,#fbfdff);cursor:pointer;transition:transform .15s ease,border-color .18s ease,box-shadow .18s ease;position:relative;overflow:hidden}
+.user-item::before{content:"";position:absolute;inset:0 auto 0 0;width:5px;background:#d8e6f4}
+.user-item.active{border-color:#b8d7f2;box-shadow:0 10px 24px rgba(13,27,42,.08)}
+.user-item.active::before{background:linear-gradient(180deg,#1D9E75,#378ADD)}
+.user-name{font-size:.86rem;font-weight:800;margin-bottom:4px}
+.user-meta{font-size:.71rem;color:var(--muted);line-height:1.6}
+.user-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.btn{border:none;border-radius:12px;padding:11px 14px;font-weight:800;cursor:pointer;transition:transform .15s ease,box-shadow .18s ease,background .18s ease}
+.btn:active{transform:scale(.985)}
+.btn.primary{background:linear-gradient(135deg,#0d1b2a,#173452);color:#fff;box-shadow:0 10px 24px rgba(13,27,42,.16)}
+.btn.secondary{background:#e8f0fa;color:var(--blue);border:1px solid #d6e6f5}
+.btn.green{background:linear-gradient(135deg,#1D9E75,#15785a);color:#fff;box-shadow:0 10px 24px rgba(29,158,117,.18)}
+.btn.warn{background:#fff5e6;color:#8a5a00;border:1px solid #f3d59d}
+.btn.ghost{background:#f8fafc;color:var(--muted);border:1px solid var(--line)}
+.btn.full{width:100%}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:.7rem;font-weight:800;color:var(--muted)}
+.field input,.field select,.field textarea{width:100%;border-radius:12px;border:1px solid var(--line);background:#f8fbfe;padding:11px 12px;font-size:.82rem;color:var(--text)}
+.field textarea{min-height:82px;resize:vertical}
+.option-wrap{display:flex;flex-wrap:wrap;gap:8px}
+.option-chip{padding:9px 12px;border-radius:999px;background:#f7fafc;border:1px solid var(--line);font-size:.72rem;font-weight:800;color:var(--muted);cursor:pointer;user-select:none;transition:all .16s ease}
+.option-chip.on{background:#0d1b2a;color:#fff;border-color:#0d1b2a;box-shadow:0 8px 18px rgba(13,27,42,.16)}
+.summary-stack{display:grid;gap:12px}
+.summary-box{border:1px solid var(--line);border-radius:18px;padding:14px;background:#fbfdff}
+.summary-box h4{margin:0 0 8px;font-size:.82rem}
+.summary-row{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid #edf3f8;font-size:.74rem}
+.summary-row:last-child{border-bottom:none;padding-bottom:0}
+.summary-row span:last-child{font-weight:800;text-align:left}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.helper-line{font-size:.73rem;color:var(--muted);line-height:1.7}
+.empty{padding:28px 14px;border-radius:18px;background:linear-gradient(180deg,#fbfdff,#f3f7fb);border:1px dashed #c9d9ea;text-align:center;color:#6b7e94;font-size:.8rem}
+.day-tabs{display:flex;gap:8px;overflow:auto;padding-bottom:4px;margin-bottom:14px}
+.day-tab{border:none;border-radius:14px;padding:11px 12px;background:#eef5fc;color:var(--blue);font-weight:800;cursor:pointer;white-space:nowrap;border:1px solid #dce8f6}
+.day-tab.on{background:linear-gradient(135deg,#0d1b2a,#173452);color:#fff;border-color:rgba(255,255,255,.08)}
+.day-panel{display:none}
+.day-panel.on{display:block}
+.day-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+.day-title{font-size:.95rem;font-weight:800}
+.day-sub{font-size:.72rem;color:var(--muted);line-height:1.6;margin-top:4px}
+.plan-grid{display:grid;grid-template-columns:1.18fr .92fr;gap:14px}
+.exercise-list{display:grid;gap:10px}
+.exercise-card{position:relative;border:1px solid var(--line);border-radius:18px;padding:14px;background:#fff;overflow:hidden}
+.exercise-card::before{content:"";position:absolute;inset:auto -34px -34px auto;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(26,79,122,.08) 0%,rgba(26,79,122,0) 72%)}
+.exercise-main{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px;position:relative}
+.exercise-name{font-size:.82rem;font-weight:800}
+.exercise-name small{display:block;font-size:.67rem;color:var(--muted);font-weight:500;margin-top:2px}
+.exercise-tag{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;background:#eef5fc;color:var(--blue);font-size:.62rem;font-weight:800;border:1px solid #dbe8f6}
+.metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;position:relative}
+.metric-grid .field input{padding:9px 10px}
+.exercise-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;position:relative}
+.exercise-actions .mini{padding:8px 10px;border-radius:10px;font-size:.68rem}
+.library-panel{display:grid;gap:10px}
+.filter-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:8px}
+.library-list{display:grid;gap:8px;max-height:540px;overflow:auto;padding-right:2px}
+.library-item{border:1px solid var(--line);border-radius:16px;padding:12px;background:#fff}
+.library-item-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:8px}
+.library-item-name{font-size:.78rem;font-weight:800}
+.library-item-name small{display:block;font-size:.65rem;color:var(--muted);font-weight:500;margin-top:2px}
+.library-item-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.mini-pill{padding:4px 8px;border-radius:999px;background:#f4f8fc;border:1px solid #dde9f5;font-size:.6rem;font-weight:800;color:#55718c}
+.library-item-actions{display:flex;gap:8px;flex-wrap:wrap}
+.program-list{display:grid;gap:10px}
+.program-item{border:1px solid var(--line);border-radius:18px;padding:12px;background:#fff}
+.program-item.active{border-color:#b8d7f2;box-shadow:0 10px 24px rgba(13,27,42,.08)}
+.program-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.program-name{font-size:.84rem;font-weight:800}
+.program-meta{font-size:.7rem;color:var(--muted);line-height:1.6;margin-top:4px}
+.program-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.session-summary{display:grid;gap:8px;margin-top:10px}
+.session-card{border:1px solid var(--line);border-radius:16px;padding:12px;background:#fbfdff}
+.session-card h4{margin:0 0 6px;font-size:.8rem}
+.session-card ul{margin:0;padding:0 18px 0 0;font-size:.72rem;color:#486072;line-height:1.8}
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#0d1b2a;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:10px 16px;font-size:.78rem;font-weight:800;display:none;z-index:10000;box-shadow:0 12px 26px rgba(0,0,0,.22)}
+.footer-note{margin-top:18px;text-align:center;color:#6b7e94;font-size:.72rem;line-height:1.8}
+@media (max-width:980px){
+  .hero,.grid-2,.plan-grid{grid-template-columns:1fr}
+}
+@media (max-width:720px){
+  .topbar-inner{padding:12px}
+  .hero-kpis{grid-template-columns:1fr 1fr 1fr}
+  .step-strip{grid-template-columns:1fr 1fr}
+  .form-grid,.filter-grid,.metric-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:520px){
+  .app{padding:12px}
+  .status-pill{display:none}
+  .hero-kpis,.form-grid,.filter-grid,.metric-grid{grid-template-columns:1fr}
+  .step-strip{grid-template-columns:1fr}
+}
+
+
+
+/* v2 polish */
+html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#f0f4f8 100%)}
+.app{max-width:1180px;padding:14px 16px 24px}
+.topbar{box-shadow:0 10px 24px rgba(0,0,0,.14)}
+.brand-title{font-size:1.02rem}
+.brand-sub{font-size:.68rem}
+.crumb{gap:8px;background:rgba(13,27,42,.72);border-radius:16px;padding:8px 10px 8px 12px;border:1px solid rgba(255,255,255,.10);backdrop-filter:blur(10px);margin-bottom:14px}
+.crumb-link{border:none;background:transparent;color:#dce8f5;font-weight:800;font-size:.72rem;padding:0;cursor:pointer}
+.crumb-link.active{color:#fff}
+.library-shell{display:grid;gap:12px;margin-bottom:16px}
+.hero-card.compact{padding:18px 18px 16px;border-radius:22px;box-shadow:0 20px 42px rgba(13,27,42,.24)}
+.hero-card.compact .hero-title{display:flex;align-items:center;gap:10px;font-size:1.2rem;margin-bottom:8px}
+.hero-card.compact .hero-title .tiny-mark{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:12px;background:rgba(255,255,255,.10);font-size:1rem}
+.hero-card.compact .hero-sub{max-width:840px;font-size:.8rem;line-height:1.65;margin-bottom:14px}
+.hero-topline{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.hero-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.10);border-radius:999px;padding:6px 10px;font-size:.66rem;font-weight:800;color:#dbe9f7}
+.hero-bottom-note{margin-top:12px;font-size:.72rem;color:#c8d8e7;line-height:1.6}
+.state-band{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.state-chip{background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px 14px;box-shadow:0 10px 24px rgba(13,27,42,.06)}
+.state-chip span{display:block;font-size:.62rem;font-weight:800;color:var(--muted);margin-bottom:6px;letter-spacing:.25px}
+.state-chip b{font-size:.83rem;color:var(--text)}
+.hub-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.hub-card{position:relative;border:none;text-align:right;padding:16px 16px 14px;border-radius:22px;cursor:pointer;background:linear-gradient(180deg,#11263d,#0d1b2a);color:#fff;overflow:hidden;box-shadow:0 18px 34px rgba(13,27,42,.18);transition:transform .18s ease, box-shadow .2s ease, border-color .2s ease;border:1px solid rgba(255,255,255,.08)}
+.hub-card::before{content:attr(data-icon);position:absolute;inset:auto 14px -10px auto;font-size:3.3rem;line-height:1;opacity:.11;filter:grayscale(.1)}
+.hub-card::after{content:'';position:absolute;inset:0 auto 0 0;width:5px;background:rgba(255,255,255,.12)}
+.hub-card:hover{transform:translateY(-1px);box-shadow:0 22px 40px rgba(13,27,42,.24)}
+.hub-card.on{background:linear-gradient(135deg,#0d1b2a,#1a3a5c);border-color:rgba(232,160,32,.28);box-shadow:0 24px 46px rgba(13,27,42,.28)}
+.hub-card.on::after{background:linear-gradient(180deg,#e8a020,#5dd9a8)}
+.hub-kicker{font-size:.62rem;font-weight:800;color:#9fc0de;margin-bottom:8px}
+.hub-title{font-size:.94rem;font-weight:800;margin-bottom:6px}
+.hub-note{font-size:.71rem;line-height:1.6;color:#d6e3f0;min-height:34px}
+.workflow-strip{position:sticky;top:72px;z-index:120;background:rgba(240,244,248,.82);backdrop-filter:blur(10px);padding:6px;border-radius:18px;border:1px solid rgba(13,27,42,.06);box-shadow:0 10px 24px rgba(13,27,42,.06);margin-bottom:16px}
+.step-strip{grid-template-columns:repeat(4,1fr);gap:8px}
+.step-btn{border-radius:14px;padding:11px 10px;background:transparent;border:1px solid transparent;box-shadow:none}
+.step-btn.on{background:linear-gradient(135deg,#0d1b2a,#173452);box-shadow:0 10px 22px rgba(13,27,42,.18)}
+.step-btn small{font-size:.6rem;opacity:.74}
+.section{animation:fadeStep .18s ease}
+@keyframes fadeStep{from{opacity:.55;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:12px}
+.section-lead{min-width:0}
+.section-kicker{font-size:.64rem;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.section-title{font-size:1.02rem;font-weight:800;margin:0 0 4px;color:#142336}
+.section-copy{font-size:.73rem;color:var(--muted);line-height:1.65}
+.card{border-radius:22px;box-shadow:0 12px 28px rgba(13,27,42,.07);padding:18px}
+.card.dark{box-shadow:0 18px 34px rgba(13,27,42,.18)}
+.card-title{margin-bottom:10px}
+.card-title h2,.card-title h3{font-size:.96rem}
+.card-note{font-size:.72rem;line-height:1.65;margin-bottom:10px}
+.helper-line{background:#f4f8fc;border:1px solid #dfeaf5;border-radius:14px;padding:10px 12px;font-size:.72rem;color:#51677d}
+.toolbar{gap:8px}
+.btn{border-radius:14px;padding:11px 15px}
+.btn.mini{padding:8px 10px;border-radius:10px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field label{font-size:.68rem;font-weight:800;color:var(--muted);margin-bottom:5px;display:block}
+.field input,.field select,.field textarea{width:100%;background:#f8fbfd;border:1px solid #d6e3ef;border-radius:14px;padding:11px 12px;color:var(--text);font-size:.78rem}
+.field textarea{min-height:96px;resize:vertical}
+.option-wrap{display:flex;gap:8px;flex-wrap:wrap}
+.option-chip{border:1px solid #d6e3ef;background:#f8fbfd;color:var(--blue);border-radius:999px;padding:8px 12px;font-size:.7rem;font-weight:800;cursor:pointer}
+.option-chip.on{background:linear-gradient(135deg,#0d1b2a,#173452);color:#fff;border-color:transparent}
+.summary-stack,.session-summary,.user-list,.program-list,.exercise-list,.library-list{display:grid;gap:10px}
+.summary-box,.session-card,.library-item,.program-item,.user-item,.exercise-card{border-radius:18px}
+.summary-box{background:#fbfdff}
+.day-tabs{display:flex;gap:8px;margin-bottom:14px;overflow:auto;padding-bottom:2px}
+.day-tab{border-radius:12px;padding:10px 12px}
+.day-tab.on{box-shadow:0 10px 22px rgba(13,27,42,.16)}
+.plan-grid{grid-template-columns:1.16fr .94fr}
+.library-panel{display:grid;gap:10px}
+.library-item-actions,.exercise-actions,.user-actions,.program-actions{display:flex;gap:8px;flex-wrap:wrap}
+.footer-note{margin-top:18px;font-size:.7rem;color:#6a7d93}
+@media (max-width:980px){
+  .state-band,.hub-grid,.grid-2,.plan-grid{grid-template-columns:1fr}
+}
+@media (max-width:720px){
+  .app{padding:12px}
+  .workflow-strip{top:68px}
+  .step-strip{grid-template-columns:1fr 1fr}
+  .form-grid,.filter-grid,.metric-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:520px){
+  .hero-card.compact .hero-title{font-size:1.06rem}
+  .hero-topline{display:none}
+  .status-pill{display:none}
+  .workflow-strip{top:64px}
+  .step-strip,.form-grid,.filter-grid,.metric-grid{grid-template-columns:1fr}
+  .state-chip b{font-size:.8rem}
+}
+
+
+
+/* v3 polish: global users drawer + smart exercise add */
+.topbar-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.user-top-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  border:none;border-radius:999px;padding:9px 12px;
+  background:linear-gradient(135deg,rgba(232,160,32,.18),rgba(255,255,255,.10));
+  color:#fff;font-size:.72rem;font-weight:800;cursor:pointer;
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 8px 18px rgba(0,0,0,.14)
+}
+.user-top-btn .ico{
+  width:28px;height:28px;border-radius:999px;
+  display:inline-flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.12);font-size:.9rem
+}
+.user-top-btn .txt{display:flex;flex-direction:column;align-items:flex-start;line-height:1.15}
+.user-top-btn .sub{font-size:.58rem;color:#c8d7e8;font-weight:700}
+.hero-kpis{grid-template-columns:repeat(4,1fr)}
+.state-band{grid-template-columns:repeat(5,1fr)}
+.smart-add-box{
+  border:1px solid rgba(255,255,255,.12);
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.03));
+  border-radius:18px;padding:12px
+}
+.smart-add-box .helper-line{color:#c7d7e8}
+.smart-preview{
+  display:none;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;padding:12px
+}
+.smart-preview.on{display:block}
+.smart-preview .preview-top{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px
+}
+.smart-preview .preview-title{font-size:.82rem;font-weight:800}
+.smart-preview .preview-sub{font-size:.68rem;color:#d7e4f1;line-height:1.6}
+.smart-preview .field label{color:#d7e4f1}
+.smart-preview .field input,.smart-preview .field select,.smart-preview .field textarea{
+  background:rgba(255,255,255,.92);border-color:rgba(255,255,255,.18)
+}
+.smart-chip-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.smart-chip{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;
+  background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.12);font-size:.62rem;font-weight:800;color:#eef5fc
+}
+.drawer-backdrop{
+  position:fixed;inset:0;background:rgba(5,12,20,.52);backdrop-filter:blur(4px);
+  opacity:0;pointer-events:none;transition:opacity .2s ease;z-index:900
+}
+.drawer-backdrop.on{opacity:1;pointer-events:auto}
+.user-drawer{
+  position:fixed;top:0;left:0;height:100%;width:min(420px,92vw);
+  background:linear-gradient(180deg,#0d1b2a,#142f49 42%,#eef4f9 42%,#f0f4f8 100%);
+  transform:translateX(-102%);transition:transform .24s ease;
+  z-index:901;box-shadow:24px 0 40px rgba(0,0,0,.24);overflow:auto
+}
+.user-drawer.on{transform:translateX(0)}
+.drawer-head{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:16px 16px 14px;color:#fff
+}
+.drawer-title{font-size:1rem;font-weight:800}
+.drawer-sub{font-size:.68rem;color:#c7d7e8;margin-top:4px}
+.drawer-close{
+  width:40px;height:40px;border:none;border-radius:12px;cursor:pointer;
+  background:rgba(255,255,255,.10);color:#fff;font-size:1.05rem
+}
+.drawer-body{padding:0 16px 18px;display:grid;gap:12px}
+.drawer-card{
+  border-radius:18px;padding:14px;border:1px solid var(--line);
+  background:#fff;box-shadow:0 10px 24px rgba(13,27,42,.08)
+}
+.drawer-card.dark{
+  background:linear-gradient(135deg,#0d1b2a,#173452);border-color:rgba(255,255,255,.08);color:#fff
+}
+.drawer-user-list{display:grid;gap:10px}
+.drawer-user-item{
+  border:1px solid var(--line);border-radius:16px;padding:12px;background:linear-gradient(180deg,#fff,#fbfdff);
+  display:flex;align-items:flex-start;justify-content:space-between;gap:10px
+}
+.drawer-user-main{min-width:0}
+.drawer-user-name{font-size:.82rem;font-weight:800}
+.drawer-user-meta{font-size:.68rem;color:var(--muted);line-height:1.6;margin-top:3px}
+.drawer-user-item.active{
+  border-color:#b8d7f2;box-shadow:0 10px 24px rgba(13,27,42,.08)
+}
+.quick-user-grid{display:grid;gap:8px}
+.quick-user-line{display:flex;justify-content:space-between;gap:10px;font-size:.72rem;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.12)}
+.quick-user-line:last-child{border-bottom:none}
+.quick-user-line b{text-align:left}
+.library-item.custom{
+  border-color:#cfe3dc;
+  background:linear-gradient(180deg,#ffffff,#f7fcfa)
+}
+.library-item.custom .library-item-head{align-items:flex-start}
+.library-empty-note{font-size:.68rem;color:#d7e4f1}
+.section-copy,.hero-sub,.card-note,.footer-note{max-width:880px}
+.card.soft{
+  background:linear-gradient(180deg,#fafdff,#f3f8fc)
+}
+.library-item .badge.warn{margin-inline-start:auto}
+@media (max-width:920px){
+  .hero-kpis{grid-template-columns:1fr 1fr}
+}
+@media (max-width:720px){
+  .topbar-actions{width:100%;justify-content:space-between}
+  .user-top-btn{padding:8px 10px}
+  .hero-kpis{grid-template-columns:1fr 1fr}
+}
+@media (max-width:520px){
+  .brand-sub{display:none}
+  .user-top-btn .sub{display:none}
+  .hero-kpis,.state-band{grid-template-columns:1fr 1fr}
+}
+
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand-wrap">
+        <div class="brand-badge">🏋️</div>
+        <div class="brand-text">
+          <div class="brand-title">THE BLUES — ספרייה 2.0</div>
+          <div class="brand-sub">אב־טיפוס עצמאי לבניית משתמש, יצירת תוכנית, שמירה והכנה ל"ביצוע".</div>
+        </div>
+      </div>
+      <div class="topbar-actions">
+      <div class="status-pill" id="top-status">אין משתמש פעיל</div>
+      <button class="user-top-btn" type="button" onclick="openUserDrawer()">
+        <span class="ico">👤</span>
+        <span class="txt"><span id="user-top-label">משתמשים</span><span class="sub">החלפה והתנתקות</span></span>
+      </button>
+    </div>
+    </div>
+  </header>
+
+  <main class="app">
+    <div class="crumb" id="breadcrumb"></div>
+
+    <section class="library-shell">
+      <div class="hero-card compact">
+        <div class="hero-topline">
+          <span class="hero-chip">כוח בלבד</span>
+          <span class="hero-chip" id="active-program-chip">טרם נבחרה</span>
+          <span class="hero-chip" id="bridge-badge">מבודד ובטוח</span>
+        </div>
+        <div class="hero-title"><span class="tiny-mark">⚙️</span><span>ספרייה 2.0 — מסלול נקי לבניית תוכנית</span></div>
+        <div class="hero-sub">מסך עצמאי, נקי ובטוח לבניית משתמשים ותוכניות כוח — בשפה חזותית צמודה יותר ל־The Blues ובמוכנות טובה יותר להטמעה בהמשך.</div>
+        <div class="hero-kpis">
+          <div class="kpi"><div class="kpi-v" id="kpi-users">0</div><div class="kpi-l">משתמשים</div></div>
+          <div class="kpi"><div class="kpi-v" id="kpi-programs">0</div><div class="kpi-l">תוכניות שמורות</div></div>
+          <div class="kpi"><div class="kpi-v" id="kpi-exercises">0</div><div class="kpi-l">תרגילים במאגר</div></div>
+          <div class="kpi"><div class="kpi-v" id="kpi-days">—</div><div class="kpi-l">ימי אימון</div></div>
+        </div>
+        <div class="hero-bottom-note" id="active-program-copy">שמור תוכנית וסמן אותה כפעילה כדי להכין חיבור מסודר ל"ביצוע".</div>
+      </div>
+
+      <div class="state-band">
+        <div class="state-chip"><span>משתמש פעיל</span><b id="state-user-val">בחר משתמש</b></div>
+        <div class="state-chip"><span>מטרה</span><b id="state-goal-val">—</b></div>
+        <div class="state-chip"><span>פיצול צפוי</span><b id="state-split-val">—</b></div>
+        <div class="state-chip"><span>מצב תוכנית</span><b id="state-program-val">אין תוכנית</b></div>
+        <div class="state-chip"><span>גשר ל"ביצוע"</span><b id="state-bridge-val">לא הוכן</b></div>
+      </div>
+
+      <div class="hub-grid">
+        <button class="hub-card on" type="button" data-hub-step="0" data-icon="👤" onclick="goStep(0)">
+          <div class="hub-kicker">שלב 1</div>
+          <div class="hub-title">ניהול משתמשים</div>
+          <div class="hub-note" id="hub-users-note">צור משתמש ראשון</div>
+        </button>
+        <button class="hub-card" type="button" data-hub-step="1" data-icon="🎯" onclick="goStep(1)">
+          <div class="hub-kicker">שלב 2</div>
+          <div class="hub-title">העדפות ולוגיקה</div>
+          <div class="hub-note" id="hub-prefs-note">הגדר מטרה, ציוד וימי אימון</div>
+        </button>
+        <button class="hub-card" type="button" data-hub-step="2" data-icon="🧱" onclick="goStep(2)">
+          <div class="hub-kicker">שלב 3</div>
+          <div class="hub-title">בניית תוכנית</div>
+          <div class="hub-note" id="hub-build-note">צור טיוטה וערוך תרגילים</div>
+        </button>
+        <button class="hub-card" type="button" data-hub-step="3" data-icon="💾" onclick="goStep(3)">
+          <div class="hub-kicker">שלב 4</div>
+          <div class="hub-title">שמירה ומעבר</div>
+          <div class="hub-note" id="hub-save-note">שמור תוכנית והכן מעבר</div>
+        </button>
+      </div>
+    </section>
+
+    <nav class="step-strip workflow-strip">
+      <button class="step-btn on" data-step-btn="0" onclick="goStep(0)">משתמשים<small>בחירה, יצירה וניהול</small></button>
+      <button class="step-btn" data-step-btn="1" onclick="goStep(1)">העדפות<small>מטרה, ציוד ופיצול</small></button>
+      <button class="step-btn" data-step-btn="2" onclick="goStep(2)">בניית תוכנית<small>טיוטה, עריכה והוספה</small></button>
+      <button class="step-btn" data-step-btn="3" onclick="goStep(3)">שמירה ומעבר<small>גרסאות, הפעלה וגשר</small></button>
+    </nav>
+
+    <section class="section on" data-step="0">
+      <div class="section-head">
+        <div class="section-lead">
+          <div class="section-kicker">ספרייה 2.0</div>
+          <h2 class="section-title">ניהול משתמשים</h2>
+          <div class="section-copy">בחר משתמש פעיל או צור חדש, ואז המשך ישירות להגדרת הלוגיקה.</div>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title"><h2>משתמשים קיימים</h2><span class="badge" id="users-count-badge">0 משתמשים</span></div>
+          <div class="card-note">משתמש פעיל קובע על מי נבנית הטיוטה.</div>
+          <div id="users-list" class="user-list"></div>
+        </div>
+        <div class="card dark">
+          <div class="card-title"><h2>הקמה / עריכת משתמש</h2><span class="badge green">בסיס לבניית תוכנית</span></div>
+          <div class="form-grid">
+            <div class="field"><label for="u-name">שם משתמש</label><input id="u-name" type="text" placeholder="לדוגמה: אורן"></div>
+            <div class="field"><label for="u-level">רמת ניסיון</label><select id="u-level"><option value="beginner">מתחיל</option><option value="intermediate">בינוני</option><option value="advanced">מתקדם</option></select></div>
+            <div class="field"><label for="u-goal">מטרה עיקרית</label><select id="u-goal"><option value="hypertrophy">הגדלת מסת שריר</option><option value="fatloss">חיטוב / ירידה באחוז שומן</option><option value="strength">עלייה בכוח</option><option value="return">חזרה לאימונים</option></select></div>
+            <div class="field"><label for="u-days">ימי אימון בשבוע</label><select id="u-days"><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option></select></div>
+            <div class="field"><label for="u-duration">משך אימון מועדף</label><select id="u-duration"><option value="35">35 דקות</option><option value="45">45 דקות</option><option value="60" selected>60 דקות</option><option value="75">75 דקות</option></select></div>
+            <div class="field"><label for="u-rest">מנוחה דיפולטיבית</label><select id="u-rest"><option value="45">45 שניות</option><option value="60" selected>60 שניות</option><option value="75">75 שניות</option><option value="90">90 שניות</option></select></div>
+          </div>
+          <div class="field" style="margin-top:10px">
+            <label>ציוד זמין</label>
+            <div class="option-wrap" id="equip-wrap"></div>
+          </div>
+          <div class="field" style="margin-top:10px">
+            <label>אזורי דגש</label>
+            <div class="option-wrap" id="focus-wrap"></div>
+          </div>
+          <div class="field" style="margin-top:10px">
+            <label for="u-notes">הערות / מגבלות</label>
+            <textarea id="u-notes" placeholder="לדוגמה: עדיפות למכונות, עומס נמוך על גב תחתון, זמן מוגבל בימי חול..."></textarea>
+          </div>
+          <div class="toolbar" style="margin-top:12px">
+            <button class="btn green" onclick="saveUser()">שמור משתמש</button>
+            <button class="btn secondary" onclick="resetUserForm()">נקה טופס</button>
+            <button class="btn warn" onclick="deleteSelectedUser()">מחק משתמש נבחר</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-step="1">
+      <div class="section-head">
+        <div class="section-lead">
+          <div class="section-kicker">לוגיקה</div>
+          <h2 class="section-title">העדפות ויצירת פיצול</h2>
+          <div class="section-copy">כאן רואים את תמונת המצב של המשתמש הפעיל ואת הפיצול שהמערכת מציעה.</div>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title"><h2>סיכום המשתמש הפעיל</h2><span class="badge" id="active-user-badge">לא נבחר משתמש</span></div>
+          <div id="active-user-summary" class="summary-stack"></div>
+        </div>
+        <div class="card">
+          <div class="card-title"><h2>לוגיקת יצירת התוכנית</h2><span class="badge green">V1</span></div>
+          <div class="summary-box">
+            <h4>הטיוטה שתיווצר</h4>
+            <div class="summary-row"><span>מספר ימים</span><span id="logic-days">—</span></div>
+            <div class="summary-row"><span>סוג פיצול</span><span id="logic-split">—</span></div>
+            <div class="summary-row"><span>מטרה</span><span id="logic-goal">—</span></div>
+            <div class="summary-row"><span>ציוד זמין</span><span id="logic-equip">—</span></div>
+            <div class="summary-row"><span>מנוחות</span><span id="logic-rest">—</span></div>
+          </div>
+          <div class="toolbar" style="margin-top:12px">
+            <button class="btn primary" onclick="goStep(2)">המשך לבניית תוכנית</button>
+            <button class="btn secondary" onclick="prefillFromSelectedUser()">רענן לפי המשתמש הפעיל</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-step="2">
+      <div class="section-head">
+        <div class="section-lead">
+          <div class="section-kicker">Workbench</div>
+          <h2 class="section-title">בניית תוכנית</h2>
+          <div class="section-copy">כאן יוצרים טיוטה, עורכים ימי אימון ומוסיפים תרגילים מתוך הספרייה.</div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-title"><h2>טיוטה פעילה</h2><span class="badge" id="draft-status-badge">אין טיוטה</span></div>
+        <div class="helper-line">השלב הזה בנוי להרגיש כמו חדר עבודה אחד: יום אימון נבחר בצד אחד, וספריית התרגילים בצד השני.</div>
+        <div class="toolbar" style="margin-top:12px">
+          <button class="btn primary" onclick="generateProgramDraft()">צור טיוטת תוכנית</button>
+          <button class="btn secondary" onclick="resetDraft()">איפוס טיוטה</button>
+          <button class="btn ghost" onclick="goStep(3)">עבור לשמירה וסיכום</button>
+        </div>
+      </div>
+
+      <div id="draft-empty" class="empty">עדיין אין טיוטת תוכנית. בחר משתמש פעיל ולאחר מכן לחץ על "צור טיוטת תוכנית".</div>
+
+      <div id="builder-wrap" style="display:none">
+        <div class="day-tabs" id="day-tabs"></div>
+        <div class="plan-grid">
+          <div class="card">
+            <div id="day-panels"></div>
+          </div>
+          <div class="card dark">
+            <div class="card-title"><h3>ספריית תרגילים</h3><span class="badge green" id="library-count-badge">מאגר תרגילים</span></div>
+            <div class="library-panel">
+              
+              <div class="smart-add-box">
+                <div class="card-title"><h3>הוספת תרגיל חצי־חכמה</h3><span class="badge warn">מבוקר וניתן לעריכה</span></div>
+                <div class="helper-line">כתוב מה חסר לך בספרייה, למשל: "תרגיל גב עם גומייה", "תרגיל כתפיים קל למתחיל", או "סקוואט עם דאמבלים". המערכת תציע תרגיל חדש, ואתה תאשר לפני הוספה.</div>
+                <div class="field" style="margin-top:10px">
+                  <label for="smart-request">בקשה חופשית</label>
+                  <textarea id="smart-request" placeholder="לדוגמה: אני צריך תרגיל חזה עם גומייה שמתאים למתחיל"></textarea>
+                </div>
+                <div class="toolbar" style="margin-top:12px;margin-bottom:0">
+                  <button class="btn green" type="button" onclick="analyzeSmartRequest()">נתח והצע תרגיל</button>
+                  <button class="btn ghost" type="button" onclick="clearSmartRequest()">נקה</button>
+                </div>
+                <div id="smart-preview" class="smart-preview"></div>
+              </div>
+
+              <div class="filter-grid">
+                <div class="field"><label for="lib-search">חיפוש</label><input id="lib-search" type="text" placeholder="שם תרגיל"></div>
+                <div class="field"><label for="lib-group">קבוצה</label><select id="lib-group"></select></div>
+                <div class="field"><label for="lib-equip">ציוד</label><select id="lib-equip"></select></div>
+              </div>
+              <div class="field"><label for="lib-day-target">הוסף ליום</label><select id="lib-day-target"></select></div>
+              <div class="library-list" id="library-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-step="3">
+      <div class="section-head">
+        <div class="section-lead">
+          <div class="section-kicker">Save & Bridge</div>
+          <h2 class="section-title">שמירה, גרסאות ומעבר</h2>
+          <div class="section-copy">בסוף שומרים, מסמנים כפעילה ומכינים גשר בטוח ל"ביצוע".</div>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title"><h2>סיכום התוכנית הנוכחית</h2><span class="badge" id="summary-badge">לא נשמרה</span></div>
+          <div class="field" style="margin-bottom:12px">
+            <label for="program-name">שם התוכנית</label>
+            <input id="program-name" type="text" placeholder="לדוגמה: כוח 3 ימים — מאי 2026">
+          </div>
+          <div id="summary-empty" class="empty">צור קודם טיוטת תוכנית כדי לראות כאן את הסיכום ולשמור אותה.</div>
+          <div id="program-summary" style="display:none">
+            <div class="summary-box">
+              <h4>פרטי על</h4>
+              <div class="summary-row"><span>משתמש</span><span id="sum-user">—</span></div>
+              <div class="summary-row"><span>פיצול</span><span id="sum-split">—</span></div>
+              <div class="summary-row"><span>ימי אימון</span><span id="sum-days">—</span></div>
+              <div class="summary-row"><span>משך אימון</span><span id="sum-duration">—</span></div>
+              <div class="summary-row"><span>מנוחה דיפולטיבית</span><span id="sum-rest">—</span></div>
+            </div>
+            <div class="session-summary" id="session-summary"></div>
+            <div class="toolbar" style="margin-top:14px">
+              <button class="btn green" onclick="saveProgram(false)">שמור תוכנית</button>
+              <button class="btn primary" onclick="saveProgram(true)">שמור וסמן כפעילה</button>
+              <button class="btn secondary" onclick="prepareExecutionBridge()">הכן מעבר ל"ביצוע"</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><h2>תוכניות שמורות</h2><span class="badge green" id="saved-program-count">0</span></div>
+          <div class="card-note">הגרסאות כאן נשמרות מבודד, כדי שאפשר יהיה לבדוק וללטש לפני הטמעה בקובץ הראשי.</div>
+          <div id="programs-list" class="program-list"></div>
+        </div>
+      </div>
+    </section>
+
+
+  <div class="drawer-backdrop" id="user-drawer-backdrop" onclick="closeUserDrawer()"></div>
+  <aside class="user-drawer" id="user-drawer" aria-hidden="true">
+    <div class="drawer-head">
+      <div>
+        <div class="drawer-title">משתמשים</div>
+        <div class="drawer-sub">מעקב אחר המשתמש הפעיל, התנתקות והחלפה מהירה.</div>
+      </div>
+      <button class="drawer-close" type="button" onclick="closeUserDrawer()">✕</button>
+    </div>
+    <div class="drawer-body">
+      <div class="drawer-card dark">
+        <div class="card-title"><h3>המשתמש המחובר</h3><span class="badge green" id="drawer-active-badge">אין מחובר</span></div>
+        <div id="drawer-active-user" class="quick-user-grid"></div>
+        <div class="toolbar" style="margin-top:12px;margin-bottom:0">
+          <button class="btn secondary" type="button" onclick="goToUsersStep()">ניהול משתמשים</button>
+          <button class="btn warn" type="button" onclick="logoutActiveUser()">צא / התנתק</button>
+        </div>
+      </div>
+      <div class="drawer-card">
+        <div class="card-title"><h3>החלף משתמש</h3><span class="badge" id="drawer-user-count">0</span></div>
+        <div id="drawer-users-list" class="drawer-user-list"></div>
+
+        <div class="drawer-card" id="legacy-import-card" style="margin-top:10px">
+          <div class="card-title"><h2>ייבוא מהאפליקציה הראשית</h2><span class="badge" id="legacy-import-badge">טרם יובא</span></div>
+          <div class="drawer-user-sub">ייבוא קובץ הגיבוי מהאפליקציה הראשית ייצור משתמש עתידי עם גיבוי legacy שמור.</div>
+          <div class="field" style="margin-top:10px"><label>שם למשתמש המיובא</label><input id="legacy-import-name" type="text" placeholder="למשל: אורן"></div>
+          <div class="field"><label>קובץ גיבוי JSON</label><input id="legacy-import-file" type="file" accept="application/json,.json"></div>
+          <div class="quick-user-line"><span>מצב</span><b id="legacy-import-status">ממתין לקובץ</b></div>
+          <div class="drawer-actions" style="margin-top:10px">
+            <button type="button" class="btn secondary" onclick="importLegacyBackupIntoLibrary2()">ייבא גיבוי</button>
+            <button type="button" class="btn ghost" onclick="clearLegacyImportSelection()">נקה בחירה</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+    <div class="footer-note">עמוד עצמאי זה נועד לאפשר פיתוח נקי, בלי לסכן נתונים קיימים, ובשפה חזותית קרובה יותר למסכי The Blues.</div>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+
+(function(){
+  var KEYS = {
+    users: 'tb_library2_users_v1',
+    activeUser: 'tb_library2_active_user_v1',
+    programs: 'tb_library2_programs_v1',
+    activeProgram: 'tb_library2_active_program_v1',
+    bridge: 'tb_library2_execution_bridge_v1',
+    customExercises: 'tb_library2_custom_exercises_v1',
+    legacyImports: 'tb_library2_legacy_imports_v1'
+  };
+
+  var EQUIPMENT = [
+    {id:'machines', label:'מכונות'},
+    {id:'dumbbells', label:'דאמבלים'},
+    {id:'cables', label:'כבלים'},
+    {id:'barbell', label:'מוט / סמית'},
+    {id:'bodyweight', label:'משקל גוף'},
+    {id:'bands', label:'גומיות'}
+  ];
+
+  var FOCUS = [
+    {id:'chest', label:'חזה'},
+    {id:'back', label:'גב'},
+    {id:'legs', label:'רגליים'},
+    {id:'shoulders', label:'כתפיים'},
+    {id:'arms', label:'ידיים'},
+    {id:'core', label:'ליבה / בטן'}
+  ];
+
+  var EXERCISES = [
+    {id:'leg_press',he:'לחיצת רגליים',en:'Leg Press',group:'legs',equipment:['machines'],sets:'3',reps:'10-12',rest:60,unit:'kg',kg:'',icon:'🦵'},
+    {id:'leg_curl',he:'כפיפת ברך במכונה',en:'Leg Curl',group:'legs',equipment:['machines'],sets:'3',reps:'10-12',rest:60,unit:'kg',kg:'',icon:'🦵'},
+    {id:'leg_extension',he:'פשיטת ברך במכונה',en:'Leg Extension',group:'legs',equipment:['machines'],sets:'3',reps:'12-15',rest:60,unit:'kg',kg:'',icon:'🦵'},
+    {id:'db_goblet_squat',he:'סקוואט גביע',en:'Goblet Squat',group:'legs',equipment:['dumbbells'],sets:'3',reps:'10-12',rest:60,unit:'kg',kg:'',icon:'🦵'},
+    {id:'rdl_db',he:'RDL עם דאמבלים',en:'Dumbbell Romanian Deadlift',group:'legs',equipment:['dumbbells'],sets:'3',reps:'8-10',rest:75,unit:'kg',kg:'',icon:'🦵'},
+    {id:'calf_raise',he:'עליות תאומים',en:'Calf Raise',group:'legs',equipment:['machines','bodyweight'],sets:'2',reps:'15-20',rest:45,unit:'bw',kg:'',icon:'🦵'},
+
+    {id:'chest_press',he:'לחיצת חזה במכונה',en:'Machine Chest Press',group:'chest',equipment:['machines'],sets:'3',reps:'8-12',rest:75,unit:'kg',kg:'',icon:'💪'},
+    {id:'incline_db_press',he:'לחיצת חזה עליון עם דאמבלים',en:'Incline Dumbbell Press',group:'chest',equipment:['dumbbells'],sets:'3',reps:'8-12',rest:75,unit:'kg',kg:'',icon:'💪'},
+    {id:'cable_fly',he:'קירוב חזה בכבלים',en:'Cable Fly',group:'chest',equipment:['cables'],sets:'2',reps:'12-15',rest:60,unit:'kg',kg:'',icon:'💪'},
+    {id:'pushup',he:'שכיבות סמיכה',en:'Push Up',group:'chest',equipment:['bodyweight'],sets:'3',reps:'8-15',rest:60,unit:'bw',kg:'',icon:'💪'},
+
+    {id:'lat_pulldown',he:'פולי עליון',en:'Lat Pulldown',group:'back',equipment:['cables','machines'],sets:'3',reps:'8-12',rest:75,unit:'kg',kg:'',icon:'🏋️'},
+    {id:'seated_row',he:'חתירה בישיבה',en:'Seated Row',group:'back',equipment:['cables','machines'],sets:'3',reps:'8-12',rest:75,unit:'kg',kg:'',icon:'🏋️'},
+    {id:'one_arm_row',he:'חתירה יד אחת עם דאמבל',en:'One Arm Dumbbell Row',group:'back',equipment:['dumbbells'],sets:'3',reps:'10-12',rest:60,unit:'kg',kg:'',icon:'🏋️'},
+    {id:'back_extension',he:'זוקפי גב',en:'Back Extension',group:'back',equipment:['bodyweight'],sets:'2',reps:'12-15',rest:45,unit:'bw',kg:'',icon:'🏋️'},
+
+    {id:'shoulder_press_machine',he:'לחיצת כתפיים במכונה',en:'Machine Shoulder Press',group:'shoulders',equipment:['machines'],sets:'3',reps:'8-12',rest:75,unit:'kg',kg:'',icon:'🎯'},
+    {id:'db_shoulder_press',he:'לחיצת כתפיים עם דאמבלים',en:'Dumbbell Shoulder Press',group:'shoulders',equipment:['dumbbells'],sets:'3',reps:'8-12',rest:75,unit:'kg',kg:'',icon:'🎯'},
+    {id:'lateral_raise',he:'הרחקת כתף לצד',en:'Lateral Raise',group:'shoulders',equipment:['dumbbells','cables'],sets:'2',reps:'12-15',rest:45,unit:'kg',kg:'',icon:'🎯'},
+    {id:'rear_delt_fly',he:'פרפר אחורי',en:'Rear Delt Fly',group:'shoulders',equipment:['machines','dumbbells'],sets:'2',reps:'12-15',rest:45,unit:'kg',kg:'',icon:'🎯'},
+
+    {id:'db_curl',he:'כפיפת מרפקים עם דאמבלים',en:'Dumbbell Curl',group:'arms',equipment:['dumbbells'],sets:'2',reps:'10-12',rest:45,unit:'kg',kg:'',icon:'💥'},
+    {id:'incline_curl',he:'כפיפת מרפקים בשיפוע',en:'Incline Curl',group:'arms',equipment:['dumbbells'],sets:'2',reps:'10-12',rest:45,unit:'kg',kg:'',icon:'💥'},
+    {id:'rope_pushdown',he:'פשיטת טרייספס בחבל',en:'Rope Pushdown',group:'arms',equipment:['cables'],sets:'2',reps:'10-12',rest:45,unit:'kg',kg:'',icon:'💥'},
+    {id:'overhead_triceps',he:'טרייספס מעל הראש',en:'Overhead Triceps Extension',group:'arms',equipment:['dumbbells','cables'],sets:'2',reps:'10-12',rest:45,unit:'kg',kg:'',icon:'💥'},
+
+    {id:'plank',he:'פלאנק',en:'Plank',group:'core',equipment:['bodyweight'],sets:'2',reps:'45-60 שנ׳',rest:45,unit:'bw',kg:'',icon:'🧱'},
+    {id:'dead_bug',he:'Dead Bug',en:'Dead Bug',group:'core',equipment:['bodyweight'],sets:'2',reps:'10-12',rest:30,unit:'bw',kg:'',icon:'🧱'},
+    {id:'hanging_knee_raise',he:'הרמת ברכיים תלויה',en:'Hanging Knee Raise',group:'core',equipment:['bodyweight'],sets:'2',reps:'10-15',rest:45,unit:'bw',kg:'',icon:'🧱'},
+    {id:'cable_crunch',he:'כפיפות בטן בכבל',en:'Cable Crunch',group:'core',equipment:['cables'],sets:'2',reps:'12-15',rest:45,unit:'kg',kg:'',icon:'🧱'}
+  ];
+
+
+  var EXTRA_EXERCISES = [
+    {
+        "id": "smith_squat",
+        "he": "סקוואט בסמית׳",
+        "en": "Smith Machine Squat",
+        "group": "legs",
+        "equipment": [
+            "barbell",
+            "machines"
+        ],
+        "sets": "3",
+        "reps": "8-10",
+        "rest": 75,
+        "unit": "kg",
+        "kg": "",
+        "icon": "🦵"
+    },
+    {
+        "id": "walking_lunge",
+        "he": "מכרעים בהליכה",
+        "en": "Walking Lunge",
+        "group": "legs",
+        "equipment": [
+            "dumbbells",
+            "bodyweight"
+        ],
+        "sets": "3",
+        "reps": "10-12 לכל רגל",
+        "rest": 60,
+        "unit": "kg",
+        "kg": "",
+        "icon": "🦵"
+    },
+    {
+        "id": "bulgarian_split_squat",
+        "he": "בולגרי עם דאמבלים",
+        "en": "Bulgarian Split Squat",
+        "group": "legs",
+        "equipment": [
+            "dumbbells",
+            "bodyweight"
+        ],
+        "sets": "3",
+        "reps": "8-10 לכל רגל",
+        "rest": 75,
+        "unit": "kg",
+        "kg": "",
+        "icon": "🦵"
+    },
+    {
+        "id": "hip_thrust",
+        "he": "היפ טראסט",
+        "en": "Hip Thrust",
+        "group": "legs",
+        "equipment": [
+            "barbell",
+            "machines",
+            "dumbbells"
+        ],
+        "sets": "3",
+        "reps": "8-12",
+        "rest": 75,
+        "unit": "kg",
+        "kg": "",
+        "icon": "🦵"
+    },
+    {
+        "id": "seated_calf_raise",
+        "he": "תאומים בישיבה",
+        "en": "Seated Calf Raise",
+        "group": "legs",
+        "equipment": [
+            "machines"
+        ],
+        "sets": "3",
+        "reps": "15-20",
+        "rest": 45,
+        "unit": "kg",
+        "kg": "",
+        "icon": "🦵"
+    },
+    {
+        "id": "smith_bench_press",
+        "he": "לחיצת חזה בסמית׳",
+        "en": "Smith Bench Press",
+        "group": "chest",
+        "equipment": [
+            "barbell",
+            "machines"
+        ],
+        "sets": "3",
+        "reps": "8-10",
+        "rest": 75,
+        "unit": "kg",
+        "kg": "",
+        "icon": "💪"
+    },
+    {
+        "id": "incline_machine_press",
+        "he": "לחיצת חזה עליון במכונה",
+        "en": "Incline Machine Press",
+        "group": "chest",
+        "equipment": [
+            "machines"
+        ],
+        "sets": "3",
+        "reps": "8-12",
+        "rest": 75,
+        "unit": "kg",
+        "kg": "",
+        "icon": "💪"
+    },
+    {
+        "id": "pec_deck",
+        "he": "פרפר חזה במכונה",
+        "en": "Pec Deck Fly",
+        "group": "chest",
+        "equipment": [
+            "machines"
+        ],
+        "sets": "2",
+        "reps": "12-15",
+        "rest": 45,
+        "unit": "kg",
+        "kg": "",
+        "icon": "💪"
+    },
+    {
+        "id": "assisted_dip",
+        "he": "מקבילים בסיוע",
+        "en": "Assisted Dip",
+        "group": "chest",
+        "equipment": [
+            "machines",
+            "bodyweight"
+        ],
+        "sets": "3",
+        "reps": "8-12",
+        "rest": 60,
+        "unit": "bw",
+        "kg": "",
+        "icon": "💪"
+    },
+    {
+        "id": "band_chest_press",
+        "he": "לחיצת חזה עם גומייה",
+        "en": "Band Chest Press",
+        "group": "chest",
+        "equipment": [
+            "bands"
+        ],
+        "sets": "3",
+        "reps": "12-15",
+        "rest": 45,
+        "unit": "bw",
+        "kg": "",
+        "icon": "💪"
+    },
+    {
+        "id": "assisted_pullup",
+        "he": "מתח בסיוע",
+        "en": "Assisted Pull Up",
+        "group": "back",
+        "equipment": [
+            "machines",
+            "bodyweight"
+        ],
+        "sets": "3",
+        "reps": "6-10",
+        "rest": 75,
+        "unit": "bw",
+        "kg": "",
+        "icon": "🏋️"
+    },
+    {
+        "id": "chest_supported_row",
+        "he": "חתירה נתמכת חזה",
+        "en": "Chest Supported Row",
+        "group": "back",
+        "equipment": [
+            "machines",
+            "dumbbells"
+        ],
+        "sets": "3",
+        "reps": "8-12",
+        "rest": 75,
+        "unit": "kg",
+        "kg": "",
+        "icon": "🏋️"
+    },
+    {
+        "id": "straight_arm_pulldown",
+        "he": "פולאובר בכבל ישר",
+        "en": "Straight Arm Pulldown",
+        "group": "back",
+        "equipment": [
+            "cables"
+        ],
+        "sets": "2",
+        "reps": "12-15",
+        "rest": 45,
+        "unit": "kg",
+        "kg": "",
+        "icon": "🏋️"
+    },
+    {
+        "id": "smith_row",
+        "he": "חתירת סמית׳",
+        "en": "Smith Row",
+        "group": "back",
+        "equipment": [
+            "barbell",
+            "machines"
+        ],
+        "sets": "3",
+        "reps": "8-10",
+        "rest": 75,
+        "unit": "kg",
+        "kg": "",
+        "icon": "🏋️"
+    },
+    {
+        "id": "band_row",
+        "he": "חתירה עם גומייה",
+        "en": "Band Row",
+        "group": "back",
+        "equipment": [
+            "bands"
+        ],
+        "sets": "3",
+        "reps": "12-15",
+        "rest": 45,
+        "unit": "bw",
+        "kg": "",
+        "icon": "🏋️"
+    },
+    {
+        "id": "arnold_press",
+        "he": "ארנולד פרס",
+        "en": "Arnold Press",
+        "group": "shoulders",
+        "equipment": [
+            "dumbbells"
+        ],
+        "sets": "3",
+        "reps": "8-12",
+        "rest": 60,
+        "unit": "kg",
+        "kg": "",
+        "icon": "🎯"
+    },
+    {
+        "id": "cable_lateral_raise",
+        "he": "הרחקת כתף בכבל",
+        "en": "Cable Lateral Raise",
+        "group": "shoulders",
+        "equipment": [
+            "cables"
+        ],
+        "sets": "2",
+        "reps": "12-15",
+        "rest": 45,
+        "unit": "kg",
+        "kg": "",
+        "icon": "🎯"
+    },
+    {
+        "id": "front_raise",
+        "he": "הרמת ידיים לפנים",
+        "en": "Front Raise",
+        "group": "shoulders",
+        "equipment": [
+            "dumbbells",
+            "cables"
+        ],
+        "sets": "2",
+        "reps": "10-12",
+        "rest": 45,
+        "unit": "kg",
+        "kg": "",
+        "icon": "🎯"
+    },
+    {
+        "id": "upright_row_cable",
+        "he": "חתירה אנכית בכבל",
+        "en": "Cable Upright Row",
+        "group": "shoulders",
+        "equipment": [
+            "cables"
+        ],
+        "sets": "2",
+        "reps": "10-12",
+        "rest": 45,
+        "unit": "kg",
+        "kg": "",
+        "icon": "🎯"
+    },
+    {
+        "id": "face_pull",
+        "he": "פייס פול",
+        "en": "Face Pull",
+        "group": "shoulders",
+        "equipment": [
+            "cables",
+            "bands"
+        ],
+        "sets": "2",
+        "reps": "12-15",
+        "rest": 45,
+        "unit": "kg",
+        "kg": "",
+        "icon": "🎯"
+    },
+    {
+        "id": "hammer_curl",
+        "he": "כפיפת פטיש",
+        "en": "Hammer Curl",
+        "group": "arms",
+        "equipment": [
+            "dumbbells"
+        ],
+        "sets": "2",
+        "reps": "10-12",
+        "rest": 45,
+        "unit": "kg",
+        "kg": "",
+        "icon": "💥"
+    },
+    {
+        "id": "cable_curl",
+        "he": "כפיפת מרפקים בכבל",
+        "en": "Cable Curl",
+        "group": "arms",
+        "equipment": [
+            "cables"
+        ],
+        "sets": "2",
+        "reps": "10-12",
+        "rest": 45,
+        "unit": "kg",
+        "kg": "",
+        "icon": "💥"
+    },
+    {
+        "id": "preacher_curl_machine",
+        "he": "כפיפת מרפקים במכונה",
+        "en": "Machine Preacher Curl",
+        "group": "arms",
+        "equipment": [
+            "machines"
+        ],
+        "sets": "2",
+        "reps": "10-12",
+        "rest": 45,
+        "unit": "kg",
+        "kg": "",
+        "icon": "💥"
+    },
+    {
+        "id": "skullcrusher",
+        "he": "סקאל קראשר",
+        "en": "Skull Crusher",
+        "group": "arms",
+        "equipment": [
+            "barbell",
+            "dumbbells"
+        ],
+        "sets": "2",
+        "reps": "8-12",
+        "rest": 45,
+        "unit": "kg",
+        "kg": "",
+        "icon": "💥"
+    },
+    {
+        "id": "bench_dip",
+        "he": "מקבילים על ספסל",
+        "en": "Bench Dip",
+        "group": "arms",
+        "equipment": [
+            "bodyweight"
+        ],
+        "sets": "2",
+        "reps": "10-15",
+        "rest": 45,
+        "unit": "bw",
+        "kg": "",
+        "icon": "💥"
+    },
+    {
+        "id": "pallof_press",
+        "he": "פאלוף פרס",
+        "en": "Pallof Press",
+        "group": "core",
+        "equipment": [
+            "cables",
+            "bands"
+        ],
+        "sets": "2",
+        "reps": "10-12 לכל צד",
+        "rest": 30,
+        "unit": "bw",
+        "kg": "",
+        "icon": "🧱"
+    },
+    {
+        "id": "reverse_crunch",
+        "he": "כפיפות בטן הפוכות",
+        "en": "Reverse Crunch",
+        "group": "core",
+        "equipment": [
+            "bodyweight"
+        ],
+        "sets": "2",
+        "reps": "12-15",
+        "rest": 30,
+        "unit": "bw",
+        "kg": "",
+        "icon": "🧱"
+    },
+    {
+        "id": "russian_twist",
+        "he": "רוסיאן טוויסט",
+        "en": "Russian Twist",
+        "group": "core",
+        "equipment": [
+            "bodyweight",
+            "dumbbells"
+        ],
+        "sets": "2",
+        "reps": "16-20",
+        "rest": 30,
+        "unit": "bw",
+        "kg": "",
+        "icon": "🧱"
+    },
+    {
+        "id": "side_plank",
+        "he": "פלאנק צד",
+        "en": "Side Plank",
+        "group": "core",
+        "equipment": [
+            "bodyweight"
+        ],
+        "sets": "2",
+        "reps": "30-45 שנ׳",
+        "rest": 30,
+        "unit": "bw",
+        "kg": "",
+        "icon": "🧱"
+    }
+];
+
+  var GROUP_LABELS = {
+    chest:'חזה', back:'גב', legs:'רגליים', shoulders:'כתפיים', arms:'ידיים', core:'ליבה / בטן'
+  };
+
+  var state = {
+    step:0,
+    users:[],
+    activeUserId:null,
+    programs:[],
+    activeProgramId:null,
+    customExercises:[],
+    editingUserId:null,
+    draft:null,
+    activeDayIndex:0,
+    smartDraft:null
+  };
+
+
+
+  function allExercises(){
+    var map = {};
+    var result = [];
+    []
+      .concat(EXERCISES || [])
+      .concat(EXTRA_EXERCISES || [])
+      .concat(state.customExercises || [])
+      .forEach(function(ex){
+        if(!ex || !ex.id || map[ex.id]) return;
+        map[ex.id] = true;
+        result.push(ex);
+      });
+    return result;
+  }
+
+  function groupIcon(group){
+    return {chest:'💪', back:'🏋️', legs:'🦵', shoulders:'🎯', arms:'💥', core:'🧱'}[group] || '🏋️';
+  }
+
+  function metricDefaultsForUser(user, group){
+    var rest = user ? (parseInt(user.rest,10) || 60) : 60;
+    var goal = user ? user.goal : 'hypertrophy';
+    var sets = goal === 'strength' ? '4' : group === 'core' ? '2' : '3';
+    var reps = goal === 'strength' ? '5-8' : group === 'core' ? '10-15' : goal === 'fatloss' ? '12-15' : '8-12';
+    return {sets:sets, reps:reps, rest:rest};
+  }
+
+  function drawerUserLine(label, value){
+    return '<div class="quick-user-line"><span>'+escapeHtml(label)+'</span><b>'+escapeHtml(value || '—')+'</b></div>';
+  }
+
+  function lsGet(key, fallback){
+    try{
+      var raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    }catch(e){ return fallback; }
+  }
+  function lsSet(key, value){
+    try{ localStorage.setItem(key, JSON.stringify(value)); }catch(e){}
+  }
+  function uid(prefix){ return prefix + '_' + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+  function clone(v){ return JSON.parse(JSON.stringify(v)); }
+  function toast(msg){
+    var el = document.getElementById('toast');
+    el.textContent = msg;
+    el.style.display = 'block';
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function(){ el.style.display = 'none'; }, 2200);
+  }
+  function nowStr(){
+    var d = new Date();
+    return d.toLocaleString('he-IL', {dateStyle:'short', timeStyle:'short'});
+  }
+
+  function loadState(){
+    state.users = lsGet(KEYS.users, []);
+    state.activeUserId = lsGet(KEYS.activeUser, null);
+    state.programs = lsGet(KEYS.programs, []);
+    state.activeProgramId = lsGet(KEYS.activeProgram, null);
+    state.customExercises = lsGet(KEYS.customExercises, []);
+    if(!state.activeUserId && state.users[0]) state.activeUserId = state.users[0].id;
+  }
+  function persistState(){
+    lsSet(KEYS.users, state.users);
+    lsSet(KEYS.activeUser, state.activeUserId);
+    lsSet(KEYS.programs, state.programs);
+    lsSet(KEYS.activeProgram, state.activeProgramId);
+    lsSet(KEYS.customExercises, state.customExercises);
+  }
+
+  function selectedUser(){
+    return state.users.find(function(u){ return u.id === state.activeUserId; }) || null;
+  }
+  function selectedProgram(){
+    return state.programs.find(function(p){ return p.id === state.activeProgramId; }) || null;
+  }
+
+  function setupOptionChips(){
+    var equipWrap = document.getElementById('equip-wrap');
+    equipWrap.innerHTML = EQUIPMENT.map(function(e){
+      return '<button type="button" class="option-chip" data-equip="'+e.id+'">'+e.label+'</button>';
+    }).join('');
+    var focusWrap = document.getElementById('focus-wrap');
+    focusWrap.innerHTML = FOCUS.map(function(f){
+      return '<button type="button" class="option-chip" data-focus="'+f.id+'">'+f.label+'</button>';
+    }).join('');
+
+    equipWrap.addEventListener('click', function(e){
+      var btn = e.target.closest('[data-equip]');
+      if(!btn) return;
+      btn.classList.toggle('on');
+    });
+    focusWrap.addEventListener('click', function(e){
+      var btn = e.target.closest('[data-focus]');
+      if(!btn) return;
+      btn.classList.toggle('on');
+    });
+  }
+
+  function setChipSelection(containerId, attr, values){
+    values = values || [];
+    document.querySelectorAll('#'+containerId+' ['+attr+']').forEach(function(el){
+      var val = el.getAttribute(attr);
+      el.classList.toggle('on', values.indexOf(val) !== -1);
+    });
+  }
+  function selectedChipValues(containerId, attr){
+    var vals = [];
+    document.querySelectorAll('#'+containerId+' ['+attr+'].on').forEach(function(el){
+      vals.push(el.getAttribute(attr));
+    });
+    return vals;
+  }
+
+  function resetUserForm(){
+    state.editingUserId = null;
+    document.getElementById('u-name').value = '';
+    document.getElementById('u-level').value = 'beginner';
+    document.getElementById('u-goal').value = 'hypertrophy';
+    document.getElementById('u-days').value = '3';
+    document.getElementById('u-duration').value = '60';
+    document.getElementById('u-rest').value = '60';
+    document.getElementById('u-notes').value = '';
+    setChipSelection('equip-wrap','data-equip',['machines','dumbbells','cables']);
+    setChipSelection('focus-wrap','data-focus',[]);
+  }
+
+  function fillUserForm(user){
+    state.editingUserId = user.id;
+    document.getElementById('u-name').value = user.name || '';
+    document.getElementById('u-level').value = user.level || 'beginner';
+    document.getElementById('u-goal').value = user.goal || 'hypertrophy';
+    document.getElementById('u-days').value = String(user.days || 3);
+    document.getElementById('u-duration').value = String(user.duration || 60);
+    document.getElementById('u-rest').value = String(user.rest || 60);
+    document.getElementById('u-notes').value = user.notes || '';
+    setChipSelection('equip-wrap','data-equip', user.equipment || []);
+    setChipSelection('focus-wrap','data-focus', user.focus || []);
+  }
+
+  function saveUser(){
+    var name = document.getElementById('u-name').value.trim();
+    if(!name){ toast('יש למלא שם משתמש'); return; }
+    var payload = {
+      id: state.editingUserId || uid('usr'),
+      name: name,
+      level: document.getElementById('u-level').value,
+      goal: document.getElementById('u-goal').value,
+      days: parseInt(document.getElementById('u-days').value,10) || 3,
+      duration: parseInt(document.getElementById('u-duration').value,10) || 60,
+      rest: parseInt(document.getElementById('u-rest').value,10) || 60,
+      equipment: selectedChipValues('equip-wrap','data-equip'),
+      focus: selectedChipValues('focus-wrap','data-focus'),
+      notes: document.getElementById('u-notes').value.trim(),
+      updatedAt: new Date().toISOString()
+    };
+    if(!payload.equipment.length) payload.equipment = ['machines','dumbbells','bodyweight'];
+    var idx = state.users.findIndex(function(u){ return u.id === payload.id; });
+    if(idx >= 0) state.users[idx] = payload;
+    else state.users.unshift(payload);
+    state.activeUserId = payload.id;
+    persistState();
+    renderAll();
+    goStep(1);
+    toast(idx >= 0 ? 'המשתמש עודכן' : 'המשתמש נשמר');
+  }
+
+  function deleteSelectedUser(){
+    if(!state.activeUserId){ toast('אין משתמש נבחר למחיקה'); return; }
+    var u = selectedUser();
+    if(!u) return;
+    if(!confirm('למחוק את המשתמש "' + u.name + '"?')) return;
+    state.users = state.users.filter(function(x){ return x.id !== state.activeUserId; });
+    if(state.editingUserId === state.activeUserId) state.editingUserId = null;
+    state.programs = state.programs.filter(function(p){ return p.userId !== state.activeUserId; });
+    state.activeUserId = state.users[0] ? state.users[0].id : null;
+    if(state.activeProgramId && !state.programs.find(function(p){ return p.id === state.activeProgramId; })) state.activeProgramId = null;
+    if(!state.users.length) resetUserForm();
+    persistState();
+    state.draft = null;
+    renderAll();
+    toast('המשתמש נמחק');
+  }
+
+  function goalLabel(goal){
+    return {hypertrophy:'מסת שריר', fatloss:'חיטוב / ירידה בשומן', strength:'כוח', return:'חזרה לאימונים'}[goal] || goal;
+  }
+  function levelLabel(level){
+    return {beginner:'מתחיל', intermediate:'בינוני', advanced:'מתקדם'}[level] || level;
+  }
+
+  function splitForUser(user){
+    if(!user) return {name:'—', days:[]};
+    if(user.level === 'beginner'){
+      if(user.days <= 2) return {name:'Full Body A/B', days:['פול בודי A','פול בודי B']};
+      if(user.days === 3) return {name:'Full Body x3', days:['פול בודי A','פול בודי B','פול בודי C']};
+    }
+    if(user.days === 2) return {name:'Upper / Lower', days:['פלג גוף עליון','פלג גוף תחתון']};
+    if(user.days === 3) return {name:'Push / Pull / Legs', days:['דחיפה','משיכה','רגליים']};
+    if(user.days === 4) return {name:'Upper / Lower / Upper / Lower', days:['עליון A','תחתון A','עליון B','תחתון B']};
+    return {name:'Push / Pull / Legs / Upper / Arms+Core', days:['דחיפה','משיכה','רגליים','עליון','ידיים + ליבה']};
+  }
+
+  function patternsForDay(title){
+    var t = String(title || '');
+    if(t.indexOf('דחיפה') !== -1) return ['chest','shoulders','arms','core'];
+    if(t.indexOf('משיכה') !== -1) return ['back','shoulders','arms','core'];
+    if(t.indexOf('רגליים') !== -1 || t.indexOf('תחתון') !== -1) return ['legs','core'];
+    if(t.indexOf('עליון') !== -1) return ['chest','back','shoulders','arms'];
+    if(t.indexOf('ידיים') !== -1) return ['arms','shoulders','core'];
+    return ['legs','chest','back','shoulders','arms','core'];
+  }
+
+  function preferredByUser(user, items){
+    var focus = user.focus || [];
+    if(!focus.length) return items;
+    return items.slice().sort(function(a,b){
+      var sa = focus.indexOf(a.group) !== -1 ? -1 : 0;
+      var sb = focus.indexOf(b.group) !== -1 ? -1 : 0;
+      return sa - sb;
+    });
+  }
+
+  function pickExercises(user, groups, usedIds, targetCount){
+    var list = preferredByUser(user, allExercises().filter(function(ex){
+      return groups.indexOf(ex.group) !== -1 && ex.equipment.some(function(eq){ return user.equipment.indexOf(eq) !== -1; });
+    }));
+    if(!list.length){
+      list = allExercises().filter(function(ex){ return groups.indexOf(ex.group) !== -1; });
+    }
+    var picked = [];
+    list.forEach(function(ex){
+      if(picked.length >= targetCount) return;
+      var localDup = picked.some(function(p){ return p.group === ex.group; });
+      if(usedIds[ex.id] || (localDup && groups.length > 2)) return;
+      picked.push(cloneExercise(ex, user.rest));
+      usedIds[ex.id] = true;
+    });
+    if(picked.length < targetCount){
+      list.forEach(function(ex){
+        if(picked.length >= targetCount) return;
+        if(usedIds[ex.id]) return;
+        picked.push(cloneExercise(ex, user.rest));
+        usedIds[ex.id] = true;
+      });
+    }
+    return picked;
+  }
+
+  function cloneExercise(ex, defaultRest){
+    var item = clone(ex);
+    item.uid = uid('item');
+    item.rest = ex.rest || defaultRest || 60;
+    if(item.unit === 'bw') item.kg = '';
+    return item;
+  }
+
+  function generateProgramDraft(){
+    var user = selectedUser();
+    if(!user){ toast('יש לבחור או לשמור משתמש לפני יצירת תוכנית'); goStep(0); return; }
+    var split = splitForUser(user);
+    var targetCount = user.duration <= 45 ? 4 : user.duration <= 60 ? 5 : 6;
+    var usedIds = {};
+    var sessions = split.days.map(function(dayLabel, idx){
+      var patterns = patternsForDay(dayLabel);
+      var items = pickExercises(user, patterns, usedIds, targetCount);
+      return {
+        id: uid('day'),
+        title: dayLabel,
+        focus: patterns.map(function(g){ return GROUP_LABELS[g]; }).join(' · '),
+        items: items
+      };
+    });
+
+    state.draft = {
+      id: uid('draft'),
+      userId: user.id,
+      name: buildSuggestedProgramName(user),
+      split: split.name,
+      days: user.days,
+      duration: user.duration,
+      rest: user.rest,
+      goal: user.goal,
+      createdAt: new Date().toISOString(),
+      sessions: sessions
+    };
+    state.activeDayIndex = 0;
+    document.getElementById('program-name').value = state.draft.name;
+    renderAll();
+    goStep(2);
+    toast('נוצרה טיוטת תוכנית חדשה');
+  }
+
+  function buildSuggestedProgramName(user){
+    return 'כוח ' + user.days + ' ימים — ' + goalLabel(user.goal);
+  }
+
+  function resetDraft(){
+    state.draft = null;
+    state.activeDayIndex = 0;
+    renderAll();
+    toast('טיוטת התוכנית אופסה');
+  }
+
+  function renderUsers(){
+    var host = document.getElementById('users-list');
+    document.getElementById('users-count-badge').textContent = state.users.length + ' משתמשים';
+    if(!state.users.length){
+      host.innerHTML = '<div class="empty">עדיין אין משתמשים. צור משתמש ראשון כדי להתחיל לבנות תוכנית.</div>';
+      return;
+    }
+    host.innerHTML = state.users.map(function(u){
+      return '<div class="user-item '+(u.id===state.activeUserId?'active':'')+'" onclick="selectUser(\''+u.id+'\')">'+
+        '<div class="user-name">'+escapeHtml(u.name)+'</div>'+
+        '<div class="user-meta">'+levelLabel(u.level)+' · '+goalLabel(u.goal)+' · '+u.days+' ימי אימון · '+u.duration+' דק׳</div>'+
+        '<div class="user-actions">'+
+          '<button type="button" class="btn secondary mini" onclick="event.stopPropagation();editUser(\''+u.id+'\')">עריכה</button>'+
+          '<button type="button" class="btn ghost mini" onclick="event.stopPropagation();activateUserOnly(\''+u.id+'\')">הפוך לפעיל</button>'+
+        '</div>'+
+      '</div>';
+    }).join('');
+  }
+
+  function renderUserSummary(){
+    var user = selectedUser();
+    var host = document.getElementById('active-user-summary');
+    var badge = document.getElementById('active-user-badge');
+    if(!user){
+      badge.textContent = 'לא נבחר משתמש';
+      host.innerHTML = '<div class="empty">בחר או צור משתמש כדי לראות את הסיכום ואת לוגיקת יצירת התוכנית.</div>';
+      ['logic-days','logic-split','logic-goal','logic-equip','logic-rest'].forEach(function(id){ document.getElementById(id).textContent = '—'; });
+      return;
+    }
+    badge.textContent = user.name;
+    var split = splitForUser(user);
+    host.innerHTML = [
+      boxHtml('נתוני יסוד', [
+        ['שם', user.name],
+        ['רמה', levelLabel(user.level)],
+        ['מטרה', goalLabel(user.goal)],
+        ['ימי אימון', user.days],
+        ['משך אימון', user.duration + ' דק׳']
+      ]),
+      boxHtml('ציוד ודגשים', [
+        ['ציוד', user.equipment.map(labelForEquip).join(' · ') || '—'],
+        ['דגש', (user.focus || []).map(function(f){ return GROUP_LABELS[f] || f; }).join(' · ') || 'ללא דגש מוגדר'],
+        ['מנוחה', user.rest + ' שניות'],
+        ['הערות', user.notes || 'אין הערות']
+      ])
+    ].join('');
+    document.getElementById('logic-days').textContent = user.days + ' ימים';
+    document.getElementById('logic-split').textContent = split.name;
+    document.getElementById('logic-goal').textContent = goalLabel(user.goal);
+    document.getElementById('logic-equip').textContent = user.equipment.map(labelForEquip).join(' · ');
+    document.getElementById('logic-rest').textContent = user.rest + ' שניות';
+  }
+
+  function boxHtml(title, rows){
+    return '<div class="summary-box"><h4>'+title+'</h4>' + rows.map(function(r){
+      return '<div class="summary-row"><span>'+escapeHtml(String(r[0]))+'</span><span>'+escapeHtml(String(r[1]))+'</span></div>';
+    }).join('') + '</div>';
+  }
+
+  function labelForEquip(id){
+    var found = EQUIPMENT.find(function(e){ return e.id === id; });
+    return found ? found.label : id;
+  }
+
+  function renderBuilder(){
+    var hasDraft = !!state.draft;
+    document.getElementById('draft-empty').style.display = hasDraft ? 'none' : 'block';
+    document.getElementById('builder-wrap').style.display = hasDraft ? 'block' : 'none';
+    document.getElementById('draft-status-badge').textContent = hasDraft ? 'טיוטה פעילה' : 'אין טיוטה';
+    if(!hasDraft){
+      document.getElementById('day-tabs').innerHTML = '';
+      document.getElementById('day-panels').innerHTML = '';
+      return;
+    }
+    if(state.activeDayIndex > state.draft.sessions.length - 1) state.activeDayIndex = 0;
+    renderDayTabs();
+    renderDayPanels();
+    renderLibrary();
+  }
+
+  function renderDayTabs(){
+    var tabs = document.getElementById('day-tabs');
+    tabs.innerHTML = state.draft.sessions.map(function(s, i){
+      return '<button class="day-tab '+(i===state.activeDayIndex?'on':'')+'" onclick="setActiveDay('+i+')">'+escapeHtml(s.title)+'</button>';
+    }).join('');
+    var target = document.getElementById('lib-day-target');
+    target.innerHTML = state.draft.sessions.map(function(s, i){
+      return '<option value="'+i+'" '+(i===state.activeDayIndex?'selected':'')+'>'+escapeHtml(s.title)+'</option>';
+    }).join('');
+    target.onchange = function(){ state.activeDayIndex = parseInt(this.value,10)||0; renderBuilder(); };
+  }
+
+  function renderDayPanels(){
+    var host = document.getElementById('day-panels');
+    host.innerHTML = state.draft.sessions.map(function(day, dayIdx){
+      return '<div class="day-panel '+(dayIdx===state.activeDayIndex?'on':'')+'">'+
+        '<div class="day-head">'+
+          '<div><div class="day-title">'+escapeHtml(day.title)+'</div><div class="day-sub">'+escapeHtml(day.focus)+' · '+day.items.length+' תרגילים</div></div>'+
+          '<span class="badge">'+state.draft.duration+' דק׳</span>'+
+        '</div>'+
+        '<div class="exercise-list">'+
+          day.items.map(function(item, itemIdx){ return exerciseCardHtml(dayIdx, itemIdx, item); }).join('')+
+        '</div>'+
+      '</div>';
+    }).join('');
+  }
+
+  function exerciseCardHtml(dayIdx, itemIdx, item){
+    return '<div class="exercise-card">'+
+      '<div class="exercise-main">'+
+        '<div><div class="exercise-name">'+item.icon+' '+escapeHtml(item.he)+'<small>'+escapeHtml(item.en)+'</small></div></div>'+
+        '<span class="exercise-tag">'+escapeHtml(GROUP_LABELS[item.group] || item.group)+'</span>'+
+      '</div>'+
+      '<div class="metric-grid">'+
+        metricField('סטים', item.sets, 'updateItemField('+dayIdx+','+itemIdx+',\'sets\', this.value)')+
+        metricField('חזרות', item.reps, 'updateItemField('+dayIdx+','+itemIdx+',\'reps\', this.value)')+
+        metricField('משקל', item.kg || '', 'updateItemField('+dayIdx+','+itemIdx+',\'kg\', this.value)', item.unit==='bw' ? 'BW' : 'KG')+
+        metricField('מנוחה', item.rest, 'updateItemField('+dayIdx+','+itemIdx+',\'rest\', this.value)', 'שנ׳')+
+      '</div>'+
+      '<div class="exercise-actions">'+
+        '<button class="btn secondary mini" type="button" onclick="duplicateItem('+dayIdx+','+itemIdx+')">שכפל</button>'+
+        '<button class="btn ghost mini" type="button" onclick="moveItem('+dayIdx+','+itemIdx+', -1)">מעלה</button>'+
+        '<button class="btn ghost mini" type="button" onclick="moveItem('+dayIdx+','+itemIdx+', 1)">מטה</button>'+
+        '<button class="btn warn mini" type="button" onclick="removeItem('+dayIdx+','+itemIdx+')">הסר</button>'+
+      '</div>'+
+    '</div>';
+  }
+
+  function metricField(label, value, oninput, suffix){
+    return '<div class="field"><label>'+label+'</label><input type="text" value="'+escapeAttr(String(value))+'" oninput="'+oninput+'" placeholder="'+(suffix||'')+'"></div>';
+  }
+
+  function renderLibrary(){
+    var groupSel = document.getElementById('lib-group');
+    if(!groupSel.dataset.ready){
+      groupSel.innerHTML = '<option value="all">כל הקבוצות</option>' + Object.keys(GROUP_LABELS).map(function(g){ return '<option value="'+g+'">'+GROUP_LABELS[g]+'</option>'; }).join('');
+      groupSel.dataset.ready = '1';
+    }
+    var equipSel = document.getElementById('lib-equip');
+    if(!equipSel.dataset.ready){
+      equipSel.innerHTML = '<option value="all">כל סוגי הציוד</option>' + EQUIPMENT.map(function(e){ return '<option value="'+e.id+'">'+e.label+'</option>'; }).join('');
+      equipSel.dataset.ready = '1';
+    }
+    ['lib-search','lib-group','lib-equip'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el.dataset.bound){
+        el.addEventListener('input', renderLibraryList);
+        el.addEventListener('change', renderLibraryList);
+        el.dataset.bound = '1';
+      }
+    });
+    renderLibraryList();
+  }
+
+  function renderLibraryList(){
+    var q = (document.getElementById('lib-search').value || '').trim().toLowerCase();
+    var group = document.getElementById('lib-group').value || 'all';
+    var equip = document.getElementById('lib-equip').value || 'all';
+    var host = document.getElementById('library-list');
+    var filtered = allExercises().filter(function(ex){
+      var matchQ = !q || ex.he.toLowerCase().indexOf(q) !== -1 || ex.en.toLowerCase().indexOf(q) !== -1;
+      var matchG = group === 'all' || ex.group === group;
+      var matchE = equip === 'all' || ex.equipment.indexOf(equip) !== -1;
+      return matchQ && matchG && matchE;
+    });
+    var badge = document.getElementById('library-count-badge');
+    if(badge){
+      var customCount = (state.customExercises || []).length;
+      badge.textContent = filtered.length + ' תרגילים' + (customCount ? ' · ' + customCount + ' אישיים' : '');
+    }
+    if(!filtered.length){
+      host.innerHTML = '<div class="empty">לא נמצאו תרגילים לפי הסינון שבחרת.</div>';
+      return;
+    }
+    host.innerHTML = filtered.map(function(ex){
+      var groupBadge = '<span class="badge">'+escapeHtml(GROUP_LABELS[ex.group] || ex.group)+'</span>';
+      if(ex.custom) groupBadge = '<span class="badge warn">מותאם אישית</span>';
+      return '<div class="library-item '+(ex.custom?'custom':'')+'">'+
+        '<div class="library-item-head"><div class="library-item-name">'+ex.icon+' '+escapeHtml(ex.he)+'<small>'+escapeHtml(ex.en)+'</small></div>'+groupBadge+'</div>'+
+        '<div class="library-item-meta">'+
+          ex.equipment.map(function(eq){ return '<span class="mini-pill">'+escapeHtml(labelForEquip(eq))+'</span>'; }).join('')+
+          (ex.custom ? '<span class="mini-pill">נוסף ידנית</span>' : '')+
+        '</div>'+
+        '<div class="library-item-actions"><button class="btn secondary mini" type="button" onclick="addLibraryExercise(\''+ex.id+'\')">הוסף ליום הנבחר</button></div>'+
+      '</div>';
+    }).join('');
+  }
+
+  function renderSummary(){
+    var hasDraft = !!state.draft;
+    document.getElementById('summary-empty').style.display = hasDraft ? 'none' : 'block';
+    document.getElementById('program-summary').style.display = hasDraft ? 'block' : 'none';
+    document.getElementById('summary-badge').textContent = hasDraft ? 'מוכן לשמירה' : 'לא נשמרה';
+    if(!hasDraft) return;
+    var user = selectedUser();
+    document.getElementById('program-name').value = state.draft.name || document.getElementById('program-name').value || '';
+    document.getElementById('sum-user').textContent = user ? user.name : '—';
+    document.getElementById('sum-split').textContent = state.draft.split;
+    document.getElementById('sum-days').textContent = state.draft.days;
+    document.getElementById('sum-duration').textContent = state.draft.duration + ' דק׳';
+    document.getElementById('sum-rest').textContent = state.draft.rest + ' שניות';
+    document.getElementById('session-summary').innerHTML = state.draft.sessions.map(function(s){
+      return '<div class="session-card"><h4>'+escapeHtml(s.title)+'</h4><div class="helper-line">'+escapeHtml(s.focus)+' · '+s.items.length+' תרגילים</div><ul>'+s.items.map(function(it){ return '<li>'+escapeHtml(it.he)+' — '+escapeHtml(it.sets)+' סטים, '+escapeHtml(it.reps)+' חזרות</li>'; }).join('')+'</ul></div>';
+    }).join('');
+  }
+
+  function renderPrograms(){
+    var host = document.getElementById('programs-list');
+    var programs = state.programs.slice().sort(function(a,b){ return String(b.updatedAt || '').localeCompare(String(a.updatedAt || '')); });
+    document.getElementById('saved-program-count').textContent = String(programs.length);
+    if(!programs.length){
+      host.innerHTML = '<div class="empty">עדיין אין תוכניות שמורות. שמור תוכנית אחת כדי להתחיל לצבור גרסאות.</div>';
+      return;
+    }
+    host.innerHTML = programs.map(function(p){
+      var user = state.users.find(function(u){ return u.id === p.userId; });
+      return '<div class="program-item '+(p.id===state.activeProgramId?'active':'')+'">'+
+        '<div class="program-top"><div><div class="program-name">'+escapeHtml(p.name)+'</div><div class="program-meta">'+(user?escapeHtml(user.name):'משתמש לא קיים')+' · '+escapeHtml(p.split)+' · '+p.days+' ימים · עודכן '+escapeHtml(p.updatedLabel || '')+'</div></div><span class="badge '+(p.id===state.activeProgramId?'green':'')+'">'+(p.id===state.activeProgramId?'פעילה':'שמורה')+'</span></div>'+
+        '<div class="program-actions">'+
+          '<button class="btn secondary mini" type="button" onclick="loadProgram(\''+p.id+'\')">טען לעריכה</button>'+
+          '<button class="btn primary mini" type="button" onclick="activateProgram(\''+p.id+'\')">סמן כפעילה</button>'+
+          '<button class="btn ghost mini" type="button" onclick="duplicateProgram(\''+p.id+'\')">שכפל</button>'+
+          '<button class="btn warn mini" type="button" onclick="deleteProgram(\''+p.id+'\')">מחק</button>'+
+        '</div>'+
+      '</div>';
+    }).join('');
+  }
+
+
+  function setTextIf(id, value){
+    var el = document.getElementById(id);
+    if(el) el.textContent = value;
+  }
+  function setHtmlIf(id, value){
+    var el = document.getElementById(id);
+    if(el) el.innerHTML = value;
+  }
+  function paintWorkflowState(){
+    document.querySelectorAll('[data-hub-step]').forEach(function(card){
+      card.classList.toggle('on', parseInt(card.getAttribute('data-hub-step'),10) === state.step);
+    });
+  }
+
+
+  function renderSmartAdd(){
+    var box = document.getElementById('smart-preview');
+    if(!box) return;
+    box.classList.toggle('on', !!state.smartDraft);
+    if(!state.smartDraft){
+      box.innerHTML = '';
+      return;
+    }
+    var draft = state.smartDraft;
+    box.innerHTML =
+      '<div class="preview-top">'+
+        '<div><div class="preview-title">המערכת מציעה תרגיל חדש</div><div class="preview-sub">זהו ניתוח חצי־חכם: התוצאה ניתנת לעריכה מלאה לפני הוספה לספרייה.</div></div>'+
+        '<span class="badge '+(draft.confidence >= 75 ? 'green' : draft.confidence >= 55 ? '' : 'warn')+'">'+draft.confidenceLabel+'</span>'+
+      '</div>'+
+      '<div class="smart-chip-row">'+
+        '<span class="smart-chip">קבוצה: '+escapeHtml(GROUP_LABELS[draft.group] || draft.group)+'</span>'+
+        '<span class="smart-chip">ציוד: '+escapeHtml(labelForEquip(draft.equipment[0] || 'bodyweight'))+'</span>'+
+        '<span class="smart-chip">ברירת מחדל: '+escapeHtml(draft.sets)+' סטים · '+escapeHtml(draft.reps)+'</span>'+
+      '</div>'+
+      '<div class="form-grid">'+
+        '<div class="field"><label for="smart-he">שם בעברית</label><input id="smart-he" type="text" value="'+escapeAttr(draft.he)+'"></div>'+
+        '<div class="field"><label for="smart-en">שם באנגלית</label><input id="smart-en" type="text" value="'+escapeAttr(draft.en)+'"></div>'+
+        '<div class="field"><label for="smart-group">קבוצה</label><select id="smart-group">'+Object.keys(GROUP_LABELS).map(function(g){ return '<option value="'+g+'" '+(g===draft.group?'selected':'')+'>'+GROUP_LABELS[g]+'</option>'; }).join('')+'</select></div>'+
+        '<div class="field"><label for="smart-equip">ציוד עיקרי</label><select id="smart-equip">'+EQUIPMENT.map(function(e){ return '<option value="'+e.id+'" '+((draft.equipment[0]||'')===e.id?'selected':'')+'>'+e.label+'</option>'; }).join('')+'</select></div>'+
+        '<div class="field"><label for="smart-sets">סטים</label><input id="smart-sets" type="text" value="'+escapeAttr(draft.sets)+'"></div>'+
+        '<div class="field"><label for="smart-reps">חזרות</label><input id="smart-reps" type="text" value="'+escapeAttr(draft.reps)+'"></div>'+
+        '<div class="field"><label for="smart-rest">מנוחה</label><input id="smart-rest" type="text" value="'+escapeAttr(String(draft.rest))+'"></div>'+
+        '<div class="field"><label for="smart-notes">הערות</label><input id="smart-notes" type="text" value="'+escapeAttr(draft.notes || '')+'"></div>'+
+      '</div>'+
+      '<div class="toolbar" style="margin-top:12px;margin-bottom:0">'+
+        '<button class="btn green" type="button" onclick="saveSmartExercise(false)">הוסף לספרייה</button>'+
+        '<button class="btn secondary" type="button" onclick="saveSmartExercise(true)">הוסף לספרייה וליום הנבחר</button>'+
+        '<button class="btn ghost" type="button" onclick="clearSmartRequest()">בטל</button>'+
+      '</div>';
+  }
+
+  function renderUserDrawer(){
+    var user = selectedUser();
+    var drawerHost = document.getElementById('drawer-active-user');
+    var badge = document.getElementById('drawer-active-badge');
+    var list = document.getElementById('drawer-users-list');
+    var count = document.getElementById('drawer-user-count');
+    if(!drawerHost || !list || !count) return;
+    badge.textContent = user ? 'מחובר' : 'אין מחובר';
+    if(!user){
+      drawerHost.innerHTML = '<div class="empty" style="padding:18px 12px;background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12);color:#d7e4f1">אין כרגע משתמש פעיל. אפשר לבחור אחד מהרשימה או לעבור לניהול משתמשים.</div>';
+    }else{
+      drawerHost.innerHTML =
+        drawerUserLine('שם', user.name) +
+        drawerUserLine('מטרה', goalLabel(user.goal)) +
+        drawerUserLine('רמה', levelLabel(user.level)) +
+        drawerUserLine('ימי אימון', String(user.days)) +
+        drawerUserLine('פיצול צפוי', splitForUser(user).name);
+    }
+    count.textContent = String(state.users.length);
+    if(!state.users.length){
+      list.innerHTML = '<div class="empty">עדיין אין משתמשים. צור משתמש ראשון כדי להתחיל.</div>';
+      return;
+    }
+    list.innerHTML = state.users.map(function(u){
+      return '<div class="drawer-user-item '+(u.id===state.activeUserId?'active':'')+'">'+
+        '<div class="drawer-user-main">'+
+          '<div class="drawer-user-name">'+escapeHtml(u.name)+'</div>'+
+          '<div class="drawer-user-meta">'+levelLabel(u.level)+' · '+goalLabel(u.goal)+' · '+u.days+' ימים</div>'+
+        '</div>'+
+        '<div class="program-actions">'+
+          (u.id===state.activeUserId
+            ? '<span class="badge green">פעיל</span>'
+            : '<button class="btn secondary mini" type="button" onclick="switchUserFromDrawer(\''+u.id+'\')">בחר</button>')+
+        '</div>'+
+      '</div>';
+    }).join('');
+  }
+
+  function normalizeSmartText(text){
+    return String(text || '')
+      .toLowerCase()
+      .replace(/[״”“"']/g,' ')
+      .replace(/\s+/g,' ')
+      .trim();
+  }
+
+  function detectSmartGroup(text){
+    var norm = normalizeSmartText(text);
+    var groups = [
+      ['legs',['רגל','ירך','גלוט','ישבן','המסטרינג','quad','leg','squat','לאנג','lunge','hip thrust','סקוואט']],
+      ['chest',['חזה','chest','press','fly','push up','שכיבות','מקבילים']],
+      ['back',['גב','back','row','lat','pull','חתירה','פולי','מתח']],
+      ['shoulders',['כתף','shoulder','lateral','rear delt','military','arnold','face pull','הרחקת']],
+      ['arms',['יד','בייספס','טרייספס','curl','pushdown','extension','hammer']],
+      ['core',['בטן','ליבה','core','plank','ab','pallof','crunch','twist']]
+    ];
+    var best = {group:'back', score:0};
+    groups.forEach(function(entry){
+      var score = 0;
+      entry[1].forEach(function(k){ if(norm.indexOf(k) !== -1) score += 1; });
+      if(score > best.score) best = {group:entry[0], score:score};
+    });
+    return best;
+  }
+
+  function detectSmartEquipment(text, user){
+    var norm = normalizeSmartText(text);
+    var options = [
+      ['dumbbells',['דאמבל','דאמבלים','dumbbell']],
+      ['cables',['כבל','כבלים','cable']],
+      ['machines',['מכונה','מכונות','machine','selectorized']],
+      ['barbell',['מוט','סמית','smith','barbell']],
+      ['bands',['גומיה','גומייה','גומיות','band']],
+      ['bodyweight',['משקל גוף','bodyweight','ללא ציוד','רק גוף']]
+    ];
+    var best = {equip:null, score:0};
+    options.forEach(function(entry){
+      var score = 0;
+      entry[1].forEach(function(k){ if(norm.indexOf(k) !== -1) score += 1; });
+      if(score > best.score) best = {equip:entry[0], score:score};
+    });
+    if(best.equip) return best;
+    if(user && user.equipment && user.equipment.length) return {equip:user.equipment[0], score:0};
+    return {equip:'machines', score:0};
+  }
+
+  function detectMovement(text){
+    var norm = normalizeSmartText(text);
+    var movements = [
+      ['press',{he:'לחיצה', en:'Press'}],
+      ['row',{he:'חתירה', en:'Row'}],
+      ['squat',{he:'סקוואט', en:'Squat'}],
+      ['lunge',{he:'מכרעים', en:'Lunge'}],
+      ['deadlift',{he:'דדליפט', en:'Deadlift'}],
+      ['curl',{he:'כפיפה', en:'Curl'}],
+      ['extension',{he:'פשיטה', en:'Extension'}],
+      ['raise',{he:'הרמה', en:'Raise'}],
+      ['fly',{he:'פרפר', en:'Fly'}],
+      ['pushup',{he:'שכיבות סמיכה', en:'Push Up'}],
+      ['plank',{he:'פלאנק', en:'Plank'}],
+      ['crunch',{he:'כפיפות בטן', en:'Crunch'}]
+    ];
+    var aliases = {
+      press:['לחיצ','press'],
+      row:['חתירה','row'],
+      squat:['סקוואט','squat'],
+      lunge:['לאנג','מכרע','lunge'],
+      deadlift:['דדליפט','rdl','deadlift'],
+      curl:['כפיפ','curl'],
+      extension:['פשיט','extension'],
+      raise:['הרחק','הרמה','raise'],
+      fly:['פרפר','fly'],
+      pushup:['שכיבות','push up'],
+      plank:['פלאנק','plank'],
+      crunch:['כפיפות','crunch']
+    };
+    for(var i=0;i<movements.length;i++){
+      var key = movements[i][0];
+      var arr = aliases[key];
+      for(var j=0;j<arr.length;j++){
+        if(norm.indexOf(arr[j]) !== -1) return movements[i][1];
+      }
+    }
+    return null;
+  }
+
+  function buildSmartNames(group, equip, movement){
+    var equipLabelHe = {
+      machines:'במכונה', dumbbells:'עם דאמבלים', cables:'בכבל', barbell:'עם מוט', bands:'עם גומייה', bodyweight:'במשקל גוף'
+    }[equip] || '';
+    var base = {
+      chest:{press:['לחיצת חזה','Chest Press'], fly:['פרפר חזה','Chest Fly'], generic:['תרגיל חזה','Chest Exercise']},
+      back:{row:['חתירה','Row'], press:['משיכת גב','Back Pull'], generic:['תרגיל גב','Back Exercise']},
+      legs:{squat:['סקוואט','Squat'], lunge:['מכרעים','Lunge'], press:['לחיצת רגליים','Leg Press'], generic:['תרגיל רגליים','Leg Exercise']},
+      shoulders:{press:['לחיצת כתפיים','Shoulder Press'], raise:['הרחקת כתף','Lateral Raise'], fly:['פרפר אחורי','Rear Delt Fly'], generic:['תרגיל כתפיים','Shoulder Exercise']},
+      arms:{curl:['כפיפת מרפקים','Curl'], extension:['פשיטת טרייספס','Triceps Extension'], generic:['תרגיל ידיים','Arm Exercise']},
+      core:{plank:['פלאנק','Plank'], crunch:['כפיפות בטן','Crunch'], press:['פאלוף פרס','Pallof Press'], generic:['תרגיל ליבה','Core Exercise']}
+    };
+    var source = base[group] || base.back;
+    var picked = movement && source[Object.keys(source).find(function(k){ return source[k] && movement.en && source[k][1].toLowerCase().indexOf(movement.en.toLowerCase()) !== -1; })];
+    if(!picked){
+      if(movement && movement.he){
+        if(group === 'back' && movement.he === 'חתירה') picked = source.row;
+        else if(group === 'legs' && movement.he === 'סקוואט') picked = source.squat;
+        else if(group === 'legs' && movement.he === 'מכרעים') picked = source.lunge;
+        else if(group === 'arms' && movement.he === 'כפיפה') picked = source.curl;
+        else if(group === 'arms' && movement.he === 'פשיטה') picked = source.extension;
+        else if(group === 'shoulders' && movement.he === 'הרמה') picked = source.raise;
+        else if(group === 'shoulders' && movement.he === 'לחיצה') picked = source.press;
+        else if(group === 'core' && movement.he === 'פלאנק') picked = source.plank;
+        else if(group === 'core' && movement.he === 'כפיפות בטן') picked = source.crunch;
+        else if(group === 'chest' && movement.he === 'לחיצה') picked = source.press;
+        else if(group === 'chest' && movement.he === 'פרפר') picked = source.fly;
+      }
+    }
+    if(!picked) picked = source.generic;
+    return {
+      he: picked[0] + (equipLabelHe ? ' ' + equipLabelHe : ''),
+      en: (picked[1] || 'Custom Exercise') + (equip ? ' — ' + labelForEquip(equip) : '')
+    };
+  }
+
+  function buildSmartDraft(text){
+    var user = selectedUser();
+    var groupHit = detectSmartGroup(text);
+    var equipHit = detectSmartEquipment(text, user);
+    var movement = detectMovement(text);
+    var names = buildSmartNames(groupHit.group, equipHit.equip, movement);
+    var defaults = metricDefaultsForUser(user, groupHit.group);
+    var confidence = 46 + groupHit.score * 18 + equipHit.score * 16 + (movement ? 12 : 0);
+    if(confidence > 92) confidence = 92;
+    var confidenceLabel = confidence >= 75 ? 'זיהוי גבוה' : confidence >= 55 ? 'זיהוי בינוני' : 'דורש בדיקה';
+    return {
+      id: uid('cust'),
+      he: names.he,
+      en: names.en,
+      group: groupHit.group,
+      equipment: [equipHit.equip || 'machines'],
+      sets: defaults.sets,
+      reps: defaults.reps,
+      rest: defaults.rest,
+      unit: equipHit.equip === 'bodyweight' || equipHit.equip === 'bands' ? 'bw' : 'kg',
+      kg: '',
+      icon: groupIcon(groupHit.group),
+      custom: true,
+      confidence: confidence,
+      confidenceLabel: confidenceLabel,
+      notes: 'נוצר מבקשת טקסט',
+      sourcePrompt: text
+    };
+  }
+
+  function collectSmartDraftFromForm(){
+    return {
+      id: state.smartDraft && state.smartDraft.id ? state.smartDraft.id : uid('cust'),
+      he: (document.getElementById('smart-he').value || '').trim(),
+      en: (document.getElementById('smart-en').value || '').trim(),
+      group: document.getElementById('smart-group').value,
+      equipment: [document.getElementById('smart-equip').value],
+      sets: (document.getElementById('smart-sets').value || '').trim() || '3',
+      reps: (document.getElementById('smart-reps').value || '').trim() || '8-12',
+      rest: parseInt(document.getElementById('smart-rest').value,10) || 60,
+      unit: ['bodyweight','bands'].indexOf(document.getElementById('smart-equip').value) !== -1 ? 'bw' : 'kg',
+      kg: '',
+      icon: groupIcon(document.getElementById('smart-group').value),
+      custom: true,
+      notes: (document.getElementById('smart-notes').value || '').trim(),
+      sourcePrompt: state.smartDraft && state.smartDraft.sourcePrompt ? state.smartDraft.sourcePrompt : ''
+    };
+  }
+
+  function renderTop(){
+    var user = selectedUser();
+    var program = selectedProgram();
+    var split = user ? splitForUser(user) : null;
+    var bridge = lsGet(KEYS.bridge, null);
+    setTextIf('top-status', user ? ('משתמש פעיל: ' + user.name) : 'אין משתמש פעיל');
+    setTextIf('user-top-label', user ? ('משתמשים · ' + user.name) : 'משתמשים');
+    setTextIf('kpi-users', String(state.users.length));
+    setTextIf('kpi-programs', String(state.programs.length));
+    setTextIf('kpi-exercises', String(allExercises().length));
+    setTextIf('kpi-days', state.draft ? String(state.draft.days) : (program ? String(program.days) : '—'));
+    setTextIf('active-program-chip', program ? program.name : 'טרם נבחרה');
+    setTextIf('active-program-copy', program
+      ? 'התוכנית הפעילה כבר מסומנת. אפשר להמשיך לערוך, לשמור גרסה חדשה או להכין מעבר ל"ביצוע".'
+      : 'שמור תוכנית וסמן אותה כפעילה כדי להכין חיבור מסודר ל"ביצוע".');
+
+    setTextIf('state-user-val', user ? user.name : 'בחר משתמש');
+    setTextIf('state-goal-val', user ? goalLabel(user.goal) : '—');
+    setTextIf('state-split-val', user ? split.name : '—');
+    setTextIf('state-program-val', state.draft ? 'טיוטה פעילה' : (program ? 'תוכנית פעילה' : 'אין תוכנית'));
+    setTextIf('state-bridge-val', bridge ? 'מוכן' : 'לא הוכן');
+
+    setTextIf('hub-users-note', state.users.length ? ((user ? user.name : 'משתמש קיים') + ' פעיל כעת') : 'צור משתמש ראשון');
+    setTextIf('hub-prefs-note', user ? (goalLabel(user.goal) + ' · ' + user.days + ' ימים') : 'הגדר מטרה, ציוד וימי אימון');
+    setTextIf('hub-build-note', state.draft ? (state.draft.sessions.length + ' ימי אימון בטיוטה') : 'צור טיוטה וערוך תרגילים');
+    setTextIf('hub-save-note', state.programs.length ? (state.programs.length + ' תוכניות שמורות') : 'שמור תוכנית והכן מעבר');
+
+    paintWorkflowState();
+  }
+
+  function renderBreadcrumb(){
+    var user = selectedUser();
+    var stepLabels = ['משתמשים','העדפות','בניית תוכנית','שמירה ומעבר'];
+    var parts = [
+      {label:'בית', step:0},
+      {label:'ספרייה 2.0', step:0}
+    ];
+    if(user) parts.push({label:user.name, step:1});
+    parts.push({label:stepLabels[state.step], step:state.step, active:true});
+    setHtmlIf('breadcrumb', parts.map(function(p, i){
+      var cls = 'crumb-link' + (p.active ? ' active' : '');
+      var node = '<button type="button" class="'+cls+'" onclick="crumbGo('+p.step+')">'+escapeHtml(p.label)+'</button>';
+      return node + (i < parts.length - 1 ? '<span class="sep">›</span>' : '');
+    }).join(''));
+  }
+
+
+
+  function readLegacyImports(){
+    return lsGet(KEYS.legacyImports, []);
+  }
+  function writeLegacyImports(items){
+    lsSet(KEYS.legacyImports, items || []);
+  }
+  function updateLegacyImportCardMeta(){
+    var imports = readLegacyImports();
+    var badge = document.getElementById('legacy-import-badge');
+    var status = document.getElementById('legacy-import-status');
+    if(badge) badge.textContent = imports.length ? (imports.length + ' ייבואים') : 'טרם יובא';
+    if(status && !status.dataset.locked) status.textContent = imports.length ? 'יש גיבוי legacy שמור לסנכרון עתידי' : 'ממתין לקובץ';
+  }
+  function applyImportedNameSuggestion(){
+    var input = document.getElementById('legacy-import-name');
+    if(!input || input.value.trim()) return;
+    var user = selectedUser();
+    if(user && user.name) input.value = user.name;
+  }
+  function legacyItemToProgramItem(item){
+    item = item || {};
+    var existing = allExercises().find(function(ex){
+      return ex.id === item.id || ex.he === item.he || ex.en === item.en;
+    });
+    if(existing){
+      var out = cloneExercise(existing, parseInt(item.rest,10) || 60);
+      out.sets = String(item.sets || out.sets || '');
+      out.reps = String(item.reps || out.reps || '');
+      out.kg = String(item.kg || out.kg || '');
+      out.unit = String(item.unit || out.unit || (out.kg ? 'kg' : 'bw'));
+      out.rest = parseInt(item.rest,10) || out.rest || 60;
+      return out;
+    }
+    var custom = {
+      id: item.id || uid('cust'),
+      he: item.he || 'תרגיל מיובא',
+      en: item.en || 'Imported Exercise',
+      group: item.group || 'arms',
+      equipment: item.unit === 'bw' ? ['bodyweight'] : ['machines'],
+      sets: String(item.sets || '3'),
+      reps: String(item.reps || '8-12'),
+      rest: parseInt(item.rest,10) || 60,
+      unit: String(item.unit || (item.kg ? 'kg' : 'bw')),
+      kg: String(item.kg || ''),
+      icon: item.icon || groupIcon(item.group || 'arms')
+    };
+    if(!state.customExercises.some(function(ex){ return ex.id === custom.id; })) state.customExercises.unshift(custom);
+    return cloneExercise(custom, custom.rest);
+  }
+  function buildImportedProgramFromBackup(backup, userId){
+    var seed = backup.library2ImportSeed || {};
+    var normalized = backup.normalized || {};
+    var items = (seed.programItems || normalized.strengthProgramItems || []).map(legacyItemToProgramItem);
+    return {
+      id: uid('prg'),
+      userId: userId,
+      name: seed.oneSessionProgramName || 'התוכנית הקיימת מהאפליקציה הראשית',
+      split: 'Legacy Import',
+      days: 1,
+      duration: 60,
+      rest: seed.rest || 60,
+      goal: seed.preferredGoal || 'hypertrophy',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      updatedLabel: nowStr(),
+      sessions: [{
+        id: uid('day'),
+        title: seed.sessionTitle || 'האימון הנוכחי',
+        focus: 'נתוני legacy מהאפליקציה הראשית',
+        items: items
+      }]
+    };
+  }
+  function upsertImportedUser(name, backup){
+    var imports = readLegacyImports();
+    var existingId = imports.length && imports[0].userId ? imports[0].userId : null;
+    var user = existingId ? state.users.find(function(u){ return u.id === existingId; }) : null;
+    if(!user){
+      user = {
+        id: uid('usr'),
+        name: name,
+        level: 'intermediate',
+        goal: (backup.library2ImportSeed && backup.library2ImportSeed.preferredGoal) || 'hypertrophy',
+        days: (backup.library2ImportSeed && backup.library2ImportSeed.preferredDays) || 3,
+        duration: 60,
+        rest: (backup.library2ImportSeed && backup.library2ImportSeed.rest) || 60,
+        equipment: ['machines','dumbbells','cables','bodyweight'],
+        focus: [],
+        notes: 'נוצר מייבוא legacy מהאפליקציה הראשית',
+        updatedAt: new Date().toISOString(),
+        importedLegacy: true
+      };
+      state.users.unshift(user);
+    } else {
+      user.name = name || user.name;
+      user.updatedAt = new Date().toISOString();
+      user.importedLegacy = true;
+      var idx = state.users.findIndex(function(u){ return u.id === user.id; });
+      if(idx >= 0) state.users[idx] = user;
+    }
+    return user;
+  }
+  window.clearLegacyImportSelection = function(){
+    var f = document.getElementById('legacy-import-file');
+    var n = document.getElementById('legacy-import-name');
+    if(f) f.value = '';
+    if(n && !selectedUser()) n.value = '';
+    var s = document.getElementById('legacy-import-status');
+    if(s){ s.textContent = readLegacyImports().length ? 'יש גיבוי legacy שמור לסנכרון עתידי' : 'ממתין לקובץ'; s.dataset.locked = ''; }
+  };
+  window.importLegacyBackupIntoLibrary2 = function(){
+    var fileInput = document.getElementById('legacy-import-file');
+    var nameInput = document.getElementById('legacy-import-name');
+    var status = document.getElementById('legacy-import-status');
+    if(!fileInput || !fileInput.files || !fileInput.files[0]){ toast('יש לבחור קודם קובץ גיבוי JSON'); return; }
+    var file = fileInput.files[0];
+    var reader = new FileReader();
+    reader.onload = function(){
+      try{
+        var backup = JSON.parse(String(reader.result || '{}'));
+        if(backup.format !== 'the_blues_legacy_backup_v1') throw new Error('format');
+        var userName = (nameInput && nameInput.value.trim()) || (backup.library2ImportSeed && backup.library2ImportSeed.suggestedUserName) || 'המשתמש הראשי';
+        var user = upsertImportedUser(userName, backup);
+        state.activeUserId = user.id;
+        var program = buildImportedProgramFromBackup(backup, user.id);
+        state.programs.unshift(program);
+        state.activeProgramId = program.id;
+        state.draft = clone(program);
+        state.activeDayIndex = 0;
+        var imports = readLegacyImports();
+        imports.unshift({
+          id: uid('imp'),
+          userId: user.id,
+          importedAt: new Date().toISOString(),
+          importedLabel: nowStr(),
+          filename: file.name,
+          summary: backup.summary || {},
+          backup: backup
+        });
+        writeLegacyImports(imports.slice(0,5));
+        persistState();
+        updateLegacyImportCardMeta();
+        if(status){ status.textContent = 'הייבוא הושלם: ' + user.name + ' · ' + file.name; status.dataset.locked = '1'; }
+        renderAll();
+        goStep(3);
+        toast('הגיבוי יובא ונשמר לסנכרון עתידי');
+      }catch(e){
+        if(status){ status.textContent = 'הייבוא נכשל — בדוק שזהו קובץ הגיבוי מהאפליקציה הראשית'; status.dataset.locked = '1'; }
+        toast('קובץ הגיבוי אינו בפורמט הצפוי');
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  function renderAll(){
+    renderTop();
+    renderUsers();
+    renderUserSummary();
+    renderBuilder();
+    renderSummary();
+    renderPrograms();
+    renderSmartAdd();
+    renderUserDrawer();
+    updateLegacyImportCardMeta();
+    applyImportedNameSuggestion();
+    renderBreadcrumb();
+    paintWorkflowState();
+  }
+
+  window.saveUser = saveUser;
+  window.resetUserForm = resetUserForm;
+  window.deleteSelectedUser = deleteSelectedUser;
+  window.generateProgramDraft = generateProgramDraft;
+  window.resetDraft = resetDraft;
+
+  window.goStep = function(step){
+    state.step = step;
+    document.querySelectorAll('.section').forEach(function(sec){ sec.classList.toggle('on', parseInt(sec.getAttribute('data-step'),10) === step); });
+    document.querySelectorAll('[data-step-btn]').forEach(function(btn){ btn.classList.toggle('on', parseInt(btn.getAttribute('data-step-btn'),10) === step); });
+    paintWorkflowState();
+    renderBreadcrumb();
+  };
+  window.crumbGo = function(step){
+    window.goStep(step);
+  };
+
+  window.selectUser = function(id){
+    state.activeUserId = id;
+    persistState();
+    var user = selectedUser();
+    if(user) fillUserForm(user);
+    prefillFromSelectedUser();
+    renderAll();
+  };
+  window.activateUserOnly = function(id){
+    state.activeUserId = id;
+    persistState();
+    renderAll();
+    toast('המשתמש סומן כפעיל');
+  };
+  window.editUser = function(id){
+    var user = state.users.find(function(u){ return u.id === id; });
+    if(!user) return;
+    state.activeUserId = id;
+    fillUserForm(user);
+    persistState();
+    renderAll();
+    toast('המשתמש נטען לעריכה');
+  };
+
+  window.prefillFromSelectedUser = prefillFromSelectedUser;
+  function prefillFromSelectedUser(){
+    var user = selectedUser();
+    if(user) fillUserForm(user);
+    renderUserSummary();
+    renderTop();
+    renderBreadcrumb();
+  }
+
+  window.setActiveDay = function(i){
+    state.activeDayIndex = i;
+    renderBuilder();
+  };
+
+  window.updateItemField = function(dayIdx, itemIdx, field, value){
+    if(!state.draft) return;
+    var item = state.draft.sessions[dayIdx].items[itemIdx];
+    if(!item) return;
+    item[field] = value;
+    renderSummary();
+  };
+  window.removeItem = function(dayIdx, itemIdx){
+    if(!state.draft) return;
+    state.draft.sessions[dayIdx].items.splice(itemIdx,1);
+    renderAll();
+  };
+  window.duplicateItem = function(dayIdx, itemIdx){
+    if(!state.draft) return;
+    var copy = clone(state.draft.sessions[dayIdx].items[itemIdx]);
+    copy.uid = uid('item');
+    state.draft.sessions[dayIdx].items.splice(itemIdx+1,0,copy);
+    renderAll();
+  };
+  window.moveItem = function(dayIdx, itemIdx, dir){
+    if(!state.draft) return;
+    var list = state.draft.sessions[dayIdx].items;
+    var next = itemIdx + dir;
+    if(next < 0 || next >= list.length) return;
+    var temp = list[itemIdx];
+    list[itemIdx] = list[next];
+    list[next] = temp;
+    renderAll();
+  };
+
+  window.addLibraryExercise = function(exId){
+    if(!state.draft) return;
+    var dayIdx = parseInt(document.getElementById('lib-day-target').value,10) || 0;
+    var ex = allExercises().find(function(x){ return x.id === exId; });
+    if(!ex) return;
+    state.draft.sessions[dayIdx].items.push(cloneExercise(ex, state.draft.rest));
+    renderAll();
+    toast('התרגיל נוסף ליום הנבחר');
+  };
+
+
+  window.openUserDrawer = function(){
+    document.getElementById('user-drawer').classList.add('on');
+    document.getElementById('user-drawer-backdrop').classList.add('on');
+    document.getElementById('user-drawer').setAttribute('aria-hidden','false');
+  };
+  window.closeUserDrawer = function(){
+    document.getElementById('user-drawer').classList.remove('on');
+    document.getElementById('user-drawer-backdrop').classList.remove('on');
+    document.getElementById('user-drawer').setAttribute('aria-hidden','true');
+  };
+  window.goToUsersStep = function(){
+    window.closeUserDrawer();
+    window.goStep(0);
+  };
+  window.logoutActiveUser = function(){
+    state.activeUserId = null;
+    state.draft = null;
+    persistState();
+    renderAll();
+    closeUserDrawer();
+    toast('המשתמש נותק');
+  };
+  window.switchUserFromDrawer = function(id){
+    state.activeUserId = id;
+    persistState();
+    var user = selectedUser();
+    if(user) fillUserForm(user);
+    prefillFromSelectedUser();
+    renderAll();
+    closeUserDrawer();
+    toast('המשתמש הוחלף');
+  };
+
+  window.analyzeSmartRequest = function(){
+    var text = (document.getElementById('smart-request').value || '').trim();
+    if(!text){ toast('כתוב קודם איזה תרגיל חסר לך'); return; }
+    state.smartDraft = buildSmartDraft(text);
+    renderSmartAdd();
+    toast('נוצרה הצעת תרגיל לעריכה');
+  };
+  window.clearSmartRequest = function(){
+    state.smartDraft = null;
+    var area = document.getElementById('smart-request');
+    if(area) area.value = '';
+    renderSmartAdd();
+  };
+  window.saveSmartExercise = function(addToSelectedDay){
+    if(!state.smartDraft){ toast('אין הצעה לשמירה'); return; }
+    var payload = collectSmartDraftFromForm();
+    if(!payload.he){ toast('יש למלא שם בעברית'); return; }
+    if(!payload.en) payload.en = 'Custom Exercise';
+    var exists = allExercises().some(function(ex){
+      return ex.he === payload.he || ex.id === payload.id;
+    });
+    if(exists){
+      payload.id = uid('cust');
+      payload.he = payload.he + ' — מותאם';
+    }
+    state.customExercises.unshift(payload);
+    persistState();
+    if(addToSelectedDay && state.draft){
+      var dayIdx = parseInt(document.getElementById('lib-day-target').value,10) || 0;
+      state.draft.sessions[dayIdx].items.push(cloneExercise(payload, state.draft.rest));
+    }
+    var area = document.getElementById('smart-request');
+    if(area) area.value = '';
+    state.smartDraft = null;
+    renderAll();
+    toast(addToSelectedDay ? 'התרגיל נוסף לספרייה וליום הנבחר' : 'התרגיל נוסף לספרייה');
+  };
+
+
+  window.saveProgram = function(makeActive){
+    if(!state.draft){ toast('אין טיוטה לשמירה'); return; }
+    var name = document.getElementById('program-name').value.trim();
+    if(!name){ toast('יש לתת שם לתוכנית'); return; }
+    var payload = clone(state.draft);
+    payload.name = name;
+    payload.updatedAt = new Date().toISOString();
+    payload.updatedLabel = nowStr();
+    var idx = state.programs.findIndex(function(p){ return p.id === payload.id; });
+    if(idx >= 0) state.programs[idx] = payload;
+    else state.programs.unshift(payload);
+    if(makeActive) state.activeProgramId = payload.id;
+    persistState();
+    renderAll();
+    toast(makeActive ? 'התוכנית נשמרה וסומנה כפעילה' : 'התוכנית נשמרה');
+  };
+
+  window.loadProgram = function(id){
+    var p = state.programs.find(function(x){ return x.id === id; });
+    if(!p) return;
+    state.draft = clone(p);
+    state.activeUserId = p.userId;
+    state.activeDayIndex = 0;
+    document.getElementById('program-name').value = p.name;
+    persistState();
+    renderAll();
+    goStep(2);
+    toast('התוכנית נטענה לעריכה');
+  };
+  window.activateProgram = function(id){
+    state.activeProgramId = id;
+    persistState();
+    renderAll();
+    toast('התוכנית סומנה כפעילה');
+  };
+  window.duplicateProgram = function(id){
+    var p = state.programs.find(function(x){ return x.id === id; });
+    if(!p) return;
+    var copy = clone(p);
+    copy.id = uid('prg');
+    copy.name = p.name + ' — עותק';
+    copy.updatedAt = new Date().toISOString();
+    copy.updatedLabel = nowStr();
+    state.programs.unshift(copy);
+    persistState();
+    renderAll();
+    toast('התוכנית שוכפלה');
+  };
+  window.deleteProgram = function(id){
+    var p = state.programs.find(function(x){ return x.id === id; });
+    if(!p) return;
+    if(!confirm('למחוק את התוכנית "' + p.name + '"?')) return;
+    state.programs = state.programs.filter(function(x){ return x.id !== id; });
+    if(state.activeProgramId === id) state.activeProgramId = null;
+    persistState();
+    renderAll();
+    toast('התוכנית נמחקה');
+  };
+
+  window.prepareExecutionBridge = function(){
+    if(!state.draft){ toast('אין טיוטה להעברה'); return; }
+    var payload = {
+      source: 'library2_strength',
+      preparedAt: new Date().toISOString(),
+      preparedLabel: nowStr(),
+      activeUserId: state.activeUserId,
+      draftId: state.draft.id,
+      name: document.getElementById('program-name').value.trim() || state.draft.name,
+      split: state.draft.split,
+      sessions: clone(state.draft.sessions),
+      compatibilityPreview: buildCompatibilityPreview(state.draft)
+    };
+    lsSet(KEYS.bridge, payload);
+    document.getElementById('bridge-badge').textContent = 'גשר נשמר';
+    document.getElementById('bridge-badge').className = 'badge green';
+    toast('נשמר גשר מעבר עתידי ל"ביצוע"');
+  };
+
+  function buildCompatibilityPreview(draft){
+    var map = {};
+    draft.sessions.forEach(function(session){
+      session.items.forEach(function(item){
+        map[item.id] = {
+          sets: String(item.sets || ''),
+          reps: String(item.reps || ''),
+          kg: String(item.kg || ''),
+          unit: String(item.unit || (item.kg ? 'kg' : 'bw')),
+          rest: parseInt(item.rest,10) || draft.rest || 60,
+          day: session.title
+        };
+      });
+    });
+    return map;
+  }
+
+  function escapeHtml(str){
+    return String(str)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#39;');
+  }
+  function escapeAttr(str){ return escapeHtml(str); }
+
+  window.addEventListener('DOMContentLoaded', function(){
+    setupOptionChips();
+    loadState();
+    if(state.users[0]) fillUserForm(selectedUser() || state.users[0]);
+    else resetUserForm();
+    var smartArea = document.getElementById('smart-request');
+    if(smartArea){
+      smartArea.addEventListener('keydown', function(e){
+        if((e.ctrlKey || e.metaKey) && e.key === 'Enter'){
+          e.preventDefault();
+          window.analyzeSmartRequest();
+        }
+      });
+    }
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape') window.closeUserDrawer();
+    });
+    renderAll();
+  });
+})();
+
+</script>
+</body>
+</html>
