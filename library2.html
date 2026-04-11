@@ -2105,7 +2105,26 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
   function buildImportedProgramFromBackup(backup, userId){
     var seed = backup.library2ImportSeed || {};
     var normalized = backup.normalized || {};
-    var items = (seed.programItems || normalized.strengthProgramItems || []).map(legacyItemToProgramItem);
+    var history = normalized.strengthHistory || [];
+    var nameMap = {};
+    history.forEach(function(day){
+      (day && day.entries || []).forEach(function(entry){
+        if(!entry || !entry.id) return;
+        if(entry.he && !nameMap[entry.id]) nameMap[entry.id] = {he: entry.he, en: entry.en || entry.he, group: entry.group || ''};
+      });
+    });
+    var sourceItems = seed.programItems || normalized.strengthProgramItems || [];
+    var hydratedItems = sourceItems.map(function(item){
+      var out = Object.assign({}, item || {});
+      var ref = out.id && nameMap[out.id] ? nameMap[out.id] : null;
+      var looksLikeIdHe = out.he && out.id && String(out.he).toLowerCase() === String(out.id).toLowerCase();
+      var looksLikeIdEn = out.en && out.id && String(out.en).toLowerCase() === String(out.id).toLowerCase();
+      if((!out.he || looksLikeIdHe) && ref && ref.he) out.he = ref.he;
+      if((!out.en || looksLikeIdEn) && ref && ref.en) out.en = ref.en;
+      if((!out.group || out.group === '') && ref && ref.group) out.group = ref.group;
+      return out;
+    });
+    var items = hydratedItems.map(legacyItemToProgramItem);
     return {
       id: uid('prg'),
       userId: userId,
