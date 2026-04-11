@@ -2125,13 +2125,33 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
     var user = selectedUser();
     if(user && user.name) input.value = user.name;
   }
+  function looksLikeLegacyExerciseToken(val){
+    var s = String(val || '').trim().toLowerCase();
+    return /^e\d+$/.test(s);
+  }
+  function pickResolvedLegacyName(primary, fallback, defaultValue){
+    var p = String(primary || '').trim();
+    var f = String(fallback || '').trim();
+    if(p && !looksLikeLegacyExerciseToken(p)) return p;
+    if(f && !looksLikeLegacyExerciseToken(f)) return f;
+    return defaultValue || p || f || '';
+  }
   function legacyItemToProgramItem(item){
     item = item || {};
+    var resolvedHe = pickResolvedLegacyName(item.he, '', 'תרגיל מיובא');
+    var resolvedEn = pickResolvedLegacyName(item.en, resolvedHe, 'Imported Exercise');
     var existing = allExercises().find(function(ex){
-      return ex.id === item.id || ex.he === item.he || ex.en === item.en;
+      var idMatch = ex.id === item.id;
+      var heMatch = resolvedHe && ex.he === resolvedHe;
+      var enMatch = resolvedEn && ex.en === resolvedEn;
+      return idMatch || heMatch || enMatch;
     });
     if(existing){
       var out = cloneExercise(existing, parseInt(item.rest,10) || 60);
+      out.he = pickResolvedLegacyName(item.he, existing.he, out.he || 'תרגיל מיובא');
+      out.en = pickResolvedLegacyName(item.en, existing.en, out.he || out.en || 'Imported Exercise');
+      out.group = String(item.group || out.group || 'arms');
+      out.icon = item.icon || out.icon || groupIcon(out.group || 'arms');
       out.sets = String(item.sets || out.sets || '');
       out.reps = String(item.reps || out.reps || '');
       out.kg = String(item.kg || out.kg || '');
@@ -2141,8 +2161,8 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
     }
     var custom = {
       id: item.id || uid('cust'),
-      he: item.he || 'תרגיל מיובא',
-      en: item.en || 'Imported Exercise',
+      he: resolvedHe,
+      en: resolvedEn,
       group: item.group || 'arms',
       equipment: item.unit === 'bw' ? ['bodyweight'] : ['machines'],
       sets: String(item.sets || '3'),
@@ -2152,7 +2172,12 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
       kg: String(item.kg || ''),
       icon: item.icon || groupIcon(item.group || 'arms')
     };
-    if(!state.customExercises.some(function(ex){ return ex.id === custom.id; })) state.customExercises.unshift(custom);
+    var existingCustomIndex = state.customExercises.findIndex(function(ex){ return ex.id === custom.id; });
+    if(existingCustomIndex >= 0){
+      state.customExercises[existingCustomIndex] = Object.assign({}, state.customExercises[existingCustomIndex], custom);
+    } else {
+      state.customExercises.unshift(custom);
+    }
     return cloneExercise(custom, custom.rest);
   }
   function buildImportedProgramFromBackup(backup, userId){
