@@ -652,6 +652,11 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
           <div class="drawer-user-sub">ייבוא קובץ הגיבוי מהאפליקציה הראשית ייצור משתמש עתידי עם גיבוי legacy שמור.</div>
           <div class="field" style="margin-top:10px"><label>שם למשתמש המיובא</label><input id="legacy-import-name" type="text" placeholder="למשל: אורן"></div>
           <div class="field"><label>קובץ גיבוי JSON</label><input id="legacy-import-file" type="file" accept="application/json,.json"></div>
+          <div id="legacy-import-preview" class="drawer-card" style="display:none;margin:10px 0 0;background:#f8fbff;border:1px solid #d9e7f5">
+            <div class="card-title"><h3>תקציר הקובץ</h3><span class="badge green" id="legacy-import-format">—</span></div>
+            <div class="quick-user-grid" id="legacy-import-summary-grid"></div>
+            <div class="drawer-user-sub" id="legacy-import-summary-note" style="margin-top:8px"></div>
+          </div>
           <div class="quick-user-line"><span>מצב</span><b id="legacy-import-status">ממתין לקובץ</b></div>
           <div class="drawer-actions" style="margin-top:10px">
             <button type="button" class="btn secondary" onclick="importLegacyBackupIntoLibrary2()">ייבא גיבוי</button>
@@ -2150,6 +2155,84 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
     }
     return user;
   }
+  function isSupportedLegacyBackup(backup){
+    return !!(backup && typeof backup === 'object' && typeof backup.format === 'string' && /^the_blues_legacy_backup_v\d+$/i.test(backup.format));
+  }
+  function summarizeLegacyBackup(backup){
+    var summary = backup && backup.summary ? backup.summary : {};
+    return {
+      format: backup && backup.format ? backup.format : 'לא ידוע',
+      exercises: Number(summary.strengthProgramExercises || ((backup.normalized && backup.normalized.strengthProgramItems && backup.normalized.strengthProgramItems.length) || 0)),
+      strengthHistory: Number(summary.strengthHistoryCount || ((backup.normalized && backup.normalized.strengthHistory && backup.normalized.strengthHistory.length) || 0)),
+      runs: Number(summary.runHistoryCount || ((backup.normalized && backup.normalized.runs && backup.normalized.runs.length) || 0)),
+      attendance: Number(summary.attendanceCount || (function(){
+        if(!backup.normalized || !backup.normalized.attendance) return 0;
+        var total = 0;
+        Object.keys(backup.normalized.attendance).forEach(function(key){
+          total += Object.keys(backup.normalized.attendance[key] || {}).length;
+        });
+        return total;
+      })()),
+      source: backup && backup.sourceApp ? backup.sourceApp : 'לא ידוע'
+    };
+  }
+  function setLegacyPreview(backup, filename){
+    window.__legacyImportPreview = backup || null;
+    var box = document.getElementById('legacy-import-preview');
+    var fmt = document.getElementById('legacy-import-format');
+    var grid = document.getElementById('legacy-import-summary-grid');
+    var note = document.getElementById('legacy-import-summary-note');
+    var status = document.getElementById('legacy-import-status');
+    if(!box || !fmt || !grid || !note || !status) return;
+    if(!backup){
+      box.style.display = 'none';
+      grid.innerHTML = '';
+      fmt.textContent = '—';
+      note.textContent = '';
+      if(!status.dataset.locked) status.textContent = readLegacyImports().length ? 'יש גיבוי legacy שמור לסנכרון עתידי' : 'ממתין לקובץ';
+      return;
+    }
+    var s = summarizeLegacyBackup(backup);
+    box.style.display = 'block';
+    fmt.textContent = s.format.replace('the_blues_legacy_backup_','').toUpperCase();
+    grid.innerHTML = [
+      '<div class="quick-user-cell"><span>תרגילים</span><b>'+s.exercises+'</b></div>',
+      '<div class="quick-user-cell"><span>אימוני כוח</span><b>'+s.strengthHistory+'</b></div>',
+      '<div class="quick-user-cell"><span>ריצות</span><b>'+s.runs+'</b></div>',
+      '<div class="quick-user-cell"><span>נוכחות</span><b>'+s.attendance+'</b></div>'
+    ].join('');
+    var exported = backup.exportedAtLabel || backup.exportedAt || '';
+    var diag = (backup.diagnostics && backup.diagnostics[0] && backup.diagnostics[0].text) ? backup.diagnostics[0].text : 'הקובץ נטען ומוכן לייבוא.';
+    note.textContent = 'קובץ: ' + (filename || 'ללא שם') + (exported ? ' · נוצר: ' + exported : '') + ' · ' + diag;
+    if(!status.dataset.locked) status.textContent = 'הקובץ נטען בהצלחה ומוכן לייבוא';
+  }
+  function parseLegacyBackupText(text){
+    var backup = JSON.parse(String(text || '{}'));
+    if(!isSupportedLegacyBackup(backup)) throw new Error('format');
+    return backup;
+  }
+  window.previewLegacyBackupFile = function(){
+    var fileInput = document.getElementById('legacy-import-file');
+    var status = document.getElementById('legacy-import-status');
+    if(!fileInput || !fileInput.files || !fileInput.files[0]){
+      setLegacyPreview(null);
+      return;
+    }
+    var file = fileInput.files[0];
+    var reader = new FileReader();
+    reader.onload = function(){
+      try{
+        var backup = parseLegacyBackupText(reader.result);
+        setLegacyPreview(backup, file.name);
+      }catch(e){
+        window.__legacyImportPreview = null;
+        setLegacyPreview(null);
+        if(status){ status.textContent = 'הקובץ נטען אך לא זוהה כגיבוי נתמך'; status.dataset.locked = '1'; }
+        toast('קובץ הגיבוי אינו בפורמט נתמך');
+      }
+    };
+    reader.readAsText(file);
+  };
   window.clearLegacyImportSelection = function(){
     var f = document.getElementById('legacy-import-file');
     var n = document.getElementById('legacy-import-name');
@@ -2157,6 +2240,7 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
     if(n && !selectedUser()) n.value = '';
     var s = document.getElementById('legacy-import-status');
     if(s){ s.textContent = readLegacyImports().length ? 'יש גיבוי legacy שמור לסנכרון עתידי' : 'ממתין לקובץ'; s.dataset.locked = ''; }
+    setLegacyPreview(null);
   };
   window.importLegacyBackupIntoLibrary2 = function(){
     var fileInput = document.getElementById('legacy-import-file');
@@ -2164,36 +2248,46 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
     var status = document.getElementById('legacy-import-status');
     if(!fileInput || !fileInput.files || !fileInput.files[0]){ toast('יש לבחור קודם קובץ גיבוי JSON'); return; }
     var file = fileInput.files[0];
+    var finishImport = function(backup){
+      var userName = (nameInput && nameInput.value.trim()) || (backup.library2ImportSeed && backup.library2ImportSeed.suggestedUserName) || 'המשתמש הראשי';
+      var user = upsertImportedUser(userName, backup);
+      state.activeUserId = user.id;
+      var program = buildImportedProgramFromBackup(backup, user.id);
+      state.programs.unshift(program);
+      state.activeProgramId = program.id;
+      state.draft = clone(program);
+      state.activeDayIndex = 0;
+      var imports = readLegacyImports();
+      imports.unshift({
+        id: uid('imp'),
+        userId: user.id,
+        importedAt: new Date().toISOString(),
+        importedLabel: nowStr(),
+        filename: file.name,
+        summary: backup.summary || {},
+        backup: backup
+      });
+      writeLegacyImports(imports.slice(0,5));
+      persistState();
+      updateLegacyImportCardMeta();
+      if(status){ status.textContent = 'הייבוא הושלם: ' + user.name + ' · ' + file.name; status.dataset.locked = '1'; }
+      renderAll();
+      goStep(3);
+      toast('הגיבוי יובא ונשמר לסנכרון עתידי');
+    };
+    if(window.__legacyImportPreview){
+      try{
+        finishImport(window.__legacyImportPreview);
+        return;
+      }catch(e){
+      }
+    }
     var reader = new FileReader();
     reader.onload = function(){
       try{
-        var backup = JSON.parse(String(reader.result || '{}'));
-        if(backup.format !== 'the_blues_legacy_backup_v1') throw new Error('format');
-        var userName = (nameInput && nameInput.value.trim()) || (backup.library2ImportSeed && backup.library2ImportSeed.suggestedUserName) || 'המשתמש הראשי';
-        var user = upsertImportedUser(userName, backup);
-        state.activeUserId = user.id;
-        var program = buildImportedProgramFromBackup(backup, user.id);
-        state.programs.unshift(program);
-        state.activeProgramId = program.id;
-        state.draft = clone(program);
-        state.activeDayIndex = 0;
-        var imports = readLegacyImports();
-        imports.unshift({
-          id: uid('imp'),
-          userId: user.id,
-          importedAt: new Date().toISOString(),
-          importedLabel: nowStr(),
-          filename: file.name,
-          summary: backup.summary || {},
-          backup: backup
-        });
-        writeLegacyImports(imports.slice(0,5));
-        persistState();
-        updateLegacyImportCardMeta();
-        if(status){ status.textContent = 'הייבוא הושלם: ' + user.name + ' · ' + file.name; status.dataset.locked = '1'; }
-        renderAll();
-        goStep(3);
-        toast('הגיבוי יובא ונשמר לסנכרון עתידי');
+        var backup = parseLegacyBackupText(reader.result);
+        setLegacyPreview(backup, file.name);
+        finishImport(backup);
       }catch(e){
         if(status){ status.textContent = 'הייבוא נכשל — בדוק שזהו קובץ הגיבוי מהאפליקציה הראשית'; status.dataset.locked = '1'; }
         toast('קובץ הגיבוי אינו בפורמט הצפוי');
@@ -2502,6 +2596,14 @@ html,body{background:linear-gradient(180deg,#091421 0%,#0f2236 22%,#edf3f8 22%,#
           e.preventDefault();
           window.analyzeSmartRequest();
         }
+      });
+    }
+    var legacyFileInput = document.getElementById('legacy-import-file');
+    if(legacyFileInput){
+      legacyFileInput.addEventListener('change', function(){
+        var status = document.getElementById('legacy-import-status');
+        if(status) delete status.dataset.locked;
+        window.previewLegacyBackupFile();
       });
     }
     document.addEventListener('keydown', function(e){
