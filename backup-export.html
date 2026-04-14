@@ -3,514 +3,56 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Blues – Legacy Backup Export</title>
+  <title>The Blues – Backup Export</title>
   <meta name="theme-color" content="#0d1b2a" />
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="1024x1024" href="icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <style>
-    :root{
-      --navy:#0d1b2a;
-      --navy2:#13263b;
-      --blue:#1a4f7a;
-      --accent:#e8a020;
-      --light:#f0f4f8;
-      --card:#ffffff;
-      --text:#1a2332;
-      --muted:#6b7e94;
-      --ok:#1D9E75;
-      --warn:#c67d00;
-      --bad:#c0392b;
-      --line:#dde6ef;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Arial,"Heebo",sans-serif;
-      background:linear-gradient(180deg,var(--navy),#102033 260px,var(--light) 260px);
-      color:var(--text);
-      min-height:100vh;
-    }
-    .wrap{max-width:880px;margin:0 auto;padding:18px 14px 34px}
-    .hero{
-      background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.04));
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
-      padding:18px;
-      color:#fff;
-      box-shadow:0 14px 36px rgba(0,0,0,.18);
-      margin-bottom:14px;
-      backdrop-filter:blur(8px);
-    }
-    .brand{font-size:1.32rem;font-weight:900;letter-spacing:.4px;margin:0 0 6px}
-    .sub{font-size:.9rem;line-height:1.65;color:#d4dfeb;margin:0}
-    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
-    .stat{background:var(--card);border-radius:16px;padding:14px 12px;border:1px solid var(--line);box-shadow:0 4px 14px rgba(13,27,42,.06)}
-    .stat .k{font-size:.72rem;color:var(--muted);font-weight:700;margin-bottom:6px}
-    .stat .v{font-size:1.28rem;font-weight:900;color:var(--navy)}
-    .panel{background:var(--card);border-radius:16px;padding:16px;border:1px solid var(--line);box-shadow:0 4px 14px rgba(13,27,42,.06);margin-bottom:12px}
-    .ttl{font-size:1rem;font-weight:900;margin:0 0 10px;color:var(--navy)}
-    .muted{color:var(--muted);font-size:.84rem;line-height:1.7}
-    .note{background:#fff8e8;border-right:4px solid var(--accent);border-radius:12px;padding:11px 12px;color:#6d4f10;font-size:.8rem;line-height:1.7;margin-top:10px}
-    .ok{background:#ebf8f3;border-right:4px solid var(--ok);color:#165f49}
-    .bad{background:#fff0ee;border-right:4px solid var(--bad);color:#7f2a21}
-    .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-    button{
-      border:none;border-radius:12px;padding:12px 14px;cursor:pointer;
-      font:inherit;font-weight:800;
-    }
-    .primary{background:var(--navy);color:#fff}
-    .secondary{background:#e8f0fa;color:var(--blue)}
-    .ghost{background:#f7fafc;color:#5f7488;border:1px solid var(--line)}
-    .src-list,.diag-list{display:grid;gap:8px}
-    .src-item,.diag-item{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fbfdff}
-    .src-top{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
-    .chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 9px;font-size:.67rem;font-weight:800}
-    .chip.ok{background:#eaf7f1;color:#19694f;border:none}
-    .chip.warn{background:#fff5e0;color:#8a5900;border:none}
-    .chip.bad{background:#ffeceb;color:#962f23;border:none}
-    .codeish{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:.78rem;word-break:break-all;color:#27415a}
-    .foot{font-size:.74rem;color:var(--muted);margin-top:6px;line-height:1.7}
-    .table{display:grid;grid-template-columns:1.35fr .8fr .8fr .8fr;gap:6px;font-size:.77rem}
-    .th,.td{padding:9px 10px;border-radius:10px;background:#fbfdff;border:1px solid var(--line)}
-    .th{font-weight:900;color:var(--navy);background:#eef4fb}
-    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
-    .hidden{display:none}
-    @media (max-width:760px){
-      .grid{grid-template-columns:repeat(2,1fr)}
-      .table{grid-template-columns:1fr}
-      .th{display:none}
-    }
+    :root{--navy:#0d1b2a;--navy2:#13263b;--blue:#1a4f7a;--accent:#e8a020;--light:#f0f4f8;--card:#ffffff;--text:#1a2332;--muted:#6b7e94;--ok:#1D9E75;--line:#dde6ef}
+    *{box-sizing:border-box}body{margin:0;font-family:Arial,Heebo,sans-serif;background:linear-gradient(180deg,var(--navy),#102033 260px,var(--light) 260px);color:var(--text);min-height:100vh}
+    .wrap{max-width:920px;margin:0 auto;padding:18px 14px 34px}.hero{background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:18px;color:#fff;box-shadow:0 14px 36px rgba(0,0,0,.18);margin-bottom:14px;backdrop-filter:blur(8px)}
+    .brand{font-size:1.32rem;font-weight:900;letter-spacing:.4px;margin:0 0 6px}.sub{font-size:.9rem;line-height:1.65;color:#d4dfeb;margin:0}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}.stat,.panel{background:var(--card);border-radius:16px;padding:14px 12px;border:1px solid var(--line);box-shadow:0 4px 14px rgba(13,27,42,.06)}.panel{padding:16px;margin-bottom:12px}.k{font-size:.72rem;color:var(--muted);font-weight:700;margin-bottom:6px}.v{font-size:1.28rem;font-weight:900;color:var(--navy)}.ttl{font-size:1rem;font-weight:900;margin:0 0 10px;color:var(--navy)}.muted{color:var(--muted);font-size:.84rem;line-height:1.7}.note{background:#fff8e8;border-right:4px solid var(--accent);border-radius:12px;padding:11px 12px;color:#6d4f10;font-size:.8rem;line-height:1.7;margin-top:10px}.ok{background:#ebf8f3;border-right:4px solid var(--ok);color:#165f49}.src-list,.diag-list{display:grid;gap:8px}.src-item,.diag-item{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fbfdff}.src-top{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap}.chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 9px;font-size:.67rem;font-weight:800}.chip.ok{background:#eaf7f1;color:#19694f}.chip.bad{background:#ffeceb;color:#962f23}.codeish{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:.78rem;word-break:break-all;color:#27415a}.foot{font-size:.74rem;color:var(--muted);margin-top:6px;line-height:1.7}button,a.btn{border:none;border-radius:12px;padding:12px 14px;cursor:pointer;font:inherit;font-weight:800;text-decoration:none;display:inline-flex;align-items:center}.primary{background:var(--navy);color:#fff}.secondary{background:#e8f0fa;color:var(--blue)}.ghost{background:#f7fafc;color:#5f7488;border:1px solid var(--line)}.table{display:grid;grid-template-columns:1.35fr .8fr .8fr .8fr;gap:6px;font-size:.77rem}.th,.td{padding:9px 10px;border-radius:10px;background:#fbfdff;border:1px solid var(--line)}.th{font-weight:900;color:var(--navy);background:#eef4fb}.hidden{display:none}@media (max-width:760px){.grid{grid-template-columns:repeat(2,1fr)}.table{grid-template-columns:1fr}.th{display:none}}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <section class="hero">
-      <h1 class="brand">THE BLUES · גיבוי Legacy מדויק</h1>
-      <p class="sub">עמוד זה אינו משנה דבר בנתונים שלך. הוא סורק את ה־localStorage של המקור הנוכחי, מזהה טוב יותר היסטוריית כוח, ריצות, נוכחות ותוכנית פעילה, ומייצא קובץ JSON מסודר להמשך יבוא.</p>
-      <div class="actions">
-        <button class="primary" id="scanBtn" type="button">סרוק נתונים</button>
-        <button class="secondary" id="exportBtn" type="button">הורד גיבוי JSON</button>
-        <button class="ghost" id="exportRawBtn" type="button">הורד raw localStorage</button>
-      </div>
-      <div class="note" id="originNote"></div>
-    </section>
-
-    <section class="grid">
-      <div class="stat"><div class="k">מפתחות שנמצאו</div><div class="v" id="statKeys">0</div></div>
-      <div class="stat"><div class="k">תרגילים בתוכנית</div><div class="v" id="statPlan">0</div></div>
-      <div class="stat"><div class="k">אימוני כוח</div><div class="v" id="statStrength">0</div></div>
-      <div class="stat"><div class="k">ריצות</div><div class="v" id="statRuns">0</div></div>
-      <div class="stat"><div class="k">ימי נוכחות</div><div class="v" id="statAttendance">0</div></div>
-      <div class="stat"><div class="k">היסטוריית סשנים</div><div class="v" id="statSessions">0</div></div>
-      <div class="stat"><div class="k">מקור כוח נבחר</div><div class="v" id="statStrengthKey" style="font-size:.92rem">—</div></div>
-      <div class="stat"><div class="k">מצב בדיקה</div><div class="v" id="statStatus" style="font-size:.92rem">ממתין</div></div>
-    </section>
-
-    <section class="panel">
-      <h2 class="ttl">מקורות שנבחרו לגיבוי</h2>
-      <div class="src-list" id="sourceList"></div>
-      <div class="foot">אם מקור מסוים נראה לא נכון, אפשר עדיין לייצא raw מלא ולחזור אליו אחר כך בלי לאבד שום דבר.</div>
-    </section>
-
-    <section class="panel">
-      <h2 class="ttl">אבחון מהיר</h2>
-      <div class="diag-list" id="diagList"></div>
-    </section>
-
-    <section class="panel">
-      <h2 class="ttl">סקירת מפתחות ב־localStorage</h2>
-      <div class="table">
-        <div class="th">מפתח</div>
-        <div class="th">סוג</div>
-        <div class="th">גודל משוער</div>
-        <div class="th">הערכה</div>
-      </div>
-      <div id="keyRows"></div>
-    </section>
-
-    <section class="panel">
-      <h2 class="ttl">מה ייכנס לקובץ הגיבוי</h2>
-      <div class="muted" id="payloadPreview">עוד לא בוצעה סריקה.</div>
-      <div class="note ok hidden" id="successNote"></div>
-      <div class="note bad hidden" id="warnNote"></div>
-    </section>
-  </div>
-
-  <script>
-    (function(){
-      var state = {scan:null};
-
-      function el(id){ return document.getElementById(id); }
-      function setText(id, value){ var x = el(id); if(x) x.textContent = String(value); }
-      function escapeHtml(v){ return String(v == null ? '' : v).replace(/[&<>"']/g, function(ch){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]); }); }
-      function prettyBytes(bytes){
-        bytes = Number(bytes||0);
-        if(bytes < 1024) return bytes + 'b';
-        if(bytes < 1024*1024) return (bytes/1024).toFixed(1) + 'kb';
-        return (bytes/(1024*1024)).toFixed(2) + 'mb';
-      }
-      function safeParse(raw){
-        if(raw == null) return {type:'null', value:null, parsed:false};
-        try{
-          return {type:Array.isArray(JSON.parse(raw)) ? 'array' : (JSON.parse(raw) === null ? 'null' : typeof JSON.parse(raw)), value:JSON.parse(raw), parsed:true};
-        }catch(e){
-          return {type:'string', value:raw, parsed:false};
-        }
-      }
-      function isObj(v){ return !!v && typeof v === 'object' && !Array.isArray(v); }
-      function countObjectKeys(v){ try{ return isObj(v) ? Object.keys(v).length : 0; }catch(e){ return 0; } }
-      function countAttendanceDays(){
-        var seen = {};
-        Array.prototype.slice.call(arguments).forEach(function(src){
-          if(!isObj(src)) return;
-          Object.keys(src).forEach(function(k){ seen[k] = true; });
-        });
-        return Object.keys(seen).length;
-      }
-      function scoreStrengthHistory(key, value){
-        if(!Array.isArray(value)) return 0;
-        var score = 0;
-        if(key === 'wh') score += 120;
-        if(/strength|workout|history|wh/i.test(key)) score += 16;
-        if(value.length) score += 4;
-        var sample = value.slice(0, 5);
-        sample.forEach(function(item){
-          if(isObj(item) && Array.isArray(item.entries)) score += 35;
-          if(isObj(item) && typeof item.date === 'string') score += 12;
-          if(isObj(item) && (item.entries || item.exercises || item.workout)) score += 10;
-        });
-        return score;
-      }
-      function scoreRunHistory(key, value){
-        if(!Array.isArray(value)) return 0;
-        var score = 0;
-        if(key === 'runs') score += 120;
-        if(/run/i.test(key)) score += 24;
-        if(value.length) score += 4;
-        var sample = value.slice(0,5);
-        sample.forEach(function(item){
-          if(!isObj(item)) return;
-          if('distance' in item || 'pace' in item || 'duration' in item || 'avgPace' in item) score += 35;
-          if(typeof item.date === 'string') score += 10;
-        });
-        return score;
-      }
-      function scoreStrengthProgram(key, value){
-        var score = 0;
-        if(key === 'strength_program_v1') score += 120;
-        if(/program|plan|strength/i.test(key)) score += 20;
-        if(isObj(value)){
-          var vals = Object.values(value).slice(0, 8);
-          if(vals.length) score += 4;
-          vals.forEach(function(item){
-            if(isObj(item) && ('sets' in item || 'reps' in item || 'kg' in item || 'rest' in item)) score += 24;
-          });
-        }
-        return score;
-      }
-      function scoreAttendance(key, value){
-        var score = 0;
-        if(['att_manual','att_auto','att2'].indexOf(key) >= 0) score += 100;
-        if(/att|presence|attendance/i.test(key)) score += 18;
-        if(isObj(value)){
-          var keys = Object.keys(value).slice(0, 12);
-          if(keys.length) score += 4;
-          keys.forEach(function(k){ if(/^\d{4}-\d{2}-\d{2}$/.test(k)) score += 6; });
-        }
-        return score;
-      }
-      function scoreSessionHistory(key, value){
-        var score = 0;
-        if(key === 'wo_hist') score += 100;
-        if(/session|wo_hist/i.test(key)) score += 20;
-        if(Array.isArray(value) && value.length) score += 4;
-        return score;
-      }
-      function chooseBest(snapshot, scorer){
-        var best = null;
-        snapshot.forEach(function(item){
-          var s = scorer(item.key, item.parsedValue);
-          if(!best || s > best.score) best = {key:item.key, value:item.parsedValue, score:s};
-        });
-        return best && best.score > 0 ? best : null;
-      }
-      function pickAttendanceMap(snapshot, preferredKeys){
-        var out = {};
-        preferredKeys.forEach(function(k){
-          var found = snapshot.find(function(item){ return item.key === k && isObj(item.parsedValue); });
-          if(found) out[k] = found.parsedValue;
-        });
-        if(!Object.keys(out).length){
-          var best = chooseBest(snapshot, scoreAttendance);
-          if(best && isObj(best.value)) out[best.key] = best.value;
-        }
-        return out;
-      }
-      function buildProgramItems(plan){
-        if(!isObj(plan)) return [];
-        return Object.keys(plan).map(function(id){
-          var item = plan[id] || {};
-          return {
-            id:id,
-            he:item.he || item.title || id,
-            en:item.en || id,
-            sets:String(item.sets != null ? item.sets : ''),
-            reps:String(item.reps != null ? item.reps : ''),
-            kg:String(item.kg != null ? item.kg : ''),
-            unit:item.unit || ((item.kg || item.weight) ? 'kg' : 'bw'),
-            rest:parseInt(item.rest,10) || 60,
-            icon:item.icon || '',
-            group:item.group || ''
-          };
-        });
-      }
-      function storageSnapshot(){
-        var rows = [];
-        for(var i=0;i<localStorage.length;i++){
-          var key = localStorage.key(i);
-          var raw = localStorage.getItem(key);
-          var parsed = safeParse(raw);
-          rows.push({
-            key:key,
-            raw:raw,
-            rawLength:(raw||'').length,
-            parsed:parsed.parsed,
-            parsedType:parsed.type,
-            parsedValue:parsed.value
-          });
-        }
-        rows.sort(function(a,b){ return a.key.localeCompare(b.key); });
-        return rows;
-      }
-      function buildScan(){
-        var snapshot = storageSnapshot();
-        var strengthProgram = chooseBest(snapshot, scoreStrengthProgram);
-        var strengthHistory = chooseBest(snapshot, scoreStrengthHistory);
-        var runHistory = chooseBest(snapshot, scoreRunHistory);
-        var attendanceMaps = pickAttendanceMap(snapshot, ['att_manual','att_auto','att2']);
-        var sessionHistory = chooseBest(snapshot, scoreSessionHistory);
-        var wp = snapshot.find(function(item){ return item.key === 'wp'; }) || null;
-        var appSettings = snapshot.find(function(item){ return item.key === 'app_settings'; }) || null;
-        var runHistoryEditMode = snapshot.find(function(item){ return item.key === 'run_history_edit_mode'; }) || null;
-        var wlDesired = snapshot.find(function(item){ return item.key === 'wl_desired'; }) || null;
-
-        var attendanceCount = countAttendanceDays(attendanceMaps.att_manual, attendanceMaps.att_auto, attendanceMaps.att2, Object.values(attendanceMaps)[0]);
-        var planItems = buildProgramItems(strengthProgram && isObj(strengthProgram.value) ? strengthProgram.value : {});
-        var diagnostics = [];
-
-        if(snapshot.length === 0){
-          diagnostics.push({level:'bad', text:'לא נמצאו כלל מפתחות ב־localStorage של המקור הנוכחי. בדרך כלל זה אומר שהעמוד לא נפתח מאותו מקור שבו האפליקציה באמת שמרה את הנתונים.'});
-        }
-        if(strengthHistory && Array.isArray(strengthHistory.value) && strengthHistory.value.length === 0){
-          diagnostics.push({level:'warn', text:'נמצא מפתח כוח מתאים אך הוא ריק. זה יכול לקרות אם האפליקציה נשמרת במקור אחר, או אם היסטוריית הכוח נמצאת במפתח אחר.'});
-        }
-        if(strengthHistory && strengthHistory.key !== 'wh'){
-          diagnostics.push({level:'warn', text:'היסטוריית הכוח לא נשלפה מהמפתח הרגיל wh אלא ממפתח חלופי: ' + strengthHistory.key});
-        }
-        if(runHistory && runHistory.key !== 'runs'){
-          diagnostics.push({level:'warn', text:'היסטוריית הריצות לא נשלפה מהמפתח הרגיל runs אלא ממפתח חלופי: ' + runHistory.key});
-        }
-        if(!strengthHistory){
-          diagnostics.push({level:'bad', text:'לא זוהה מפתח היסטוריית כוח בביטחון מספיק. raw localStorage עדיין ייוצא כדי שלא יאבד מידע.'});
-        }
-        if(!strengthProgram){
-          diagnostics.push({level:'warn', text:'לא זוהתה תוכנית כוח בביטחון מספיק. raw localStorage עדיין ייכלל בגיבוי.'});
-        }
-        if(Object.keys(attendanceMaps).length === 0){
-          diagnostics.push({level:'warn', text:'לא זוהו מקורות נוכחות מוכרים. ייתכן שהנוכחות נשמרת אצלך במפתח אחר או שאין נתוני נוכחות במקור הזה.'});
-        }
-        if(diagnostics.length === 0){
-          diagnostics.push({level:'ok', text:'הסריקה נראית תקינה. זוהו מקורות ברורים לתוכנית, כוח, ריצה ונוכחות.'});
-        }
-
-        var payload = {
-          format: 'the_blues_legacy_backup_v2',
-          exportedAt: new Date().toISOString(),
-          exportedAtLabel: new Date().toLocaleString('he-IL', {dateStyle:'short', timeStyle:'short'}),
-          sourceApp: 'the_blues_main_app',
-          sourceOrigin: location.origin,
-          sourceHref: location.href,
-          summary: {
-            storageKeyCount: snapshot.length,
-            strengthProgramExercises: planItems.length,
-            strengthHistoryCount: strengthHistory && Array.isArray(strengthHistory.value) ? strengthHistory.value.length : 0,
-            runHistoryCount: runHistory && Array.isArray(runHistory.value) ? runHistory.value.length : 0,
-            attendanceCount: attendanceCount,
-            workoutCompletionFlags: wp && isObj(wp.parsedValue) ? countObjectKeys(wp.parsedValue) : 0,
-            workoutSessionHistory: sessionHistory && Array.isArray(sessionHistory.value) ? sessionHistory.value.length : 0
-          },
-          selectedSources: {
-            strengthProgram: strengthProgram ? strengthProgram.key : null,
-            strengthHistory: strengthHistory ? strengthHistory.key : null,
-            runHistory: runHistory ? runHistory.key : null,
-            attendance: Object.keys(attendanceMaps),
-            workoutProgress: wp ? wp.key : null,
-            workoutSessionHistory: sessionHistory ? sessionHistory.key : null,
-            appSettings: appSettings ? appSettings.key : null
-          },
-          diagnostics: diagnostics,
-          normalized: {
-            strengthProgramItems: planItems,
-            strengthHistory: strengthHistory ? strengthHistory.value : [],
-            runs: runHistory ? runHistory.value : [],
-            attendance: attendanceMaps,
-            workoutProgress: wp ? wp.parsedValue : {},
-            workoutSessionHistory: sessionHistory ? sessionHistory.value : [],
-            appSettings: appSettings ? appSettings.parsedValue : {},
-            run_history_edit_mode: runHistoryEditMode ? runHistoryEditMode.raw : null,
-            wl_desired: wlDesired ? wlDesired.raw : null
-          },
-          rawSnapshot: snapshot.map(function(item){
-            return {
-              key:item.key,
-              parsed:item.parsed,
-              parsedType:item.parsedType,
-              raw:item.raw,
-              parsedValue:item.parsedValue
-            };
-          }),
-          library2ImportSeed: {
-            suggestedUserName: 'המשתמש הראשי',
-            preferredGoal: 'hypertrophy',
-            preferredDays: 3,
-            rest: 60,
-            oneSessionProgramName: 'התוכנית הקיימת מהאפליקציה הראשית',
-            sessionTitle: 'האימון הנוכחי',
-            programItems: planItems
-          }
-        };
-
-        return {
-          snapshot:snapshot,
-          strengthProgram:strengthProgram,
-          strengthHistory:strengthHistory,
-          runHistory:runHistory,
-          attendanceMaps:attendanceMaps,
-          sessionHistory:sessionHistory,
-          wp:wp,
-          payload:payload,
-          diagnostics:diagnostics
-        };
-      }
-      function render(){
-        state.scan = buildScan();
-        var scan = state.scan;
-        var payload = scan.payload;
-        var summary = payload.summary;
-
-        setText('statKeys', summary.storageKeyCount);
-        setText('statPlan', summary.strengthProgramExercises);
-        setText('statStrength', summary.strengthHistoryCount);
-        setText('statRuns', summary.runHistoryCount);
-        setText('statAttendance', summary.attendanceCount);
-        setText('statSessions', summary.workoutSessionHistory);
-        setText('statStrengthKey', payload.selectedSources.strengthHistory || 'לא זוהה');
-        setText('statStatus', scan.diagnostics.some(function(d){ return d.level === 'bad'; }) ? 'דורש בדיקה' : 'מוכן');
-
-        el('originNote').innerHTML = 'המקור הנוכחי: <span class="mono">' + escapeHtml(location.origin || 'file://') + '</span><br>כדי לראות את אותם נתונים של האפליקציה הראשית, גם עמוד זה וגם האפליקציה צריכים להיפתח מאותו מקור ובאותו דפדפן.';
-
-        var sourceList = el('sourceList');
-        sourceList.innerHTML = '';
-        [
-          {label:'תוכנית כוח', key:payload.selectedSources.strengthProgram, count:summary.strengthProgramExercises, ok:!!payload.selectedSources.strengthProgram},
-          {label:'היסטוריית כוח', key:payload.selectedSources.strengthHistory, count:summary.strengthHistoryCount, ok:!!payload.selectedSources.strengthHistory},
-          {label:'היסטוריית ריצות', key:payload.selectedSources.runHistory, count:summary.runHistoryCount, ok:!!payload.selectedSources.runHistory},
-          {label:'נוכחות', key:(payload.selectedSources.attendance||[]).join(', ') || null, count:summary.attendanceCount, ok:(payload.selectedSources.attendance||[]).length>0},
-          {label:'היסטוריית סשנים', key:payload.selectedSources.workoutSessionHistory, count:summary.workoutSessionHistory, ok:!!payload.selectedSources.workoutSessionHistory},
-          {label:'הגדרות אפליקציה', key:payload.selectedSources.appSettings, count:'—', ok:!!payload.selectedSources.appSettings}
-        ].forEach(function(row){
-          var div = document.createElement('div');
-          div.className = 'src-item';
-          div.innerHTML =
-            '<div class="src-top">' +
-              '<strong>' + escapeHtml(row.label) + '</strong>' +
-              '<span class="chip ' + (row.ok ? 'ok' : 'bad') + '">' + (row.ok ? 'זוהה' : 'לא זוהה') + '</span>' +
-            '</div>' +
-            '<div class="codeish">' + escapeHtml(row.key || '—') + '</div>' +
-            '<div class="foot">פריטים/ימים: ' + escapeHtml(row.count) + '</div>';
-          sourceList.appendChild(div);
-        });
-
-        var diagList = el('diagList');
-        diagList.innerHTML = '';
-        scan.diagnostics.forEach(function(d){
-          var div = document.createElement('div');
-          div.className = 'diag-item';
-          div.innerHTML = '<span class="chip ' + (d.level === 'ok' ? 'ok' : d.level === 'warn' ? 'warn' : 'bad') + '">' + (d.level === 'ok' ? 'תקין' : d.level === 'warn' ? 'שים לב' : 'בעיה') + '</span>' + '<div class="foot" style="margin-top:8px">' + escapeHtml(d.text) + '</div>';
-          diagList.appendChild(div);
-        });
-
-        var keyRows = el('keyRows');
-        keyRows.innerHTML = '';
-        scan.snapshot.forEach(function(item){
-          var kind = '—';
-          if(item.key === payload.selectedSources.strengthProgram) kind = 'תוכנית כוח';
-          else if(item.key === payload.selectedSources.strengthHistory) kind = 'היסטוריית כוח';
-          else if(item.key === payload.selectedSources.runHistory) kind = 'היסטוריית ריצות';
-          else if((payload.selectedSources.attendance||[]).indexOf(item.key) >= 0) kind = 'נוכחות';
-          else if(item.key === payload.selectedSources.workoutSessionHistory) kind = 'סשנים';
-          else if(item.key === payload.selectedSources.appSettings) kind = 'הגדרות';
-          var row = document.createElement('div');
-          row.className = 'table';
-          row.innerHTML =
-            '<div class="td codeish">' + escapeHtml(item.key) + '</div>' +
-            '<div class="td">' + escapeHtml(item.parsedType + (item.parsed ? '' : ' (raw)')) + '</div>' +
-            '<div class="td">' + escapeHtml(prettyBytes(item.rawLength)) + '</div>' +
-            '<div class="td">' + escapeHtml(kind) + '</div>';
-          keyRows.appendChild(row);
-        });
-
-        var payloadPreview = el('payloadPreview');
-        payloadPreview.innerHTML =
-          'קובץ הגיבוי יכיל <b>' + summary.storageKeyCount + '</b> מפתחות raw, ' +
-          '<b>' + summary.strengthProgramExercises + '</b> תרגילים בתוכנית, ' +
-          '<b>' + summary.strengthHistoryCount + '</b> אימוני כוח, ' +
-          '<b>' + summary.runHistoryCount + '</b> ריצות, ו־<b>' + summary.attendanceCount + '</b> ימי נוכחות.';
-
-        el('successNote').classList.add('hidden');
-        el('warnNote').classList.toggle('hidden', !scan.diagnostics.some(function(d){ return d.level !== 'ok'; }));
-        if(!el('warnNote').classList.contains('hidden')){
-          el('warnNote').textContent = 'אם משהו עדיין לא נראה נכון, ייצא גם raw localStorage מלא. כך לא מאבדים מידע, וגם אפשר לייבא או לנתח אותו אחר כך.';
-        }
-      }
-      function download(filename, data, type){
-        var blob = new Blob([data], {type:type || 'application/json;charset=utf-8'});
-        var a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(function(){ try{ URL.revokeObjectURL(a.href); }catch(e){} try{ a.remove(); }catch(e){} }, 300);
-      }
-      function stamp(){
-        var d = new Date();
-        var p = function(n){ return String(n).padStart(2,'0'); };
-        return d.getFullYear() + p(d.getMonth()+1) + p(d.getDate()) + '_' + p(d.getHours()) + p(d.getMinutes());
-      }
-      el('scanBtn').addEventListener('click', render);
-      el('exportBtn').addEventListener('click', function(){
-        if(!state.scan) render();
-        var file = 'the_blues_legacy_backup_v2_' + stamp() + '.json';
-        download(file, JSON.stringify(state.scan.payload, null, 2));
-        el('successNote').classList.remove('hidden');
-        el('successNote').textContent = 'נוצר קובץ גיבוי: ' + file;
-      });
-      el('exportRawBtn').addEventListener('click', function(){
-        if(!state.scan) render();
-        var raw = {
-          format:'the_blues_localstorage_raw_v1',
-          exportedAt:new Date().toISOString(),
-          sourceOrigin:location.origin,
-          sourceHref:location.href,
-          keys:state.scan.snapshot.map(function(item){
-            return {key:item.key, raw:item.raw, parsed:item.parsed, parsedType:item.parsedType, parsedValue:item.parsedValue};
-          })
-        };
-        var file = 'the_blues_localstorage_raw_' + stamp() + '.json';
-        download(file, JSON.stringify(raw, null, 2));
-        el('successNote').classList.remove('hidden');
-        el('successNote').textContent = 'נוצר קובץ raw: ' + file;
-      });
-      render();
-    })();
-  </script>
+<div class="wrap">
+<section class="hero">
+<h1 class="brand">THE BLUES · גיבוי נתונים</h1>
+<p class="sub">עמוד זה לא משנה את הנתונים שלך. הוא סורק את ה-localStorage של האפליקציה, מציג תקציר, ומאפשר הורדת גיבוי JSON או snapshot מלא של localStorage.</p>
+<div class="actions"><a class="btn ghost" href="./index.html">חזרה לאפליקציה</a><button class="primary" id="scanBtn" type="button">סרוק נתונים</button><button class="secondary" id="exportBtn" type="button">הורד גיבוי JSON</button><button class="ghost" id="exportRawBtn" type="button">הורד raw localStorage</button></div>
+<div class="note" id="originNote"></div>
+</section>
+<section class="grid">
+<div class="stat"><div class="k">מפתחות שנמצאו</div><div class="v" id="statKeys">0</div></div>
+<div class="stat"><div class="k">אימוני כוח</div><div class="v" id="statStrength">0</div></div>
+<div class="stat"><div class="k">ריצות</div><div class="v" id="statRuns">0</div></div>
+<div class="stat"><div class="k">ימי נוכחות</div><div class="v" id="statAttendance">0</div></div>
+</section>
+<section class="panel"><h2 class="ttl">מקורות שנמצאו</h2><div class="src-list" id="sourceList"></div></section>
+<section class="panel"><h2 class="ttl">מפתחות ב-localStorage</h2><div class="table"><div class="th">מפתח</div><div class="th">סוג</div><div class="th">גודל</div><div class="th">הערה</div></div><div id="keyRows"></div></section>
+<section class="panel"><h2 class="ttl">סטטוס</h2><div class="muted" id="payloadPreview">עוד לא בוצעה סריקה.</div><div class="note ok hidden" id="successNote"></div></section>
+</div>
+<script>
+(function(){
+  var state={scan:null};
+  function el(id){return document.getElementById(id)}
+  function setText(id,v){var x=el(id); if(x) x.textContent=String(v)}
+  function escapeHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]})}
+  function prettyBytes(bytes){bytes=Number(bytes||0); if(bytes<1024) return bytes+'b'; if(bytes<1024*1024) return (bytes/1024).toFixed(1)+'kb'; return (bytes/(1024*1024)).toFixed(2)+'mb'}
+  function safeParse(raw){if(raw==null) return {type:'null', value:null, parsed:false}; try{var p=JSON.parse(raw); return {type:Array.isArray(p)?'array':(p===null?'null':typeof p), value:p, parsed:true}}catch(e){return {type:'string', value:raw, parsed:false}}}
+  function isObj(v){return !!v && typeof v==='object' && !Array.isArray(v)}
+  function storageSnapshot(){var rows=[]; for(var i=0;i<localStorage.length;i++){var key=localStorage.key(i); var raw=localStorage.getItem(key); var parsed=safeParse(raw); rows.push({key:key,raw:raw,rawLength:(raw||'').length,parsed:parsed.parsed,parsedType:parsed.type,parsedValue:parsed.value})} rows.sort(function(a,b){return a.key.localeCompare(b.key)}); return rows}
+  function countAttendanceDays(){var seen={}; Array.prototype.slice.call(arguments).forEach(function(src){if(!isObj(src)) return; Object.keys(src).forEach(function(k){seen[k]=true})}); return Object.keys(seen).length}
+  function pickLikely(snapshot, test){return snapshot.find(test)||null}
+  function buildScan(){var snapshot=storageSnapshot(); var strength=pickLikely(snapshot,function(i){return i.key==='wh' || /strength|workout/i.test(i.key)}); var runs=pickLikely(snapshot,function(i){return i.key==='runs' || /run/i.test(i.key)}); var attManual=pickLikely(snapshot,function(i){return i.key==='att_manual'}); var attAuto=pickLikely(snapshot,function(i){return i.key==='att_auto'}); var att2=pickLikely(snapshot,function(i){return i.key==='att2'}); var attCount=countAttendanceDays(attManual&&attManual.parsedValue, attAuto&&attAuto.parsedValue, att2&&att2.parsedValue); return {snapshot:snapshot, summary:{storageKeyCount:snapshot.length,strengthCount:(strength&&Array.isArray(strength.parsedValue)?strength.parsedValue.length:0),runCount:(runs&&Array.isArray(runs.parsedValue)?runs.parsedValue.length:0),attendanceCount:attCount}, selected:{strength:strength?strength.key:null,runs:runs?runs.key:null,attendance:[attManual&&attManual.key,attAuto&&attAuto.key,att2&&att2.key].filter(Boolean)}, payload:{format:'the_blues_backup_v1', exportedAt:new Date().toISOString(), sourceOrigin:location.origin, sourceHref:location.href, summary:{storageKeyCount:snapshot.length,strengthCount:(strength&&Array.isArray(strength.parsedValue)?strength.parsedValue.length:0),runCount:(runs&&Array.isArray(runs.parsedValue)?runs.parsedValue.length:0),attendanceCount:attCount}, selectedSources:{strength:strength?strength.key:null,runs:runs?runs.key:null,attendance:[attManual&&attManual.key,attAuto&&attAuto.key,att2&&att2.key].filter(Boolean)}, rawSnapshot:snapshot.map(function(item){return {key:item.key,raw:item.raw,parsed:item.parsed,parsedType:item.parsedType,parsedValue:item.parsedValue}})}}}
+  function render(){state.scan=buildScan(); var scan=state.scan; setText('statKeys',scan.summary.storageKeyCount); setText('statStrength',scan.summary.strengthCount); setText('statRuns',scan.summary.runCount); setText('statAttendance',scan.summary.attendanceCount); el('originNote').innerHTML='המקור הנוכחי: <span class="codeish">'+escapeHtml(location.origin||'file://')+'</span><br>כדי לקבל את אותם נתונים, פתח גם את האפליקציה הראשית וגם את עמוד הגיבוי מאותו מקור.'; var srcList=el('sourceList'); srcList.innerHTML=''; [{label:'היסטוריית כוח',key:scan.selected.strength},{label:'היסטוריית ריצות',key:scan.selected.runs},{label:'נוכחות',key:scan.selected.attendance.join(', ')||'—'}].forEach(function(row){var div=document.createElement('div'); div.className='src-item'; div.innerHTML='<div class="src-top"><strong>'+escapeHtml(row.label)+'</strong><span class="chip '+(row.key&&row.key!=='—'?'ok':'bad')+'">'+(row.key&&row.key!=='—'?'זוהה':'לא זוהה')+'</span></div><div class="codeish">'+escapeHtml(row.key||'—')+'</div>'; srcList.appendChild(div)}); var keyRows=el('keyRows'); keyRows.innerHTML=''; scan.snapshot.forEach(function(item){var note='—'; if(item.key===scan.selected.strength) note='היסטוריית כוח'; else if(item.key===scan.selected.runs) note='היסטוריית ריצות'; else if(scan.selected.attendance.indexOf(item.key)>=0) note='נוכחות'; var row=document.createElement('div'); row.className='table'; row.innerHTML='<div class="td codeish">'+escapeHtml(item.key)+'</div><div class="td">'+escapeHtml(item.parsedType+(item.parsed?'':' (raw)'))+'</div><div class="td">'+escapeHtml(prettyBytes(item.rawLength))+'</div><div class="td">'+escapeHtml(note)+'</div>'; keyRows.appendChild(row)}); el('payloadPreview').innerHTML='קובץ הגיבוי יכלול <b>'+scan.summary.storageKeyCount+'</b> מפתחות raw, <b>'+scan.summary.strengthCount+'</b> אימוני כוח, <b>'+scan.summary.runCount+'</b> ריצות ו-<b>'+scan.summary.attendanceCount+'</b> ימי נוכחות.'; el('successNote').classList.add('hidden')}
+  function download(filename,data,type){var blob=new Blob([data],{type:type||'application/json;charset=utf-8'}); var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; document.body.appendChild(a); a.click(); setTimeout(function(){try{URL.revokeObjectURL(a.href)}catch(e){} try{a.remove()}catch(e){}},300)}
+  function stamp(){var d=new Date(); var p=function(n){return String(n).padStart(2,'0')}; return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes())}
+  el('scanBtn').addEventListener('click',render); el('exportBtn').addEventListener('click',function(){if(!state.scan) render(); var file='the_blues_backup_'+stamp()+'.json'; download(file, JSON.stringify(state.scan.payload,null,2)); el('successNote').classList.remove('hidden'); el('successNote').textContent='נוצר קובץ גיבוי: '+file}); el('exportRawBtn').addEventListener('click',function(){var raw={format:'the_blues_localstorage_raw_v1', exportedAt:new Date().toISOString(), sourceOrigin:location.origin, sourceHref:location.href, keys:storageSnapshot().map(function(item){return {key:item.key,raw:item.raw,parsed:item.parsed,parsedType:item.parsedType,parsedValue:item.parsedValue}})}; var file='the_blues_localstorage_raw_'+stamp()+'.json'; download(file, JSON.stringify(raw,null,2)); el('successNote').classList.remove('hidden'); el('successNote').textContent='נוצר קובץ raw: '+file}); render();
+})();
+</script>
 </body>
 </html>
