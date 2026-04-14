@@ -8171,7 +8171,7 @@ body.portal-mode .portal-hero > *{position:relative !important; z-index:2 !impor
       </div>
       <div class="g2" style="margin-bottom:9px">
         <div><div class="flbl">שלב תוכנית</div>
-          <select id="run-ivl" class="finput">
+          <select id="run-ivl" class="finput" onchange="updateManualRunStructurePreview()">
             <option value="1">שבועות 1–2 (2/2)</option><option value="2">שבועות 3–4 (2/1.5)</option>
             <option value="3">שבועות 5–6 (2.5/1.5)</option><option value="4">שבועות 7–8 (3/1)</option>
             <option value="5">שבועות 9–10 (5/2)</option><option value="6">שבועות 11–12 (8/2)</option>
@@ -8182,6 +8182,31 @@ body.portal-mode .portal-hero > *{position:relative !important; z-index:2 !impor
         </div>
         <div><div class="flbl">דופק (אופציונלי)</div><input type="text" id="run-hr" class="finput" placeholder="145" onclick="this.select()"></div>
       </div>
+      <div class="g2" style="margin-bottom:9px">
+        <div><div class="flbl">חימום לפני האימון</div>
+          <select id="run-warmup" class="finput" onchange="manualRunWarmupChanged()">
+            <option value="0">ללא חימום</option>
+            <option value="3">3 דקות</option>
+            <option value="5">5 דקות</option>
+            <option value="8">8 דקות</option>
+            <option value="custom">אחר…</option>
+          </select>
+          <input type="number" id="run-warmup-custom" class="finput" min="0" max="30" step="0.5" placeholder="דקות חימום" style="display:none;margin-top:6px" oninput="updateManualRunStructurePreview()">
+        </div>
+        <div><div class="flbl">הליכה / שארית בסיום</div>
+          <select id="run-finish-extra" class="finput" onchange="updateManualRunStructurePreview()">
+            <option value="0">ללא שארית</option>
+            <option value="5">5 דקות</option>
+            <option value="10">10 דקות</option>
+            <option value="15">15 דקות</option>
+            <option value="20">20 דקות</option>
+            <option value="25">25 דקות</option>
+            <option value="30">30 דקות</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-bottom:9px"><div class="flbl">מבנה שייווצר אוטומטית</div><div id="run-structure-preview" class="finput" style="min-height:42px;display:flex;align-items:center;color:#5f7589">המבנה ייבנה מתוך שלב התוכנית והבחירות שלך</div><input type="hidden" id="run-structure"></div>
+      <div style="margin-bottom:9px"><div class="flbl">קצב מההליכון</div><input type="text" id="run-treadmill-pace" class="finput" placeholder="למשל: 10:45 דק/ק״מ" onclick="this.select()"></div>
       <div style="margin-bottom:9px"><div class="flbl">תחושה</div>
         <div class="feel-row">
           <button class="fbtn" id="f1" onclick="setFeel(1)">😢 קשה</button>
@@ -9187,6 +9212,40 @@ function setFeel(n){RF=n;for(var i=1;i<=4;i++)document.getElementById('f'+i).cla
 function calcPace(d,m){if(!d||!m||isNaN(d)||isNaN(m)||d<=0)return'';var p=m/d,pm=Math.floor(p),ps=Math.round((p-pm)*60);if(ps===60){pm++;ps=0;}return pm+':'+(ps<10?'0':'')+ps+" דק'/ק\"מ";}
 function updPace(){var d=parseFloat(document.getElementById('run-dist').value),t=parseFloat(document.getElementById('run-time').value),pb=document.getElementById('pacebox'),pace=calcPace(d,t);if(pace){pb.style.display='block';pb.innerHTML='⏱ קצב: <b>'+pace+'</b>';}else pb.style.display='none';}
 
+function getManualRunPhase(){
+  var el=document.getElementById('run-ivl');
+  var idx=el?parseInt(el.value||'0',10)-1:-1;
+  return (idx>=0 && RT_PHASES[idx]) ? RT_PHASES[idx] : null;
+}
+function formatManualRunMinutes(min){
+  min=parseInt(min||0,10)||0;
+  return min>0 ? (String(min)+':00') : '';
+}
+function buildManualRunStructure(){
+  var p=getManualRunPhase();
+  var base=p?rtStructText(p):'';
+  var finishEl=document.getElementById('run-finish-extra');
+  var extra=finishEl?parseInt(finishEl.value||'0',10)||0:0;
+  var parts=[];
+  if(base) parts.push(base);
+  if(extra>0) parts.push('הליכה נוספת '+formatManualRunMinutes(extra));
+  return parts.join(' + ');
+}
+function updateManualRunStructurePreview(){
+  var preview=document.getElementById('run-structure-preview');
+  var hidden=document.getElementById('run-structure');
+  var warmEl=document.getElementById('run-warmup');
+  var warm=warmEl?parseInt(warmEl.value||'0',10)||0:0;
+  var built=buildManualRunStructure();
+  if(hidden) hidden.value=built;
+  if(!preview) return;
+  var parts=[];
+  if(warm>0) parts.push('חימום '+formatManualRunMinutes(warm));
+  if(built) parts.push(built);
+  preview.textContent = parts.length ? parts.join(' • ') : 'המבנה ייבנה מתוך שלב התוכנית והבחירות שלך';
+  preview.style.color = parts.length ? '#1a2332' : '#5f7589';
+}
+
 function rtPhaseActiveSec(p){
   if(!p) return 0;
   if(p.type==='continuous') return (parseInt(p.reps,10)||1) * (parseInt(p.run,10)||0);
@@ -9256,13 +9315,28 @@ function saveRun(){
   var date=document.getElementById('run-date').value;if(!date){alert('בחר תאריך');return;}
   var dist=document.getElementById('run-dist').value,time=document.getElementById('run-time').value;
   if(!dist&&!time){alert('הזן מרחק או זמן');return;}
+  var structureEl=document.getElementById('run-structure');
+  var treadmillEl=document.getElementById('run-treadmill-pace');
+  var warmupEl=document.getElementById('run-warmup');
+  var finishEl=document.getElementById('run-finish-extra');
+  var p=getManualRunPhase();
+  var structure=String(buildManualRunStructure()||'').trim();
+  if(structureEl) structureEl.value=structure;
+  var treadmillPace=treadmillEl?String(treadmillEl.value||'').trim():'';
+  var warmupMin=warmupEl?(parseInt(warmupEl.value||'0',10)||0):0;
+  var finishExtraMin=finishEl?(parseInt(finishEl.value||'0',10)||0):0;
+  var activeMin=p?fmtRunMinutes(rtPhaseActiveSec(p)):(time||'');
+  var runOnlyMin=p?fmtRunMinutes(rtPhaseRunSec(p)):'';
+  var walkOnlyMin=p?fmtRunMinutes(rtPhaseWalkSec(p)):'';
+  var computedTotal=(warmupMin||0)+(parseFloat(activeMin)||0)+(finishExtraMin||0);
   var dtIso = date + 'T' + new Date().toTimeString().slice(0,8);
-  var run={date:dtIso,dist:dist,time:time,ivl:document.getElementById('run-ivl').value,hr:document.getElementById('run-hr').value,feel:RF,notes:document.getElementById('run-notes').value,pace:calcPace(parseFloat(dist),parseFloat(time)),source:'manual'};
+  var run={date:dtIso,dist:dist,time:time,ivl:document.getElementById('run-ivl').value,hr:document.getElementById('run-hr').value,feel:RF,notes:document.getElementById('run-notes').value,structure:structure,treadmillPace:treadmillPace,pace:calcPace(parseFloat(dist),parseFloat(time)),source:'manual',warmupMin:warmupMin?String(warmupMin):'',endExtraMin:finishExtraMin?String(finishExtraMin):'',activeMin:activeMin,runOnlyMin:runOnlyMin,walkOnlyMin:walkOnlyMin,totalMin:(time|| (computedTotal?String(computedTotal):''))};
   var runs=lsJ('runs')||[];runs.unshift(run);if(runs.length>100)runs=runs.slice(0,100);
   lsSJ('runs',runs);renderRunH();showMsg('msg-run');
   var msg=document.getElementById('msg-run'); if(msg) msg.textContent='האימון נשמר';
-  document.getElementById('run-dist').value='';document.getElementById('run-time').value='';document.getElementById('run-hr').value='';document.getElementById('run-notes').value='';document.getElementById('pacebox').style.display='none';
+  document.getElementById('run-dist').value='';document.getElementById('run-time').value='';document.getElementById('run-hr').value='';document.getElementById('run-notes').value='';if(structureEl)structureEl.value='';if(treadmillEl)treadmillEl.value='';if(warmupEl)warmupEl.value='0';if(finishEl)finishEl.value='0';document.getElementById('pacebox').style.display='none';
   RF=0;for(var i=1;i<=4;i++)document.getElementById('f'+i).className='fbtn';
+  updateManualRunStructurePreview();
   renderRunExtras();
 }
 function delRun(idx){if(!confirm('למחוק?'))return;var runs=lsJ('runs')||[];runs.splice(idx,1);lsSJ('runs',runs);renderRunH();renderRunExtras();}
@@ -9281,24 +9355,29 @@ function renderRunH(){
   for(var i=0;i<runs.length;i++){
     var r=runs[i], dtInfo=fmtRunDateTime(r.date), isAuto=(r.source==='auto_timer');
     out+='<div class="runcard"><div class="runhd"><div><div class="hwdt">🏃 '+dtInfo.day+'</div><div class="runsub">'+dtInfo.time+(isAuto?' · נשמר אוטומטית':' · נשמר ידנית')+'</div></div><div class="runbadges"><span class="runbadge '+(isAuto?'auto':'')+'">'+(isAuto?'טיימר':'ידני')+'</span>'+(r.ivl?'<span class="runbadge">'+r.ivl+'</span>':'')+'<button class="hwbtn" onclick="delRun('+i+')">🗑</button></div></div><div class="runbd">';
-    out+='<div class="runsts">';
     if(isAuto){
+      out+='<div class="runsts">';
       out+='<div class="runst"><div class="rsv">'+(r.warmupMin||'0')+'</div><div class="rsl">חימום</div></div>';
       out+='<div class="runst"><div class="rsv">'+(r.activeMin||r.time||'—')+'</div><div class="rsl">ריצה/הליכה</div></div>';
       out+='<div class="runst"><div class="rsv">'+(r.totalMin||r.time||'—')+'</div><div class="rsl">סה"כ דקות</div></div>';
-    }else{
-      out+='<div class="runst"><div class="rsv">'+(r.dist||'—')+'</div><div class="rsl">ק"מ</div></div>';
-      out+='<div class="runst"><div class="rsv">'+(r.time||'—')+'</div><div class="rsl">דקות</div></div>';
-      out+='<div class="runst"><div class="rsv">'+(r.pace||'—')+'</div><div class="rsl">קצב</div></div>';
-    }
-    out+='</div><div class="runmeta">';
-    if(isAuto){
+      out+='</div><div class="runmeta">';
       if(r.structure) out+='<div class="runline"><b>מבנה:</b> '+r.structure+'</div>';
       if(r.runOnlyMin || r.walkOnlyMin) out+='<div class="runline"><b>פירוק:</b> ריצה '+(r.runOnlyMin||'0')+' דק׳ · הליכה '+(r.walkOnlyMin||'0')+' דק׳</div>';
+      if(r.treadmillPace || r.pace || r.dist) out+='<div class="runline"><b>סיכום:</b> '+(r.treadmillPace?('קצב הליכון '+r.treadmillPace):('קצב '+(r.pace||'—')))+(r.dist?(' · '+r.dist+' ק"מ'):'')+'</div>';
+      if(r.feel) out+='<div class="runline"><b>תחושה:</b> '+FEEL[r.feel]+'</div>';
+      if(r.notes) out+='<div class="runline"><b>הערות:</b> '+r.notes+'</div>';
     }else{
-      if(r.hr)out+='<div class="runline"><b>דופק:</b> '+r.hr+' bpm</div>';
-      if(r.feel)out+='<div class="runline"><b>תחושה:</b> '+FEEL[r.feel]+'</div>';
-      if(r.notes)out+='<div class="runline"><b>הערות:</b> '+r.notes+'</div>';
+      if(r.structure) out+='<div class="runline"><b>מבנה:</b> '+r.structure+'</div>';
+      out+='<div class="runsts">';
+      out+='<div class="runst"><div class="rsv">'+(r.feel?FEEL[r.feel]:'—')+'</div><div class="rsl">תחושה</div></div>';
+      out+='<div class="runst"><div class="rsv">'+(r.time||r.totalMin||'—')+'</div><div class="rsl">דקות</div></div>';
+      out+='<div class="runst"><div class="rsv">'+(r.treadmillPace||r.pace||'—')+'</div><div class="rsl">קצב</div></div>';
+      out+='</div><div class="runmeta">';
+      if(r.warmupMin) out+='<div class="runline"><b>חימום:</b> '+r.warmupMin+' דק׳</div>';
+      if(r.hr) out+='<div class="runline"><b>דופק:</b> '+r.hr+' bpm</div>';
+      if(r.treadmillPace || r.pace || r.dist) out+='<div class="runline"><b>סיכום:</b> '+(r.treadmillPace?('קצב הליכון '+r.treadmillPace):('קצב '+(r.pace||'—')))+(r.dist?(' · '+r.dist+' ק"מ'):'')+'</div>';
+      if(r.endExtraMin) out+='<div class="runline"><b>שארית בסיום:</b> '+r.endExtraMin+' דק׳</div>';
+      if(r.notes) out+='<div class="runline"><b>הערות:</b> '+r.notes+'</div>';
     }
     out+='</div></div></div>';
   }
@@ -11807,7 +11886,7 @@ function renderAtt(){
         txt === 'שמור';
 
       // Never touch real modals
-      if(btn.closest('#settings-modal') || btn.closest('#wo-end-modal') || btn.closest('#wt-edit-modal') || btn.closest('#wt-hist-modal') || btn.closest('#wt-hist-edit-modal') || btn.closest('#wt-hist-delete-modal') || btn.closest('#wt-confirm-modal') || btn.closest('#run-hist-delete-modal')) return;
+      if(btn.closest('#settings-modal') || btn.closest('#wo-end-modal') || btn.closest('#wt-edit-modal') || btn.closest('#wt-hist-modal') || btn.closest('#wt-hist-edit-modal') || btn.closest('#wt-hist-delete-modal') || btn.closest('#wt-confirm-modal') || btn.closest('#run-hist-delete-modal') || btn.closest('#run-hist-delete-modal-clean') || btn.closest('#run-hist-edit-modal-clean') || btn.closest('#run-hist-modal-clean')) return;
 
       if(isSettingsAction && btn.closest('#s3')){
         var host = btn.parentElement;
@@ -12191,7 +12270,7 @@ function renderAtt(){
 
     // protect other modals, but remove leaked save/cancel rows outside settings modal
     document.querySelectorAll('button').forEach(function(btn){
-      if(btn.closest('#settings-modal') || btn.closest('#wo-end-modal') || btn.closest('#wt-edit-modal') || btn.closest('#wt-hist-modal') || btn.closest('#wt-hist-edit-modal') || btn.closest('#wt-hist-delete-modal') || btn.closest('#wt-confirm-modal') || btn.closest('#run-hist-delete-modal')) return;
+      if(btn.closest('#settings-modal') || btn.closest('#wo-end-modal') || btn.closest('#wt-edit-modal') || btn.closest('#wt-hist-modal') || btn.closest('#wt-hist-edit-modal') || btn.closest('#wt-hist-delete-modal') || btn.closest('#wt-confirm-modal') || btn.closest('#run-hist-delete-modal') || btn.closest('#run-hist-delete-modal-clean') || btn.closest('#run-hist-edit-modal-clean') || btn.closest('#run-hist-modal-clean')) return;
       var txt = (btn.textContent || '').trim();
       if(txt === 'שמור' || txt === 'ביטול'){
         var host = btn.parentElement;
@@ -28305,7 +28384,7 @@ body.run-timer-session-active #path-crumb-bar{display:none !important}
   }
   function renderProgressSmart(){
     var host=gid('data-smart-progress-host'); if(!host) return;
-    var m=progressMeta(), recent=m.events.slice(0,4), moreOpen=!!jget('data_progress_more_open',false), strengthRows=strengthMapRows(), max=0;
+    var m=progressMeta(), recent=m.events.slice(0,4), moreOpen=!!jget('data_progress_more_open',false), strengthRows=strengthMapRows(), runRows=(typeof window.runMapRows==='function'?window.runMapRows():[]), max=0;
     recent.forEach(function(e){ if(e.score>max) max=e.score; });
     m.events.slice(0,6).forEach(function(e){ if(e.score>max) max=e.score; });
     var html='';
@@ -28331,6 +28410,9 @@ body.run-timer-session-active #path-crumb-bar{display:none !important}
     if(strengthRows.length){ strengthRows.forEach(function(r){ html+='<div class="data-smart-map-item"><div class="h">'+r.h+'</div><div class="t">'+r.t+'</div><div class="meta">'+r.meta+'</div></div>'; }); } else { html+='<div class="data-smart-map-item"><div class="t">עדיין אין מספיק אימוני כוח כדי למפות התקדמות בתוך התוכנית.</div></div>'; }
     html+='</div></div>';
     html+='<div class="data-smart-section"><div class="data-smart-head"><div><div class="ttl">המלצה לשלב הבא</div><div class="sub">הכוונה פרקטית מתוך התמונה הנוכחית</div></div></div><div class="data-smart-tip"><div class="h">מה כדאי לעשות עכשיו?</div><div class="t">'+progressRecommendation(m)+'</div></div></div>';
+    html+='<div id="data-smart-run-map-inline" class="data-smart-section"><div class="data-smart-head"><div><div class="ttl">מיפוי התקדמות בתוכנית — ריצה</div><div class="sub">מעמד שלב הריצה והקצב ביחס לריצות האחרונות</div></div></div><div class="data-smart-map-grid run-clone">';
+    if(runRows.length){ runRows.forEach(function(r){ html+='<div class="data-smart-map-item"><div class="h">'+r.h+'</div><div class="t">'+r.t+'</div><div class="meta">'+r.meta+'</div></div>'; }); } else { html+='<div class="data-smart-map-item"><div class="t">עדיין אין מספיק ריצות שמורות כדי למפות התקדמות בתוך תוכנית הריצה.</div></div>'; }
+    html+='</div></div>';
     html+='<div class="data-smart-section"><div class="data-smart-head"><div><div class="ttl">טיפים חכמים לאימון</div><div class="sub">שכבת AI קלה שמפרשת את הנתונים שלך</div></div></div><div class="data-smart-tips">';
     progressTips(m).forEach(function(t){ html+='<div class="data-smart-tip"><div class="h">'+t.h+'</div><div class="t">'+t.t+'</div></div>'; });
     html+='</div></div>';
@@ -30273,5 +30355,2238 @@ body.portal-mode .portal-hero > *{position:relative !important; z-index:2 !impor
   window.addEventListener('pageshow', function(){ window.resumeWakeIfNeeded(); });
   window.addEventListener('focus', function(){ window.resumeWakeIfNeeded(); });
   window.addEventListener('load', function(){ setTimeout(function(){ if(desired()) window.resumeWakeIfNeeded(); else setWakeUI(false); }, 60); });
+})();
+</script>
+
+
+<style id="oai-vfinal-batch-fixes-style">
+.strength-more-history-slot{margin-top:10px;display:none}
+.strength-more-history-slot.open{display:block}
+.strength-more-history-slot .note{display:none !important}
+.oai-next-focus{box-shadow:0 0 0 2px rgba(232,160,32,.28),0 12px 28px rgba(13,27,42,.14) !important;transition:box-shadow .22s ease}
+.oai-next-focus .chead{background:linear-gradient(180deg,#fff8e8 0%,#ffffff 100%)}
+.data-smart-map-grid.run-clone{margin-top:10px}
+</style>
+<script id="oai-vfinal-batch-fixes-script">
+(function(){
+  function gid(id){ return document.getElementById(id); }
+  function lsJ(key, fallback){ try{ var raw=localStorage.getItem(key); return raw?JSON.parse(raw):fallback; }catch(e){ return fallback; } }
+  function lsSJ(key, val){ try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){} }
+  function pad2(n){ return String(n).padStart(2,'0'); }
+  function dateKey(v){
+    if(!v) return '';
+    if(typeof v === 'string'){
+      var m = v.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if(m) return m[1]+'-'+m[2]+'-'+m[3];
+    }
+    var d = new Date(v);
+    if(isNaN(d.getTime())) return '';
+    return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());
+  }
+  function safeRuns(){ var arr = lsJ('runs',[]) || []; return Array.isArray(arr) ? arr.slice() : []; }
+  function safeStrength(){ var arr = lsJ('wh',[]) || []; return Array.isArray(arr) ? arr.slice() : []; }
+  function num(v){ if(v==null) return 0; var n=parseFloat(String(v).replace(',', '.')); return isFinite(n)?n:0; }
+  function runPaceSec(run){
+    if(!run) return 0;
+    var s = String(run.treadmillPace || run.pace || '').trim();
+    var m = s.match(/(\d{1,2})\s*:\s*(\d{1,2})/);
+    if(m) return parseInt(m[1],10)*60 + parseInt(m[2],10);
+    var time = num(run.totalMin || run.time);
+    var dist = num(run.dist);
+    if(time>0 && dist>0) return Math.round((time*60)/dist);
+    return 0;
+  }
+  function fmtPace(sec){ sec=Math.round(sec||0); if(!sec) return '—'; return Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0'); }
+  function safeRunDate(run){ return dateKey((run&&run.date) || (run&&run.startTimeIso) || (run&&run.startIso) || ''); }
+  function runTitle(run){
+    try{ if(typeof window.runTitle === 'function') return window.runTitle(run); }catch(e){}
+    return (run && (run.runTitle || run.ivl)) ? String(run.runTitle || run.ivl) : 'ריצה';
+  }
+  function phaseMetaForRun(run){
+    try{
+      if(typeof window.phaseIndexFromRun === 'function' && typeof window.phaseMeta === 'function'){
+        return window.phaseMeta(window.phaseIndexFromRun(run));
+      }
+    }catch(e){}
+    return {label:runTitle(run), goal:'', stage:'ריצה'};
+  }
+
+  function buildAttendanceAuto(){
+    var auto = {};
+    safeStrength().forEach(function(w){
+      var key = dateKey(w && (w.date || w.savedAt || w.ts));
+      if(!key) return;
+      auto[key] = (auto[key] === 'R' || auto[key] === 'B') ? 'B' : 'S';
+    });
+    safeRuns().forEach(function(r){
+      var key = safeRunDate(r);
+      if(!key) return;
+      auto[key] = (auto[key] === 'S' || auto[key] === 'B') ? 'B' : 'R';
+    });
+    return auto;
+  }
+
+  window.syncAttendanceFromLogs = function(){
+    var auto = buildAttendanceAuto();
+    lsSJ('att_auto', auto);
+    return auto;
+  };
+  window.getAttAuto = function(){ return window.syncAttendanceFromLogs(); };
+  window.getAttManual = function(){ return lsJ('att_manual', lsJ('att2', {}) || {}) || {}; };
+  window.saveAttManual = function(d){ lsSJ('att_manual', d || {}); };
+  window.getAttD = function(){
+    var merged = {};
+    var manual = window.getAttManual() || {};
+    var auto = window.syncAttendanceFromLogs() || {};
+    Object.keys(manual).forEach(function(k){ merged[k] = manual[k]; });
+    Object.keys(auto).forEach(function(k){ merged[k] = auto[k]; });
+    return merged;
+  };
+  window.getAttCount = function(){ return Object.keys(window.getAttD() || {}).length; };
+
+  function normalizeStrengthHistoryNode(){
+    var node = gid('strength-more-history') || gid('hist-s');
+    if(!node) return null;
+    if(node.id !== 'hist-s') node.id = 'hist-s';
+    node.classList.add('strength-more-history-slot');
+    var open = !!lsJ('strength_more_open', false);
+    node.classList.toggle('open', open);
+    node.style.display = open ? 'block' : 'none';
+    var btn = gid('strength-more-history-toggle');
+    if(btn){
+      btn.classList.toggle('open', open);
+      btn.textContent = open ? 'סגור אימונים נוספים' : 'לאימונים נוספים';
+    }
+    return node;
+  }
+
+  if(typeof window.renderStrengthProgressHub === 'function' && !window.renderStrengthProgressHub._oaiBatchWrapped){
+    var _origRenderStrengthProgressHub = window.renderStrengthProgressHub;
+    window.renderStrengthProgressHub = function(){
+      var hist = gid('strength-more-history');
+      if(hist && !gid('hist-s')) hist.id = 'hist-s';
+      var out = _origRenderStrengthProgressHub.apply(this, arguments);
+      normalizeStrengthHistoryNode();
+      return out;
+    };
+    window.renderStrengthProgressHub._oaiBatchWrapped = true;
+  }
+
+  window.toggleStrengthMoreHistory = function(){
+    var next = !lsJ('strength_more_open', false);
+    lsSJ('strength_more_open', next);
+    try{ if(typeof window.renderStrengthProgressHub === 'function') window.renderStrengthProgressHub(); }catch(e){}
+    var histNode = normalizeStrengthHistoryNode();
+    if(next && histNode){ try{ histNode.scrollIntoView({behavior:'smooth', block:'start'}); }catch(e){} }
+  };
+
+  function ensureProgressMoreToggle(){
+    var wrap = gid('data-smart-progress-more');
+    var btn = wrap ? wrap.previousElementSibling : null;
+    if(!wrap || !btn) return;
+    var hasMore = wrap.children.length > 0;
+    btn.style.display = hasMore ? '' : 'none';
+    var open = !wrap.classList.contains('data-smart-hidden');
+    btn.textContent = open ? 'סגור אימונים נוספים' : 'לאימונים נוספים';
+  }
+
+  window.toggleDataProgressMore = function(){
+    var wrap = gid('data-smart-progress-more');
+    if(wrap){
+      var next = wrap.classList.contains('data-smart-hidden');
+      wrap.classList.toggle('data-smart-hidden', !next);
+      lsSJ('data_progress_more_open', next);
+      ensureProgressMoreToggle();
+      if(next){ try{ wrap.scrollIntoView({behavior:'smooth', block:'nearest'}); }catch(e){} }
+      return;
+    }
+    var nextStored = !lsJ('data_progress_more_open', false);
+    lsSJ('data_progress_more_open', nextStored);
+    try{ if(typeof window.renderProgressSmart === 'function') window.renderProgressSmart(); }catch(e){}
+  };
+
+  function runMapRows(){
+    var runs = safeRuns().sort(function(a,b){ return new Date((b&& (b.date||b.startTimeIso)) || 0) - new Date((a&& (a.date||a.startTimeIso)) || 0); });
+    return runs.slice(0,4).map(function(run, idx){
+      var meta = phaseMetaForRun(run) || {};
+      var prev = runs[idx+1];
+      var status = 'חדש';
+      if(prev){
+        var curPhase = (typeof window.phaseIndexFromRun === 'function') ? window.phaseIndexFromRun(run) : idx;
+        var prevPhase = (typeof window.phaseIndexFromRun === 'function') ? window.phaseIndexFromRun(prev) : idx;
+        var curPace = runPaceSec(run), prevPace = runPaceSec(prev);
+        if(curPhase > prevPhase) status = 'עלה';
+        else if(curPhase < prevPhase) status = 'ירד';
+        else if(curPace && prevPace){
+          if(curPace < prevPace - 8) status = 'עלה';
+          else if(curPace > prevPace + 8) status = 'ירד';
+          else status = 'יציב';
+        }else status = 'יציב';
+      }
+      var parts = [];
+      if(meta.stage) parts.push(meta.stage);
+      if(meta.label) parts.push(meta.label);
+      if(meta.goal) parts.push(meta.goal);
+      var pace = runPaceSec(run);
+      if(pace) parts.push('קצב ' + fmtPace(pace));
+      return {
+        h: runTitle(run),
+        t: status,
+        meta: parts.join(' · ')
+      };
+    });
+  }
+
+  window.runMapRows = runMapRows;
+
+  function injectRunMapIntoDataProgress(){
+    return;
+    var host = gid('data-smart-progress-host');
+    if(!host) return;
+    var existing = gid('data-smart-run-map-section');
+    if(existing) existing.remove();
+    var rows = runMapRows();
+    var sections = host.querySelectorAll('.data-smart-section');
+    if(!sections || !sections.length) return;
+    var section = document.createElement('div');
+    section.className = 'data-smart-section';
+    section.id = 'data-smart-run-map-section';
+    var html = '<div class="data-smart-head"><div><div class="ttl">מיפוי התקדמות בתוכנית — ריצה</div><div class="sub">מעמד שלב הריצה והקצב ביחס לריצות האחרונות</div></div></div><div class="data-smart-map-grid run-clone">';
+    if(rows.length){
+      rows.forEach(function(r){ html += '<div class="data-smart-map-item"><div class="h">'+r.h+'</div><div class="t">'+r.t+'</div><div class="meta">'+r.meta+'</div></div>'; });
+    }else{
+      html += '<div class="data-smart-map-item"><div class="t">עדיין אין מספיק ריצות שמורות כדי למפות התקדמות בתוך תוכנית הריצה.</div></div>';
+    }
+    html += '</div>';
+    section.innerHTML = html;
+    var insertAfter = sections[3] || sections[2] || sections[0];
+    if(insertAfter && insertAfter.parentNode){
+      insertAfter.parentNode.insertBefore(section, insertAfter.nextSibling);
+    }else{
+      host.appendChild(section);
+    }
+  }
+
+  if(typeof window.renderProgressSmart === 'function' && !window.renderProgressSmart._oaiBatchWrapped){
+    var _origRenderProgressSmart = window.renderProgressSmart;
+    window.renderProgressSmart = function(){
+      var out = _origRenderProgressSmart.apply(this, arguments);
+      ensureProgressMoreToggle();
+      injectRunMapIntoDataProgress();
+      return out;
+    };
+    window.renderProgressSmart._oaiBatchWrapped = true;
+  }
+
+  function advanceToNextStrengthCard(currentId){
+    var cards = Array.prototype.slice.call(document.querySelectorAll('#ssub1 .card'));
+    if(!cards.length) return;
+    var idx = cards.findIndex(function(c){ return c.id === currentId; });
+    if(idx < 0) return;
+    for(var i=idx+1;i<cards.length;i++){
+      var next = cards[i];
+      if(!next) continue;
+      cards.forEach(function(c){ c.classList.remove('open'); c.classList.remove('oai-next-focus'); });
+      next.classList.add('open');
+      next.classList.add('oai-next-focus');
+      try{ next.scrollIntoView({behavior:'smooth', block:'center'}); }catch(e){}
+      setTimeout(function(){ try{ next.classList.remove('oai-next-focus'); }catch(err){} }, 1800);
+      break;
+    }
+  }
+
+  if(typeof window.stopPlank === 'function' && !window.stopPlank._oaiBatchWrapped){
+    var _origStopPlank = window.stopPlank;
+    window.stopPlank = function(){
+      var wasAutoDone = false;
+      try{
+        var card = gid('c12');
+        wasAutoDone = !!(card && card.classList.contains('done') && (window.PPh === 'done' || (window.PI == null && window.PSec === 0)));
+      }catch(e){}
+      var out = _origStopPlank.apply(this, arguments);
+      if(wasAutoDone){ setTimeout(function(){ advanceToNextStrengthCard('c12'); }, 220); }
+      return out;
+    };
+    window.stopPlank._oaiBatchWrapped = true;
+  }
+
+  function bootBatchFixes(){
+    try{ window.syncAttendanceFromLogs(); }catch(e){}
+    try{ normalizeStrengthHistoryNode(); }catch(e){}
+    try{ ensureProgressMoreToggle(); }catch(e){}
+    try{ injectRunMapIntoDataProgress(); }catch(e){}
+    try{ if(typeof window.renderAtt === 'function') window.renderAtt(); }catch(e){}
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(bootBatchFixes, 60); setTimeout(bootBatchFixes, 600); });
+  else { setTimeout(bootBatchFixes, 60); setTimeout(bootBatchFixes, 600); }
+})();
+</script>
+
+
+<style id="oai-v201-guided-progress-enhancements">
+.oai-next-shell,.oai-next-shell-run,.oai-data-next-shell{
+  background:linear-gradient(180deg,#f8fbff 0%,#f3f8fd 100%);
+  border:1px solid #dfeaf4;
+  border-radius:14px;
+  padding:12px 13px;
+}
+.oai-next-shell .lead,.oai-next-shell-run .lead,.oai-data-next-shell .lead{
+  font-size:.76rem;
+  line-height:1.75;
+  color:#243f5a;
+  margin-bottom:10px;
+}
+.oai-next-grid,.oai-run-next-grid,.oai-data-next-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:8px;
+}
+.oai-next-item,.oai-run-next-item,.oai-data-next-item{
+  background:white;
+  border:1px solid #e4edf5;
+  border-radius:12px;
+  padding:10px 11px;
+}
+.oai-next-item .k,.oai-run-next-item .k,.oai-data-next-item .k{
+  font-size:.66rem;
+  font-weight:900;
+  color:#1a4f7a;
+  margin-bottom:4px;
+}
+.oai-next-item .v,.oai-run-next-item .v,.oai-data-next-item .v{
+  font-size:.73rem;
+  line-height:1.7;
+  color:#334e68;
+}
+.oai-map-meter,.oai-data-map-meter{
+  margin-top:9px;
+  padding-top:8px;
+  border-top:1px dashed #e3ebf2;
+}
+.oai-map-meter-top,.oai-data-map-meter-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  font-size:.62rem;
+  font-weight:800;
+  color:#6b7e94;
+  margin-bottom:5px;
+}
+.oai-map-meter-track,.oai-data-map-meter-track{
+  width:100%;
+  height:8px;
+  border-radius:999px;
+  background:#eaf1f7;
+  overflow:hidden;
+}
+.oai-map-meter-fill,.oai-data-map-meter-fill{
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg,#378ADD,#7ec8f8);
+}
+.oai-map-meter-fill.up,.oai-data-map-meter-fill.up{background:linear-gradient(90deg,#1D9E75,#5dd9a8)}
+.oai-map-meter-fill.flat,.oai-data-map-meter-fill.flat{background:linear-gradient(90deg,#378ADD,#7ec8f8)}
+.oai-map-meter-fill.down,.oai-data-map-meter-fill.down{background:linear-gradient(90deg,#c0392b,#e67e73)}
+.oai-map-meter-fill.new,.oai-data-map-meter-fill.new{background:linear-gradient(90deg,#e8a020,#f5c76d)}
+.oai-map-meter-fill.none,.oai-data-map-meter-fill.none{background:linear-gradient(90deg,#8fa8c0,#c7d5e3)}
+.oai-map-meter-note,.oai-data-map-meter-note{
+  font-size:.64rem;
+  color:#5f7589;
+  line-height:1.6;
+  margin-top:5px;
+}
+.oai-map-legend,.oai-data-map-legend{
+  margin-top:10px;
+  font-size:.66rem;
+  color:#5f7589;
+  line-height:1.65;
+  background:#fbfdff;
+  border:1px solid #e7eef5;
+  border-radius:12px;
+  padding:9px 10px;
+}
+.oai-run-map-plus{
+  margin-top:10px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+.oai-run-mini{
+  background:#f8fbff;
+  border:1px solid #e2ebf4;
+  border-radius:12px;
+  padding:9px 8px;
+  text-align:center;
+}
+.oai-run-mini .k{font-size:.61rem;font-weight:800;color:#6b7e94;margin-bottom:4px}
+.oai-run-mini .v{font-size:.77rem;font-weight:900;color:#10243a;line-height:1.35}
+.oai-run-mini .s{font-size:.6rem;color:#6b7e94;margin-top:3px;line-height:1.45}
+.oai-data-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:48px;padding:4px 8px;border-radius:999px;
+  font-size:.6rem;font-weight:900;
+  background:#eef5fc;color:#1a4f7a;border:1px solid #d7e7f6;
+}
+@media (max-width:460px){
+  .oai-run-map-plus{grid-template-columns:1fr}
+}
+</style>
+<script id="oai-v201-guided-progress-enhancements-script">
+(function(){
+  function gid(id){ return document.getElementById(id); }
+  function lsJ(key, fallback){ try{ var raw=localStorage.getItem(key); return raw?JSON.parse(raw):fallback; }catch(e){ return fallback; } }
+  function safeStrength(){ var arr=lsJ('wh',[])||[]; return Array.isArray(arr)?arr.slice():[]; }
+  function safeRuns(){ var arr=lsJ('runs',[])||[]; return Array.isArray(arr)?arr.slice():[]; }
+  function num(v){ if(v==null) return 0; var n=parseFloat(String(v).replace(',', '.')); return isFinite(n)?n:0; }
+  function dateVal(v){ var d=new Date(v||0); return isNaN(d.getTime())?0:d.getTime(); }
+  function runDate(run){ return (run&& (run.date||run.startTimeIso||run.startIso)) || ''; }
+  function runPaceSec(run){
+    if(!run) return 0;
+    var s=String(run.treadmillPace || run.pace || '').trim();
+    var m=s.match(/(\d{1,2})\s*:\s*(\d{1,2})/);
+    if(m) return parseInt(m[1],10)*60 + parseInt(m[2],10);
+    var t=num(run.totalMin || run.time), d=num(run.dist);
+    if(t>0 && d>0) return Math.round((t*60)/d);
+    return 0;
+  }
+  function fmtPace(sec){ sec=Math.round(sec||0); if(!sec) return '—'; return Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0'); }
+  function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
+  function daysAgo(n){ var d=new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate()-n); return d.getTime(); }
+  function phaseIdx(run){ try{ if(typeof window.phaseIndexFromRun === 'function') return window.phaseIndexFromRun(run); }catch(e){} return 0; }
+  function phaseLabel(idx, run){ try{ if(typeof window.phaseMeta === 'function') return (window.phaseMeta(idx||0)||{}).label || ((run&&run.runTitle)||'ריצה'); }catch(e){} return (run&&run.runTitle)||'ריצה'; }
+  function phaseStage(idx){ try{ if(typeof window.phaseMeta === 'function') return (window.phaseMeta(idx||0)||{}).stage || 'שלב'; }catch(e){} return 'שלב'; }
+
+  function strengthDomRows(){
+    return Array.prototype.slice.call(document.querySelectorAll('#strength-progress-hub .sp-map-grid .sp-map-item')).map(function(item){
+      var chip=item.querySelector('.sp-chip');
+      var status='none';
+      ['up','flat','down','new','none'].forEach(function(c){ if(chip && chip.classList.contains(c)) status=c; });
+      return {
+        item:item,
+        name:(item.querySelector('.sp-map-name')||{}).textContent || 'תרגיל',
+        meta:(item.querySelector('.sp-map-meta')||{}).textContent || '',
+        status:status
+      };
+    });
+  }
+  function strengthStatusScore(status){ return ({up:82,flat:58,down:26,new:36,none:12})[status] || 20; }
+  function strengthStatusNote(status){ return ({up:'נראה שאתה קרוב לניסיון קידום קטן אם הטכניקה נשארת יציבה.',flat:'יש בסיס טוב, ועדיף לשמור עוד אימון דומה לפני העלאה.',down:'כדאי לשמור משקל, לחזק טכניקה ולבדוק התאוששות.',new:'צריך לפחות עוד אימון אחד כדי להבין אם התרגיל מתייצב.',none:'אין מספיק נתונים כדי להציע קידום בטוח.'})[status] || 'כדאי לצבור עוד נתונים.'; }
+  function strengthActionModel(){
+    var rows=strengthDomRows();
+    var promote=rows.find(function(r){ return r.status==='up'; }) || rows.find(function(r){ return r.status==='flat'; }) || rows[0];
+    var maintain=rows.find(function(r){ return r.status==='flat'; }) || rows.find(function(r){ return r.status==='up'; }) || rows[1] || promote;
+    var caution=rows.find(function(r){ return r.status==='down'; }) || rows.find(function(r){ return r.status==='new' || r.status==='none'; }) || rows[2] || maintain;
+    var lead='באימון הבא עדיף לעבוד לפי שלושה מוקדים ברורים: תרגיל אחד לקדם, תרגיל אחד לשמר ותרגיל אחד לבצע בזהירות.';
+    if(rows.some(function(r){ return r.status==='down'; })) lead='נראית האטה בתרגיל אחד לפחות, לכן באימון הבא עדיף להתחיל מיציבות וטכניקה לפני ניסיון העלאה.';
+    else if(rows.some(function(r){ return r.status==='up'; })) lead='נראים סימני התקדמות טובים, ולכן באימון הבא אפשר לבדוק קידום קטן ומבוקר באחד התרגילים.';
+    function txt(role,row){
+      if(!row) return 'עדיין אין מספיק היסטוריה כדי לבחור מוקד ברור.';
+      if(role==='promote') return row.name + ' — ' + (row.status==='up' ? 'אפשר לבדוק עלייה קטנה אם הסט האחרון מרגיש נקי.' : 'כדאי לנסות לשחזר אימון יציב אחד נוסף ואז לשקול עלייה.');
+      if(role==='maintain') return row.name + ' — שמור על אותו מבנה עבודה ונסה לשמור על איכות תנועה מלאה.';
+      return row.name + ' — אל תמהר לעלות. עדיף יציבות, טכניקה ומנוחה מדויקת.';
+    }
+    return {
+      lead:lead,
+      items:[
+        {k:'לקדם', v:txt('promote', promote)},
+        {k:'לשמר', v:txt('maintain', maintain)},
+        {k:'לשים לב', v:txt('caution', caution)}
+      ]
+    };
+  }
+
+  function enhanceStrengthHub(){
+    var hub=gid('strength-progress-hub'); if(!hub) return;
+    var sections=Array.prototype.slice.call(hub.querySelectorAll('.sp-section'));
+    var mapSection=sections.find(function(sec){ var t=sec.querySelector('.sp-sec-title'); return t && t.textContent.indexOf('מיפוי התקדמות בתוכנית')>-1; });
+    if(mapSection){
+      mapSection.querySelectorAll('.sp-map-item').forEach(function(item){
+        if(item.querySelector('.oai-map-meter')) return;
+        var chip=item.querySelector('.sp-chip');
+        var status='none'; ['up','flat','down','new','none'].forEach(function(c){ if(chip && chip.classList.contains(c)) status=c; });
+        var score=strengthStatusScore(status);
+        var box=document.createElement('div');
+        box.className='oai-map-meter';
+        box.innerHTML='<div class="oai-map-meter-top"><span>מוכנות לקידום</span><span>'+score+'%</span></div><div class="oai-map-meter-track"><div class="oai-map-meter-fill '+status+'" style="width:'+score+'%"></div></div><div class="oai-map-meter-note">'+strengthStatusNote(status)+'</div>';
+        item.appendChild(box);
+      });
+      if(!mapSection.querySelector('.oai-map-legend')){
+        var legend=document.createElement('div');
+        legend.className='oai-map-legend';
+        legend.textContent='הפס בכל תרגיל לא מחליף את הנתונים המקוריים — הוא רק מוסיף קריאה מהירה: כמה נראה שאתה קרוב לניסיון קידום באימון הבא.';
+        mapSection.appendChild(legend);
+      }
+      if(!gid('oai-strength-next-section')){
+        var model=strengthActionModel();
+        var sec=document.createElement('div');
+        sec.className='sp-section';
+        sec.id='oai-strength-next-section';
+        sec.innerHTML='<div class="sp-sec-head"><div><div class="sp-sec-title">מה לעשות באימון הבא</div><div class="sp-sec-sub">תרגום פרקטי של המיפוי לפעולה הבאה</div></div></div><div class="oai-next-shell"><div class="lead">'+model.lead+'</div><div class="oai-next-grid">'+model.items.map(function(it){ return '<div class="oai-next-item"><div class="k">'+it.k+'</div><div class="v">'+it.v+'</div></div>'; }).join('')+'</div></div>';
+        mapSection.insertAdjacentElement('afterend', sec);
+      }
+    }
+  }
+
+  function computeRunInfo(){
+    var runs=safeRuns().sort(function(a,b){ return dateVal(runDate(b)) - dateVal(runDate(a)); });
+    var now=daysAgo(0), cutoff=daysAgo(14);
+    var recent14=runs.filter(function(r){ return dateVal(runDate(r)) >= cutoff; });
+    var latest=runs[0]||null, prev=runs[1]||null;
+    var latestP=runPaceSec(latest), prevP=runPaceSec(prev);
+    var trend='none';
+    if(latestP && prevP){ if(latestP < prevP - 8) trend='better'; else if(latestP > prevP + 8) trend='slower'; else trend='stable'; }
+    var idx=phaseIdx(latest), nextIdx=Math.min(idx+1,11);
+    var readiness=35 + Math.min(4,recent14.length)*12 + (trend==='better'?10:(trend==='stable'?5:(trend==='slower'?-8:0)));
+    readiness=clamp(readiness,15,92);
+    var lead='באימון הבא עדיף להמשיך לבנות רצף יציב לפני קפיצה מהירה מדי.';
+    if(readiness>=72) lead='נראית מוכנות טובה יחסית, ולכן באימון הבא אפשר לשקול מעבר זהיר לשלב הבא אם התחושה נשארת נוחה.';
+    else if(recent14.length<=1) lead='כרגע החוליה החלשה היא הרצף. באימון הבא עדיף פשוט להשלים עוד ריצה מתוכננת בשלב הנוכחי.';
+    return {
+      runs:runs, latest:latest, prev:prev, recent14:recent14.length, trend:trend, readiness:readiness,
+      idx:idx, nextLabel:phaseLabel(nextIdx, latest), phaseLabel:phaseLabel(idx, latest), phaseStage:phaseStage(idx),
+      lead:lead, latestPace:fmtPace(latestP), paceTrendText:(trend==='better'?'מגמת קצב משתפרת':trend==='stable'?'מגמת קצב יציבה':trend==='slower'?'יש האטה קלה בקצב':'עדיין אין מספיק נתוני קצב')
+    };
+  }
+
+  function enhanceRunInsights(){
+    var wrap=gid('run-adv-wrap'); if(!wrap) return;
+    var grid=wrap.querySelector('.run-adv-grid'); if(!grid) return;
+    var cards=Array.prototype.slice.call(grid.querySelectorAll('.run-adv-card'));
+    var mapCard=cards.find(function(card){ var h=card.querySelector('h3'); return h && h.textContent.indexOf('מיפוי התקדמות בתוכנית')>-1; });
+    if(!mapCard) return;
+    var info=computeRunInfo();
+    if(!mapCard.querySelector('.oai-run-map-plus')){
+      var plus=document.createElement('div');
+      plus.className='oai-run-map-plus';
+      plus.innerHTML=''
+        +'<div class="oai-run-mini"><div class="k">מוכנות משוערת</div><div class="v">'+info.readiness+'%</div><div class="s">קריאה מהירה על סמך רצף וקצב</div></div>'
+        +'<div class="oai-run-mini"><div class="k">ריצות ב־14 יום</div><div class="v">'+info.recent14+'</div><div class="s">עקביות עדכנית</div></div>'
+        +'<div class="oai-run-mini"><div class="k">קצב אחרון</div><div class="v">'+info.latestPace+'</div><div class="s">'+info.paceTrendText+'</div></div>';
+      mapCard.appendChild(plus);
+    }
+    if(!gid('oai-run-next-card')){
+      var nextCard=document.createElement('div');
+      nextCard.className='run-adv-card';
+      nextCard.id='oai-run-next-card';
+      var items=[
+        {k:'להמשיך', v:(info.recent14>=2 ? 'השאר בשלב הנוכחי ('+info.phaseLabel+') ושמור על עוד ריצה אחת בקו דומה.' : 'השלם עוד ריצה מתוכננת בשלב הנוכחי לפני כל קפיצה.')},
+        {k:'לבדוק', v:(info.readiness>=72 ? 'אם התחושה טובה גם בריצה הבאה, אפשר לשקול מעבר ל־'+info.nextLabel+'.' : 'עדיף כרגע לא למהר לשלב הבא; תן לרצף להתייצב קודם.')},
+        {k:'לשים לב', v:(info.trend==='slower' ? 'הקצב ירד מעט, לכן שמור על נוחות ולא על לחץ.' : 'המטרה היא דיוק והתמדה, לא ריצה מהירה מדי מוקדם מדי.')}
+      ];
+      nextCard.innerHTML='<div class="run-adv-head"><div><h3>מה לעשות באימון הבא</h3><div class="sub">תרגום פרקטי של המיפוי לצעד הבא בריצה</div></div><span class="run-adv-badge '+(info.readiness>=72?'good':(info.recent14<=1?'warn':'hold'))+'">כיוון</span></div><div class="oai-next-shell-run"><div class="lead">'+info.lead+'</div><div class="oai-run-next-grid">'+items.map(function(it){ return '<div class="oai-run-next-item"><div class="k">'+it.k+'</div><div class="v">'+it.v+'</div></div>'; }).join('')+'</div></div>';
+      mapCard.insertAdjacentElement('afterend', nextCard);
+    }
+  }
+
+  function enhanceDataProgress(){
+    var host=gid('data-smart-progress-host'); if(!host) return;
+    var sections=Array.prototype.slice.call(host.querySelectorAll('.data-smart-section'));
+    var strengthSec=sections.find(function(sec){ var t=sec.querySelector('.ttl'); return t && t.textContent.trim()==='מיפוי התקדמות בתוכנית'; });
+    if(strengthSec){
+      var ttl=strengthSec.querySelector('.ttl'); if(ttl) ttl.textContent='מיפוי התקדמות בתוכנית - כוח';
+      strengthSec.querySelectorAll('.data-smart-map-item').forEach(function(item){
+        if(item.querySelector('.oai-data-map-meter')) return;
+        var statusText=((item.querySelector('.t')||{}).textContent||'').trim();
+        var status='none'; if(statusText==='עלה') status='up'; else if(statusText==='יציב') status='flat'; else if(statusText==='ירד') status='down'; else if(statusText==='חדש') status='new';
+        var score=strengthStatusScore(status);
+        var box=document.createElement('div');
+        box.className='oai-data-map-meter';
+        box.innerHTML='<div class="oai-data-map-meter-top"><span>מוכנות לקידום</span><span>'+score+'%</span></div><div class="oai-data-map-meter-track"><div class="oai-data-map-meter-fill '+status+'" style="width:'+score+'%"></div></div><div class="oai-data-map-meter-note">'+strengthStatusNote(status)+'</div>';
+        item.appendChild(box);
+      });
+      if(!strengthSec.querySelector('.oai-data-map-legend')){
+        var lg=document.createElement('div'); lg.className='oai-data-map-legend'; lg.textContent='גם כאן המיפוי נשאר כמו שהיה — רק עם אינדיקציה חזותית ברורה יותר לגבי רמת המוכנות לקידום.'; strengthSec.appendChild(lg);
+      }
+      if(!gid('oai-data-strength-next')){
+        var model=strengthActionModel();
+        var sec=document.createElement('div'); sec.className='data-smart-section'; sec.id='oai-data-strength-next';
+        sec.innerHTML='<div class="data-smart-head"><div><div class="ttl">המלצה לשלב הבא</div><div class="sub">כוח — מה כדאי לקחת לאימון הבא מתוך המיפוי</div></div><span class="oai-data-badge">כוח</span></div><div class="oai-data-next-shell"><div class="lead">'+model.lead+'</div><div class="oai-data-next-grid">'+model.items.map(function(it){ return '<div class="oai-data-next-item"><div class="k">'+it.k+'</div><div class="v">'+it.v+'</div></div>'; }).join('')+'</div></div>';
+        strengthSec.insertAdjacentElement('afterend', sec);
+      }
+    }
+    var runSec=sections.find(function(sec){ var t=sec.querySelector('.ttl'); return t && t.textContent.indexOf('מיפוי התקדמות בתוכנית — ריצה')>-1; });
+    if(runSec && !gid('oai-data-run-next')){
+      var info=computeRunInfo();
+      var sec2=document.createElement('div'); sec2.className='data-smart-section'; sec2.id='oai-data-run-next';
+      sec2.innerHTML='<div class="data-smart-head"><div><div class="ttl">המלצה לשלב הבא</div><div class="sub">ריצה — מה לקחת מהריצה האחרונה לאימון הבא</div></div><span class="oai-data-badge">ריצה</span></div><div class="oai-data-next-shell"><div class="lead">'+info.lead+'</div><div class="oai-data-next-grid">'
+        +'<div class="oai-data-next-item"><div class="k">להמשיך</div><div class="v">'+(info.recent14>=2 ? 'להשלים עוד ריצה בשלב '+info.phaseLabel+' לפני מעבר.' : 'להתמקד קודם ברצף ולשמור עוד ריצה אחת לפחות.')+'</div></div>'
+        +'<div class="oai-data-next-item"><div class="k">לבדוק</div><div class="v">'+(info.readiness>=72 ? 'אם גם האימון הבא מרגיש נוח, אפשר לשקול מעבר ל־'+info.nextLabel+'.' : 'המוכנות עדיין חלקית, לכן עדיף עוד חיזוק בשלב הנוכחי.')+'</div></div>'
+        +'<div class="oai-data-next-item"><div class="k">לשים לב</div><div class="v">'+(info.trend==='slower' ? 'יש האטה קלה בקצב, ולכן לא צריך ללחוץ מהר יותר.' : 'המפתח כרגע הוא דיוק, נוחות והתמדה.')+'</div></div>'
+        +'</div></div>';
+      runSec.insertAdjacentElement('afterend', sec2);
+    }
+  }
+
+  function wrapGlobal(name, fn){
+    if(typeof window[name] !== 'function' || window[name]._oaiV201Wrapped) return;
+    var orig=window[name];
+    window[name]=function(){ var out=orig.apply(this, arguments); try{ fn(); }catch(e){} return out; };
+    window[name]._oaiV201Wrapped=true;
+  }
+
+  function boot(){
+    try{ enhanceStrengthHub(); }catch(e){}
+    try{ enhanceRunInsights(); }catch(e){}
+    try{ enhanceDataProgress(); }catch(e){}
+  }
+
+  wrapGlobal('renderStrengthProgressHub', enhanceStrengthHub);
+  wrapGlobal('renderProgressSmart', enhanceDataProgress);
+  if(typeof window.runSubSw === 'function' && !window.runSubSw._oaiV201Wrapped){
+    var origRunSubSw=window.runSubSw;
+    window.runSubSw=function(){ var out=origRunSubSw.apply(this, arguments); setTimeout(boot, 30); setTimeout(boot, 260); return out; };
+    window.runSubSw._oaiV201Wrapped=true;
+  }
+  var robs;
+  function installRunObserver(){
+    var wrap=gid('run-adv-wrap'); if(!wrap || robs) return;
+    robs=new MutationObserver(function(){ setTimeout(enhanceRunInsights, 0); });
+    robs.observe(wrap, {childList:true, subtree:true});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', function(){ installRunObserver(); setTimeout(boot, 50); setTimeout(boot, 500); });
+  else { installRunObserver(); setTimeout(boot, 50); setTimeout(boot, 500); }
+  window.addEventListener('pageshow', function(){ installRunObserver(); setTimeout(boot, 80); });
+})();
+</script>
+
+<style id="tb-final-tune-v7">
+.exec-diff{margin-top:10px;padding:10px;border:1px solid #e4edf5;border-radius:12px;background:#ffffff}
+.exec-diff-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.exec-diff-title{font-size:.66rem;font-weight:800;color:#6b7e94}
+.exec-diff-value{font-size:.68rem;font-weight:900;color:#0d1b2a}
+.exec-diff-scale{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.exec-diff-btn{border:1px solid #d6e2ee;border-radius:10px;background:#f8fafc;padding:8px 4px;cursor:pointer;font-family:'Heebo',sans-serif;transition:transform .12s ease, background .18s ease, border-color .18s ease;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:58px}
+.exec-diff-btn:active{transform:scale(.98)}
+.exec-diff-btn .n{font-size:.76rem;font-weight:900;color:#0d1b2a;line-height:1}
+.exec-diff-btn .t{font-size:.54rem;font-weight:800;color:#6b7e94;line-height:1.25;text-align:center}
+.exec-diff-btn.on{background:#0d1b2a;border-color:#0d1b2a;box-shadow:0 8px 18px rgba(13,27,42,.16)}
+.exec-diff-btn.on .n,.exec-diff-btn.on .t{color:#fff}
+.oai-data-badge{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:4px 10px;font-size:.6rem;font-weight:900;background:#eef5fc;color:#1a4f7a;border:1px solid #d6e6f5}
+.oai-data-next-shell{background:#f8fbff;border:1px solid #e4edf5;border-radius:14px;padding:12px}
+.oai-data-next-shell .lead{font-size:.78rem;font-weight:800;color:#102338;line-height:1.65;margin-bottom:10px}
+.oai-data-next-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.oai-data-next-item{background:#fff;border:1px solid #e7eef5;border-radius:12px;padding:10px}
+.oai-data-next-item .k{font-size:.62rem;font-weight:900;color:#6b7e94;margin-bottom:5px}
+.oai-data-next-item .v{font-size:.7rem;font-weight:800;color:#1a2332;line-height:1.6}
+.sp-load-badge,.data-load-badge{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:2px 9px;font-size:.58rem;font-weight:900;border:1px solid transparent}
+.sp-load-low,.data-load-low{background:#eef8f2;color:#176b48;border-color:#cfeadb}
+.sp-load-mid,.data-load-mid{background:#fff7e8;color:#8a5a00;border-color:#f3d7a2}
+.sp-load-high,.data-load-high{background:#fff0ee;color:#a82f2f;border-color:#f1c1bb}
+@media (max-width:460px){.oai-data-next-grid{grid-template-columns:1fr}.exec-diff-scale{grid-template-columns:repeat(3,1fr);gap:6px}.exec-diff-btn{min-height:54px;padding:7px 3px}.exec-diff-btn .t{font-size:.58rem}}
+</style>
+<script id="tb-final-tune-v7">
+(function(){
+  if(window.__TB_FINAL_TUNE_V7__) return;
+  window.__TB_FINAL_TUNE_V7__ = true;
+
+  var DIFF = [
+    {v:1, t:'קל'},
+    {v:2, t:'בינוני'},
+    {v:3, t:'קשה'}
+  ];
+
+  function normalizeDiff(v){
+    v = parseInt(v,10);
+    if(isNaN(v) || v <= 0) return 0;
+    if(v >= 4) return 3;
+    return v;
+  }
+
+  function gid(id){ return document.getElementById(id); }
+  function num(v){
+    if(v == null) return NaN;
+    var n = parseFloat(String(v).replace(/[^0-9.\-]/g,''));
+    return isNaN(n) ? NaN : n;
+  }
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>\"']/g, function(ch){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+    });
+  }
+  function loadMeta(score){
+    var n = num(score);
+    if(isNaN(n) || n <= 0) return {label:'—', cls:'mid'};
+    if(n < 1500) return {label:'נמוך', cls:'low'};
+    if(n < 3200) return {label:'בינוני', cls:'mid'};
+    return {label:'גבוה', cls:'high'};
+  }
+  function diffLabel(v){
+    v = parseInt(v,10);
+    var hit = DIFF.find(function(x){ return x.v === v; });
+    return hit ? hit.t : 'לא סומן';
+  }
+  function getJson(key, fallback){
+    try{
+      if(typeof lsJ === 'function'){
+        var v = lsJ(key);
+        return v == null ? fallback : v;
+      }
+      var raw = localStorage.getItem(key);
+      return raw == null ? fallback : JSON.parse(raw);
+    }catch(e){ return fallback; }
+  }
+  function setJson(key, value){
+    try{
+      if(typeof lsSJ === 'function') lsSJ(key, value);
+      else localStorage.setItem(key, JSON.stringify(value));
+    }catch(e){}
+  }
+  function loadDraftEntry(exId){
+    var draft = getJson('wh_draft', null);
+    if(!draft || !draft.entries) return null;
+    for(var i=0;i<draft.entries.length;i++) if(draft.entries[i] && draft.entries[i].id === exId) return draft.entries[i];
+    return null;
+  }
+  function currentDifficulty(exId){
+    var input = gid('diff-' + exId);
+    var v = input ? parseInt(input.value,10) : NaN;
+    if(!isNaN(v) && v >= 1) return normalizeDiff(v);
+    var draft = loadDraftEntry(exId);
+    if(draft && draft.difficulty) return normalizeDiff(draft.difficulty);
+    return 0;
+  }
+  function diffHtml(exId, value){
+    value = normalizeDiff(value);
+    return '<div class="exec-diff-head"><div class="exec-diff-title">קושי בפועל</div><div class="exec-diff-value" id="diff-label-'+esc(exId)+'">'+esc(diffLabel(value))+'</div></div>'
+      + '<div class="exec-diff-scale">'
+      + DIFF.map(function(item){
+          return '<button type="button" class="exec-diff-btn'+(item.v===value?' on':'')+'" data-diff="'+item.v+'" onclick="setExerciseDifficulty(\''+esc(exId)+'\','+item.v+',event)"><span class="t">'+esc(item.t)+'</span></button>';
+        }).join('')
+      + '</div><input type="hidden" id="diff-'+esc(exId)+'" value="'+(value||'')+'">';
+  }
+  function ensureDifficultyControls(){
+    document.querySelectorAll('#ssub1 .card .exec-inline').forEach(function(box){
+      var row = box.querySelector('.exec-row[data-ex]');
+      if(!row) return;
+      var exId = row.getAttribute('data-ex');
+      if(!exId) return;
+      var node = box.querySelector('.exec-diff[data-ex="'+exId+'"]');
+      if(!node){
+        node = document.createElement('div');
+        node.className = 'exec-diff';
+        node.setAttribute('data-ex', exId);
+        row.insertAdjacentElement('afterend', node);
+      }
+      var existingVal = currentDifficulty(exId);
+      node.innerHTML = diffHtml(exId, existingVal);
+    });
+  }
+  window.setExerciseDifficulty = function(exId, value, ev){
+    if(ev){ ev.preventDefault(); ev.stopPropagation(); }
+    value = normalizeDiff(value);
+    var wrap = document.querySelector('.exec-diff[data-ex="'+exId+'"]');
+    if(!wrap) return;
+    var input = gid('diff-' + exId);
+    if(input) input.value = value;
+    wrap.querySelectorAll('.exec-diff-btn').forEach(function(btn){
+      btn.classList.toggle('on', parseInt(btn.getAttribute('data-diff'),10) === value);
+    });
+    var label = gid('diff-label-' + exId);
+    if(label) label.textContent = diffLabel(value);
+  };
+  function augmentEntries(entries){
+    entries = Array.isArray(entries) ? entries : [];
+    return entries.map(function(entry){
+      if(!entry || !entry.id) return entry;
+      var val = currentDifficulty(entry.id);
+      if(val >= 1 && val <= 3){
+        entry.difficulty = val;
+        entry.difficultyLabel = diffLabel(val);
+      }
+      return entry;
+    });
+  }
+  function persistDifficultyDraft(){
+    try{
+      var date = (gid('log-date') || {}).value || '';
+      var base = (typeof window.collectE === 'function') ? window.collectE() : [];
+      var payload = {date: date, entries: augmentEntries(base)};
+      setJson('wh_draft', payload);
+    }catch(e){}
+  }
+
+  if(typeof window.collectE === 'function' && !window.collectE._tbDiffWrapped){
+    var _origCollectE = window.collectE;
+    window.collectE = function(){
+      return augmentEntries(_origCollectE.apply(this, arguments) || []);
+    };
+    window.collectE._tbDiffWrapped = true;
+  }
+  ['saveExerciseDraft','saveDraft'].forEach(function(name){
+    var fn = window[name];
+    if(typeof fn !== 'function' || fn._tbDiffWrapped) return;
+    window[name] = function(){
+      var out = fn.apply(this, arguments);
+      persistDifficultyDraft();
+      return out;
+    };
+    window[name]._tbDiffWrapped = true;
+  });
+  if(typeof window.finishWO2 === 'function' && !window.finishWO2._tbDiffWrapped){
+    var _origFinishWO2 = window.finishWO2;
+    window.finishWO2 = function(){
+      var out = _origFinishWO2.apply(this, arguments);
+      try{
+        var hist = getJson('wh', []);
+        if(hist && hist[0] && hist[0].entries) hist[0].entries = augmentEntries(hist[0].entries);
+        setJson('wh', hist);
+      }catch(e){}
+      return out;
+    };
+    window.finishWO2._tbDiffWrapped = true;
+  }
+
+  function fallbackStrengthModel(){
+    return {
+      lead:'היעד לאימון הבא הוא להמשיך בקו יציב, לתעד קושי אמיתי בכל תרגיל, ולהתקדם רק איפה שהתחושה נשארת טובה.',
+      items:[
+        {k:'להמשיך', v:'שמור על אותם תרגילים מרכזיים שנראים יציבים.'},
+        {k:'לבדוק', v:'אם הביצוע מרגיש טוב בשני אימונים רצופים, אפשר לשקול עלייה קטנה.'},
+        {k:'לשים לב', v:'קושי גבוה מדי בכמה תרגילים רצוף הוא סימן להאט זמנית.'}
+      ]
+    };
+  }
+  function fallbackRunInfo(){
+    return {
+      lead:'באימון הבא עדיף לשמור קודם רצף נוח לפני קפיצה מהירה לשלב הבא.',
+      recent14:0,
+      readiness:40,
+      nextLabel:'השלב הבא',
+      phaseLabel:'השלב הנוכחי',
+      trend:'stable'
+    };
+  }
+  function ensureDataProgressDirect(){
+    var host = gid('data-smart-progress-host');
+    if(!host) return;
+    var sections = Array.prototype.slice.call(host.querySelectorAll('.data-smart-section'));
+    var strengthSec = sections.find(function(sec){
+      var ttl = sec.querySelector('.ttl');
+      var txt = ttl ? ttl.textContent.trim() : '';
+      return txt.indexOf('מיפוי התקדמות בתוכנית') > -1 && txt.indexOf('ריצה') === -1;
+    });
+    if(strengthSec){
+      var ttl = strengthSec.querySelector('.ttl');
+      if(ttl) ttl.textContent = 'מיפוי התקדמות בתוכנית - כוח';
+      var strengthModel = (typeof window.strengthActionModel === 'function') ? window.strengthActionModel() : fallbackStrengthModel();
+      var sHtml = '<div class="data-smart-head"><div><div class="ttl">המלצה לשלב הבא</div><div class="sub">כוח — מה כדאי לקחת לאימון הבא מתוך המיפוי</div></div><span class="oai-data-badge">כוח</span></div>'
+        + '<div class="oai-data-next-shell"><div class="lead">'+esc(strengthModel.lead)+'</div><div class="oai-data-next-grid">'
+        + (strengthModel.items||[]).map(function(it){ return '<div class="oai-data-next-item"><div class="k">'+esc(it.k)+'</div><div class="v">'+esc(it.v)+'</div></div>'; }).join('')
+        + '</div></div>';
+      var sRec = gid('tb-data-strength-next') || gid('oai-data-strength-next');
+      if(!sRec){
+        sRec = document.createElement('div');
+        sRec.className = 'data-smart-section';
+        sRec.id = 'tb-data-strength-next';
+        strengthSec.insertAdjacentElement('afterend', sRec);
+      }
+      sRec.id = 'tb-data-strength-next';
+      sRec.innerHTML = sHtml;
+    }
+    var runSec = sections.find(function(sec){
+      var ttl = sec.querySelector('.ttl');
+      var txt = ttl ? ttl.textContent.trim() : '';
+      return txt.indexOf('מיפוי התקדמות בתוכנית') > -1 && txt.indexOf('ריצה') > -1;
+    });
+    if(runSec){
+      var info = (typeof window.computeRunInfo === 'function') ? window.computeRunInfo() : fallbackRunInfo();
+      var rHtml = '<div class="data-smart-head"><div><div class="ttl">המלצה לשלב הבא</div><div class="sub">ריצה — מה לקחת לאימון הבא מתוך מיפוי הריצה</div></div><span class="oai-data-badge">ריצה</span></div>'
+        + '<div class="oai-data-next-shell"><div class="lead">'+esc(info.lead)+'</div><div class="oai-data-next-grid">'
+        + '<div class="oai-data-next-item"><div class="k">להמשיך</div><div class="v">'+esc(info.recent14>=2 ? 'להשלים עוד ריצה בשלב '+info.phaseLabel+' לפני מעבר.' : 'להתמקד קודם ברצף ולשמור עוד ריצה אחת לפחות.')+'</div></div>'
+        + '<div class="oai-data-next-item"><div class="k">לבדוק</div><div class="v">'+esc(info.readiness>=72 ? 'אם גם האימון הבא מרגיש נוח, אפשר לשקול מעבר ל־'+info.nextLabel+'.' : 'המוכנות עדיין חלקית, לכן עדיף לחזק עוד את השלב הנוכחי.')+'</div></div>'
+        + '<div class="oai-data-next-item"><div class="k">לשים לב</div><div class="v">'+esc(info.trend==='slower' ? 'יש האטה קלה בקצב, ולכן לא צריך ללחוץ מהר יותר.' : 'המפתח כרגע הוא דיוק, נוחות והתמדה.')+'</div></div>'
+        + '</div></div>';
+      var rRec = gid('tb-data-run-next') || gid('oai-data-run-next');
+      if(!rRec){
+        rRec = document.createElement('div');
+        rRec.className = 'data-smart-section';
+        rRec.id = 'tb-data-run-next';
+        runSec.insertAdjacentElement('afterend', rRec);
+      }
+      rRec.id = 'tb-data-run-next';
+      rRec.innerHTML = rHtml;
+    }
+  }
+  function patchLoadDisplays(){
+    document.querySelectorAll('.sp-recent-meta').forEach(function(el){
+      var m = (el.textContent || '').match(/(\d+)\s*תרגילים\s*·\s*עומס\s*([0-9]+)/);
+      if(m){
+        var meta = loadMeta(m[2]);
+        el.innerHTML = m[1] + ' תרגילים · <span class="sp-load-badge sp-load-'+meta.cls+'">רמת עומס: ' + meta.label + '</span>';
+      }
+    });
+    document.querySelectorAll('.data-smart-recent .t').forEach(function(el){
+      var txt = el.textContent || '';
+      var m = txt.match(/^(.*?)(?:\s*·\s*)?עומס\s*([0-9]+)\s*$/);
+      if(m){
+        var base = (m[1] || '').trim();
+        var meta = loadMeta(m[2]);
+        el.innerHTML = (base ? esc(base) + ' · ' : '') + '<span class="data-load-badge data-load-'+meta.cls+'">רמת עומס: ' + meta.label + '</span>';
+      }
+    });
+    document.querySelectorAll('.sp-bar-v').forEach(function(el){
+      var meta = loadMeta(el.textContent);
+      if(meta.label !== '—') el.textContent = meta.label;
+    });
+    document.querySelectorAll('.data-smart-bar-col').forEach(function(col){
+      var lbl = (col.querySelector('.data-smart-bar-lbl') || {}).textContent || '';
+      var val = col.querySelector('.data-smart-bar-val');
+      if(!val) return;
+      if(lbl.indexOf('כוח') > -1){
+        var meta = loadMeta(val.textContent);
+        if(meta.label !== '—') val.textContent = meta.label;
+      }
+    });
+    document.querySelectorAll('.sp-trend-row').forEach(function(row){
+      var title = row.querySelector('.t');
+      var desc = row.querySelector('.d');
+      if(!title || !desc) return;
+      var txt = desc.textContent || '';
+      if(txt.indexOf('ציון העומס') > -1 || title.textContent.indexOf('מגמת עומס') > -1){
+        var nums = txt.match(/([0-9]+).*?([0-9]+)/);
+        title.textContent = 'מגמת עומס משוערת';
+        if(nums){
+          desc.textContent = 'רמת העומס המשוערת השתנתה מ־' + loadMeta(nums[1]).label + ' ל־' + loadMeta(nums[2]).label + '.';
+        }else{
+          desc.textContent = 'רמת העומס המשוערת מוצגת כעת בקטגוריות: נמוך, בינוני או גבוה.';
+        }
+      }
+    });
+    document.querySelectorAll('.sp-section').forEach(function(sec){
+      var ttl = sec.querySelector('.sp-sec-title');
+      var sub = sec.querySelector('.sp-sec-sub');
+      if(ttl && sub && ttl.textContent.trim() === 'גרף התקדמות האימונים'){
+        sub.textContent = 'רמת עומס משוערת לאורך האימונים האחרונים';
+      }
+    });
+  }
+  function refreshAll(){
+    try{ ensureDifficultyControls(); }catch(e){}
+    try{ ensureDataProgressDirect(); }catch(e){}
+    try{ patchLoadDisplays(); }catch(e){}
+  }
+  function wrap(name){
+    var fn = window[name];
+    if(typeof fn !== 'function' || fn._tbFinalTuneWrapped) return;
+    window[name] = function(){
+      var out = fn.apply(this, arguments);
+      setTimeout(refreshAll, 0);
+      setTimeout(refreshAll, 80);
+      return out;
+    };
+    window[name]._tbFinalTuneWrapped = true;
+  }
+  ['buildStrengthInlineRows','initStrengthLog','strSubSw','sw','dataSubSw','renderProgressSmart','renderStrengthProgressHub'].forEach(wrap);
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(refreshAll, 40); setTimeout(refreshAll, 260); });
+  else { setTimeout(refreshAll, 40); setTimeout(refreshAll, 260); }
+  window.addEventListener('pageshow', function(){ setTimeout(refreshAll, 80); setTimeout(refreshAll, 320); });
+})();
+</script>
+
+<style id="tb-difficulty-linkage-v12-style">
+.exec-diff-btn .n{display:none !important}
+.exec-diff-btn{min-height:50px !important;padding:8px 6px !important}
+.exec-diff-btn .t{font-size:.72rem !important;font-weight:900 !important}
+.hwrow .hwvl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.tb-diff-chip,.tb-map-chip{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:3px 9px;font-size:.58rem;font-weight:900;border:1px solid transparent;white-space:nowrap}
+.tb-diff-easy{background:#eef8f2;color:#176b48;border-color:#cfeadb}
+.tb-diff-mid{background:#fff7e8;color:#8a5a00;border-color:#f3d7a2}
+.tb-diff-hard{background:#fff0ee;color:#a82f2f;border-color:#f1c1bb}
+.tb-map-note{font-size:.63rem;color:#6b7e94;line-height:1.55;margin-top:6px}
+.tb-strength-next .d{line-height:1.7}
+.sp-trend-row.tb-diff-row .sp-trend-icon{background:#eef5fc;color:#1a4f7a}
+.data-smart-map-item .tb-map-note{margin-top:5px}
+</style>
+<script id="tb-difficulty-linkage-v12">
+(function(){
+  if(window.__TB_DIFFICULTY_LINKAGE_V12__) return;
+  window.__TB_DIFFICULTY_LINKAGE_V12__ = true;
+
+  function gid(id){ return document.getElementById(id); }
+  function getJson(key, fallback){
+    try{
+      if(typeof lsJ === 'function'){
+        var v = lsJ(key);
+        return v == null ? fallback : v;
+      }
+      var raw = localStorage.getItem(key);
+      return raw == null ? fallback : JSON.parse(raw);
+    }catch(e){ return fallback; }
+  }
+  function setJson(key, value){
+    try{
+      if(typeof lsSJ === 'function') lsSJ(key, value);
+      else localStorage.setItem(key, JSON.stringify(value));
+    }catch(e){}
+  }
+  function num(v){
+    if(v == null) return NaN;
+    var n = parseFloat(String(v).replace(/[^0-9.\-]/g,''));
+    return isNaN(n) ? NaN : n;
+  }
+  function repsMid(v){
+    if(v == null) return 0;
+    var s = String(v);
+    if(s.indexOf('-') > -1){
+      var parts = s.split('-').map(function(x){ return parseFloat(x.replace(/[^0-9.\-]/g,'')); }).filter(function(x){ return !isNaN(x); });
+      if(parts.length === 2) return (parts[0] + parts[1]) / 2;
+      if(parts.length === 1) return parts[0];
+      return 0;
+    }
+    var arr = s.match(/[0-9]+(?:\.[0-9]+)?/g);
+    if(!arr || !arr.length) return 0;
+    var vals = arr.map(function(x){ return parseFloat(x); }).filter(function(x){ return !isNaN(x); });
+    if(!vals.length) return 0;
+    var sum = vals.reduce(function(a,b){ return a+b; }, 0);
+    return sum / vals.length;
+  }
+  function weightScore(e){
+    if(!e) return 0;
+    var unit = String(e.unit || '').toLowerCase();
+    if(unit === 'bw') return 1;
+    var n = num(e.kg);
+    if(isNaN(n)) return 0;
+    if(unit === 'lb') n = n * 0.453592;
+    return n;
+  }
+  function compareEntry(a,b){
+    if(!a || !b) return 'none';
+    var unitA = String(a.unit||'').toLowerCase();
+    var unitB = String(b.unit||'').toLowerCase();
+    var wa = weightScore(a), wb = weightScore(b);
+    var ra = repsMid(a.reps), rb = repsMid(b.reps);
+    if(unitA === unitB && wa && wb){
+      if(wa > wb + 0.2) return 'up';
+      if(wa < wb - 0.2) return 'down';
+    }
+    if(ra > rb) return 'up';
+    if(ra < rb) return 'down';
+    return 'flat';
+  }
+  function normalizeDiff(v){
+    v = parseInt(v,10);
+    if(isNaN(v) || v <= 0) return 0;
+    if(v >= 4) return 3;
+    return v;
+  }
+  function diffLabel(v){
+    v = normalizeDiff(v);
+    return ({1:'קל',2:'בינוני',3:'קשה'})[v] || 'לא סומן';
+  }
+  function diffClass(v){
+    v = normalizeDiff(v);
+    return v === 1 ? 'tb-diff-easy' : (v === 3 ? 'tb-diff-hard' : 'tb-diff-mid');
+  }
+  function diffChip(v){
+    v = normalizeDiff(v);
+    if(!v) return '';
+    return '<span class="tb-diff-chip '+diffClass(v)+'">קושי: '+diffLabel(v)+'</span>';
+  }
+  function entryLoadText(e){
+    var unit = String(e.unit||'').toLowerCase();
+    return unit === 'bw' ? 'משקל גוף' : ((e.kg || '—') + ' ' + (unit === 'lb' ? 'LB' : 'KG'));
+  }
+  function normalizeStoredDifficulty(){
+    var changed = false;
+    var hist = getJson('wh', []);
+    if(Array.isArray(hist)){
+      hist.forEach(function(w){
+        ((w && w.entries) || []).forEach(function(e){
+          var n = normalizeDiff(e && e.difficulty);
+          if(n && e){
+            if(e.difficulty !== n) changed = true;
+            e.difficulty = n;
+            e.difficultyLabel = diffLabel(n);
+          }
+        });
+      });
+      if(changed) setJson('wh', hist);
+    }
+    var draft = getJson('wh_draft', null);
+    if(draft && Array.isArray(draft.entries)){
+      var dChanged = false;
+      draft.entries.forEach(function(e){
+        var n = normalizeDiff(e && e.difficulty);
+        if(n && e){
+          if(e.difficulty !== n) dChanged = true;
+          e.difficulty = n;
+          e.difficultyLabel = diffLabel(n);
+        }
+      });
+      if(dChanged) setJson('wh_draft', draft);
+    }
+  }
+  function strengthHistory(){
+    var hist = getJson('wh', []);
+    return Array.isArray(hist) ? hist : [];
+  }
+  function currentProgramList(){
+    try{ if(Array.isArray(window.EX) && window.EX.length) return window.EX; }catch(e){}
+    return [];
+  }
+  function buildNameMap(history){
+    var map = {};
+    (history||[]).forEach(function(w){
+      ((w && w.entries) || []).forEach(function(e){
+        if(e && e.id && e.he && (!map[e.id] || /^e\d+$/i.test(String(map[e.id])))) map[e.id] = e.he;
+      });
+    });
+    return map;
+  }
+  function avgDiff(entries){
+    var vals = (entries||[]).map(function(e){ return normalizeDiff(e && e.difficulty); }).filter(function(v){ return v >= 1; });
+    if(!vals.length) return 0;
+    return vals.reduce(function(a,b){ return a+b; }, 0) / vals.length;
+  }
+  function diffTrendMeta(history){
+    history = history || strengthHistory();
+    if(!history.length) return {label:'עדיין אין', text:'כשתסמן קושי בפועל בכל תרגיל, נוכל לזהות אם האימונים מרגישים קלים יותר או כבדים יותר.'};
+    var latest = avgDiff((history[0]||{}).entries || []);
+    var prev = avgDiff((history[1]||{}).entries || []);
+    if(!latest && !prev) return {label:'מחכה לנתונים', text:'הקושי יתחיל להופיע במגמות אחרי שתסמן אותו באימונים הקרובים.'};
+    if(latest && prev){
+      if(latest < prev - 0.24) return {label:'קל יותר', text:'האימון האחרון הרגיש מעט קל יותר לעומת האימון שלפניו — זה יכול להעיד על הסתגלות טובה.'};
+      if(latest > prev + 0.24) return {label:'קשה יותר', text:'האימון האחרון הרגיש כבד יותר. שווה לשים לב להתאוששות ולבחור בקידום רק איפה שהתחושה נשארת טובה.'};
+      return {label:'יציב', text:'רמת הקושי נשארה די יציבה בין שני האימונים האחרונים, וזה בסיס טוב להתקדמות מבוקרת.'};
+    }
+    return {label: diffLabel(Math.round(latest || prev || 0)), text:'נאספו סימוני קושי, וככל שיצטברו עוד אימונים נוכל לזהות מגמה ברורה יותר.'};
+  }
+  function difficultyAwareItems(history){
+    history = history || strengthHistory();
+    var prog = currentProgramList();
+    var latest = history[0] || {entries:[]};
+    var prev = history[1] || {entries:[]};
+    var latestBy = {}, prevBy = {}, names = buildNameMap(history);
+    (latest.entries||[]).forEach(function(e){ latestBy[e.id] = e; });
+    (prev.entries||[]).forEach(function(e){ prevBy[e.id] = e; });
+    var src = prog.length ? prog : (latest.entries || []);
+    return src.map(function(ex, i){
+      var id = ex.id || ex.he || ('ex' + i);
+      var name = names[id] || ex.he || ex.name || id;
+      var le = latestBy[id];
+      var pe = prevBy[id];
+      var base = le ? compareEntry(le, pe) : 'none';
+      var ld = normalizeDiff(le && le.difficulty);
+      var pd = normalizeDiff(pe && pe.difficulty);
+      var status = base;
+      var hint = '';
+      if(le){
+        if(base === 'up' && (pd === 0 || (ld && ld <= pd))) { status = 'up'; hint = 'העומס או הביצוע עלו בלי שהקושי החריף.'; }
+        else if(base === 'flat' && ld && pd && ld < pd) { status = 'up'; hint = 'הביצוע נשאר דומה אבל הרגיש קל יותר.'; }
+        else if(base === 'down' && ld && pd && ld <= pd) { status = 'flat'; hint = 'יש ירידה קטנה בביצוע, אבל התחושה לא החמירה.'; }
+        else if(base === 'flat' && ld === 3) { status = 'flat'; hint = 'כרגע עדיף לייצב לפני שמעלים.'; }
+        else if(base === 'down' || (ld === 3 && pd === 3)) { status = 'down'; hint = 'התרגיל הרגיש קשה או נחלש — עדיף לא לדחוף בו כעת.'; }
+        else if(base === 'new') { hint = ld ? ('נשמר לראשונה עם קושי ' + diffLabel(ld) + '.') : 'עדיין חדש במעקב.'; }
+        else if(!hint && ld){ hint = 'קושי נוכחי: ' + diffLabel(ld) + '.'; }
+      } else {
+        hint = 'עדיין אין תיעוד בתרגיל הזה.';
+      }
+      var meta = le ? (le.sets + ' × ' + le.reps + ' · ' + entryLoadText(le)) : 'עדיין אין תיעוד';
+      return {id:id, name:name, status:status, meta:meta, diff:ld, hint:hint};
+    });
+  }
+  function strengthActionModelFromDifficulty(history){
+    history = history || strengthHistory();
+    if(!history.length){
+      return {
+        lead:'כדי לקבל הכוונה חכמה באמת, כדאי לשמור לפחות שני אימוני כוח מלאים ולסמן קושי בפועל בכל תרגיל.',
+        items:[
+          {k:'להתחיל', v:'שמור את האימון הבא במלואו, כולל קושי בפועל בכל תרגיל.'},
+          {k:'להמשיך', v:'בחר תרגילים מרכזיים שקל לך להשוות בין אימון לאימון.'},
+          {k:'לשים לב', v:'ככל שהסימון יהיה עקבי יותר, כך ההמלצות יהיו מדויקות יותר.'}
+        ]
+      };
+    }
+    var items = difficultyAwareItems(history).filter(function(x){ return x.meta !== 'עדיין אין תיעוד'; });
+    var easy = items.filter(function(x){ return x.diff === 1; });
+    var mid = items.filter(function(x){ return x.diff === 2; });
+    var hard = items.filter(function(x){ return x.diff === 3; });
+    var improving = items.filter(function(x){ return x.status === 'up'; });
+    var regressing = items.filter(function(x){ return x.status === 'down'; });
+    var lead = 'המטרה לאימון הבא היא להמשיך יציב, לקדם רק תרגילים שמרגישים בשליטה, ולעצור קפיצה מהירה בתרגילים שעדיין מרגישים כבדים.';
+    if(easy.length >= 2) lead = 'יש כמה תרגילים שמרגישים קלים יחסית — באימון הבא אפשר לשקול קידום קטן רק בהם, תוך שמירה על שאר התוכנית יציבה.';
+    else if(hard.length >= 2) lead = 'נראה שיש כמה תרגילים שמרגישים כבדים באמת — עדיף לשמור על יציבות, טכניקה ומנוחות טובות לפני קידום.';
+    else if(improving.length >= 2) lead = 'יש סימני התקדמות חיוביים. באימון הבא אפשר להתקדם בצורה מדודה בתרגילים החזקים יותר ולהישאר יציב בשאר.';
+    return {
+      lead:lead,
+      items:[
+        {k:'להמשיך', v: improving.length ? ('לשמור קו דומה ב־' + improving.slice(0,2).map(function(x){ return x.name; }).join(' ו־') + '.') : 'להשאיר את רוב התרגילים בקו יציב לעוד אימון אחד.'},
+        {k:'לקדם', v: easy.length ? ('אפשר לשקול עלייה קטנה ב־' + easy.slice(0,2).map(function(x){ return x.name; }).join(' ו־') + ' אם גם הטכניקה נשארת טובה.') : (mid.length ? 'אם תרגיל מרגיש בינוני ויציב שני אימונים רצוף, אפשר לקדם בו מעט.' : 'כדאי לקדם רק תרגיל או שניים שמרגישים בשליטה מלאה.')},
+        {k:'לשים לב', v: hard.length ? ('כרגע עדיף לא לדחוף ב־' + hard.slice(0,2).map(function(x){ return x.name; }).join(' ו־') + ' עד שהתחושה תתייצב.') : (regressing.length ? 'יש תרגילים שנחלשו מעט. בדוק התאוששות, שינה ומנוחות לפני קידום.' : 'קושי גבוה רצוף הוא סימן להאט זמנית ולא להילחם בנתונים.')}
+      ]
+    };
+  }
+  function patchDifficultyButtons(){
+    document.querySelectorAll('.exec-diff-btn .n').forEach(function(n){ n.textContent=''; n.style.display='none'; });
+  }
+  function patchHistoryView(){
+    var hist = strengthHistory();
+    var cards = document.querySelectorAll('#hist-s .strh-card');
+    cards.forEach(function(card, i){
+      var w = hist[i];
+      if(!w || !w.entries) return;
+      card.querySelectorAll('.strh-body .hwrow').forEach(function(row, j){
+        var e = w.entries[j];
+        if(!e) return;
+        var holder = row.querySelector('.hwvl');
+        if(!holder) return;
+        holder.querySelectorAll('.tb-diff-chip').forEach(function(x){ x.remove(); });
+        var chip = diffChip(e.difficulty);
+        if(chip) holder.insertAdjacentHTML('beforeend', chip);
+      });
+      var summary = card.querySelector('.strh-summary');
+      if(summary){
+        var vals = (w.entries||[]).map(function(e){ return normalizeDiff(e.difficulty); }).filter(function(v){ return v >= 1; });
+        if(vals.length && summary.textContent.indexOf('קושי ממוצע') === -1){
+          var avg = vals.reduce(function(a,b){ return a+b; }, 0) / vals.length;
+          summary.textContent += ' · קושי ממוצע: ' + diffLabel(Math.round(avg));
+        }
+      }
+    });
+  }
+  function patchStrengthHub(){
+    var host = gid('strength-progress-hub');
+    if(!host) return;
+    var hist = strengthHistory();
+    var items = difficultyAwareItems(hist);
+    var model = strengthActionModelFromDifficulty(hist);
+    var diffMeta = diffTrendMeta(hist);
+
+    var mapTitle = Array.from(host.querySelectorAll('.sp-sec-title')).find(function(el){ return el.textContent.trim() === 'מיפוי התקדמות בתוכנית'; });
+    if(mapTitle){
+      var sec = mapTitle.closest('.sp-section');
+      var grid = sec ? sec.querySelector('.sp-map-grid') : null;
+      if(grid){
+        grid.innerHTML = items.map(function(it){
+          var label = {'up':'מוכן לקידום','flat':'יציב','down':'דורש בלימה','new':'חדש','none':'אין נתון'}[it.status] || 'אין נתון';
+          return '<div class="sp-map-item"><div class="sp-map-top"><div class="sp-map-name">'+it.name+'</div><span class="sp-chip '+it.status+'">'+label+'</span></div><div class="sp-map-meta">'+it.meta+(it.diff?(' · '+diffLabel(it.diff)):'')+'</div><div class="tb-map-note">'+it.hint+'</div></div>';
+        }).join('');
+      }
+    }
+
+    var recoTitle = Array.from(host.querySelectorAll('.sp-sec-title')).find(function(el){ return el.textContent.trim() === 'המלצה לשלב הבא'; });
+    if(recoTitle){
+      var sec2 = recoTitle.closest('.sp-section');
+      var reco = sec2 ? sec2.querySelector('.sp-reco') : null;
+      if(reco){
+        reco.classList.add('tb-strength-next');
+        reco.innerHTML = '<div class="t">מה כדאי לעשות עכשיו?</div><div class="d">'+model.lead+'</div><div class="oai-next-grid" style="margin-top:10px">'+model.items.map(function(it){ return '<div class="oai-next-item"><div class="k">'+it.k+'</div><div class="v">'+it.v+'</div></div>'; }).join('')+'</div>';
+      }
+    }
+
+    var trendList = host.querySelector('.sp-trend-list');
+    if(trendList){
+      var existing = trendList.querySelector('.tb-diff-row');
+      var html = '<div class="sp-trend-row tb-diff-row"><div class="sp-trend-icon">🎚️</div><div><div class="t">מגמת קושי בפועל</div><div class="d">'+diffMeta.text+'</div></div></div>';
+      if(existing) existing.outerHTML = html;
+      else trendList.insertAdjacentHTML('beforeend', html);
+    }
+
+    host.querySelectorAll('.sp-recent-card').forEach(function(card, idx){
+      var w = hist[idx];
+      if(!w || !w.entries) return;
+      var note = card.querySelector('.sp-recent-note');
+      if(!note) return;
+      var avg = avgDiff(w.entries);
+      if(avg && note.innerHTML.indexOf('tb-diff-chip') === -1){
+        note.insertAdjacentHTML('beforeend', '<div style="margin-top:6px">'+diffChip(Math.round(avg))+'</div>');
+      }
+    });
+  }
+  function patchDataProgress(){
+    var host = gid('data-smart-progress-host');
+    if(!host) return;
+    var hist = strengthHistory();
+    var items = difficultyAwareItems(hist);
+    var model = strengthActionModelFromDifficulty(hist);
+
+    var sections = Array.prototype.slice.call(host.querySelectorAll('.data-smart-section'));
+    var strengthSec = sections.find(function(sec){
+      var ttl = sec.querySelector('.ttl');
+      var txt = ttl ? ttl.textContent.trim() : '';
+      return txt.indexOf('מיפוי התקדמות בתוכנית') > -1 && txt.indexOf('ריצה') === -1;
+    });
+    if(strengthSec){
+      var ttl = strengthSec.querySelector('.ttl');
+      if(ttl) ttl.textContent = 'מיפוי התקדמות בתוכנית - כוח';
+      var sub = strengthSec.querySelector('.sub');
+      if(sub) sub.textContent = 'התרגילים העיקריים של הכוח, עכשיו גם עם קושי בפועל';
+      var grid = strengthSec.querySelector('.data-smart-map-grid');
+      if(grid){
+        grid.innerHTML = items.length ? items.map(function(it){
+          var label = {'up':'מוכן לקידום','flat':'יציב','down':'דורש בלימה','new':'חדש','none':'אין נתון'}[it.status] || 'אין נתון';
+          return '<div class="data-smart-map-item"><div class="h">'+it.name+'</div><div class="t">'+label+'</div><div class="meta">'+it.meta+(it.diff?(' · '+diffLabel(it.diff)):'')+'</div><div class="tb-map-note">'+it.hint+'</div></div>';
+        }).join('') : '<div class="data-smart-map-item"><div class="t">עדיין אין מספיק אימוני כוח כדי למפות התקדמות בתוך התוכנית.</div></div>';
+      }
+      var nextSec = gid('tb-data-strength-next') || gid('oai-data-strength-next');
+      if(nextSec){
+        nextSec.innerHTML = '<div class="data-smart-head"><div><div class="ttl">המלצה לשלב הבא</div><div class="sub">כוח — עכשיו גם לפי הקושי שסימנת בפועל</div></div><span class="oai-data-badge">כוח</span></div><div class="oai-data-next-shell"><div class="lead">'+model.lead+'</div><div class="oai-data-next-grid">'+model.items.map(function(it){ return '<div class="oai-data-next-item"><div class="k">'+it.k+'</div><div class="v">'+it.v+'</div></div>'; }).join('')+'</div></div>';
+      }
+    }
+
+    var trendSec = sections.find(function(sec){
+      var ttl = sec.querySelector('.ttl');
+      return ttl && ttl.textContent.trim() === 'מגמות';
+    });
+    if(trendSec){
+      var list = trendSec.querySelector('.data-smart-trends');
+      if(list){
+        var meta = diffTrendMeta(hist);
+        var card = list.querySelector('.tb-data-diff-trend');
+        var html = '<div class="data-smart-trend tb-data-diff-trend"><div class="h">מגמת קושי בפועל</div><div class="t">'+meta.text+'</div></div>';
+        if(card) card.outerHTML = html; else list.insertAdjacentHTML('beforeend', html);
+      }
+    }
+  }
+  function patchStrengthScreenNextCard(){
+    var sec = gid('tb-strength-next-step') || gid('oai-strength-next-step');
+    if(sec){
+      var model = strengthActionModelFromDifficulty();
+      sec.innerHTML = '<div class="sp-sec-head"><div><div class="sp-sec-title">מה לעשות באימון הבא</div><div class="sp-sec-sub">מבוסס גם על הקושי שסימנת בפועל בכל תרגיל</div></div></div><div class="oai-next-shell"><div class="lead">'+model.lead+'</div><div class="oai-next-grid">'+model.items.map(function(it){ return '<div class="oai-next-item"><div class="k">'+it.k+'</div><div class="v">'+it.v+'</div></div>'; }).join('')+'</div></div>';
+    }
+  }
+  function refreshAll(){
+    try{ normalizeStoredDifficulty(); }catch(e){}
+    try{ patchDifficultyButtons(); }catch(e){}
+    try{ patchHistoryView(); }catch(e){}
+    try{ patchStrengthHub(); }catch(e){}
+    try{ patchDataProgress(); }catch(e){}
+    try{ patchStrengthScreenNextCard(); }catch(e){}
+  }
+  function wrap(name){
+    var fn = window[name];
+    if(typeof fn !== 'function' || fn._tbDifficultyV12Wrapped) return;
+    window[name] = function(){
+      var out = fn.apply(this, arguments);
+      setTimeout(refreshAll, 0);
+      setTimeout(refreshAll, 120);
+      return out;
+    };
+    window[name]._tbDifficultyV12Wrapped = true;
+  }
+  ['renderStrH','renderStrengthProgressHub','renderProgressSmart','buildStrengthInlineRows','initStrengthLog','saveDraft','saveExerciseDraft','finishWO2','strSubSw','sw','dataSubSw'].forEach(wrap);
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(refreshAll, 60); setTimeout(refreshAll, 260); });
+  else { setTimeout(refreshAll, 60); setTimeout(refreshAll, 260); }
+  window.addEventListener('pageshow', function(){ setTimeout(refreshAll, 90); setTimeout(refreshAll, 320); });
+})();
+</script>
+
+
+<script id="oai-v14-attendance-auto-from-histories">
+(function(){
+  function gid(id){ return document.getElementById(id); }
+  function pad2(n){ return String(n).padStart(2,'0'); }
+  function read(key, fallback){
+    try{
+      if(typeof lsJ === 'function'){
+        var v = lsJ(key);
+        return (v === null || v === undefined) ? fallback : v;
+      }
+    }catch(e){}
+    return fallback;
+  }
+  function write(key, value){
+    try{ if(typeof lsSJ === 'function') lsSJ(key, value); }catch(e){}
+  }
+  function normalizeDateKey(value){
+    if(!value) return '';
+    if(typeof value === 'string'){
+      var m = value.match(/^(\d{4}-\d{2}-\d{2})/);
+      if(m) return m[1];
+      var m2 = value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+      if(m2) return m2[3] + '-' + m2[2] + '-' + m2[1];
+    }
+    var d = new Date(value);
+    if(isNaN(d)) return '';
+    return d.getFullYear() + '-' + pad2(d.getMonth()+1) + '-' + pad2(d.getDate());
+  }
+  function mergeAutoMark(map, key, mark){
+    if(!key) return;
+    if(mark === 'S') map[key] = (map[key] === 'R' || map[key] === 'B') ? 'B' : 'S';
+    else if(mark === 'R') map[key] = (map[key] === 'S' || map[key] === 'B') ? 'B' : 'R';
+  }
+  function buildAutoFromHistories(){
+    var auto = {};
+    var strength = read('wh', []) || [];
+    var workoutHistory = read('wo_hist', []) || [];
+    var runs = read('runs', []) || [];
+
+    strength.forEach(function(w){ mergeAutoMark(auto, normalizeDateKey(w && (w.date || w.savedAt || w.ts || w.createdAt)), 'S'); });
+    workoutHistory.forEach(function(w){ mergeAutoMark(auto, normalizeDateKey(w && (w.date || w.day || w.savedAt || w.ts || w.createdAt)), 'S'); });
+    runs.forEach(function(r){ mergeAutoMark(auto, normalizeDateKey(r && (r.date || r.savedAt || r.ts || r.createdAt)), 'R'); });
+    return auto;
+  }
+  function getManual(){ return read('att_manual', read('att2', {})) || {}; }
+
+  window.syncAttendanceFromLogs = function(){
+    var auto = buildAutoFromHistories();
+    write('att_auto', auto);
+    return auto;
+  };
+  window.getAttAuto = function(){ return window.syncAttendanceFromLogs(); };
+  window.getAttManual = function(){ return getManual(); };
+  window.saveAttManual = function(d){ write('att_manual', d || {}); };
+  window.getAttD = function(){
+    var merged = {};
+    var manual = getManual();
+    Object.keys(manual).forEach(function(k){ merged[normalizeDateKey(k) || k] = manual[k]; });
+    var auto = window.syncAttendanceFromLogs() || {};
+    Object.keys(auto).forEach(function(k){ merged[k] = auto[k]; });
+    return merged;
+  };
+  window.getAttCount = function(){
+    var data = window.getAttD() || {};
+    return Object.keys(data).filter(function(k){
+      return data[k] === 'S' || data[k] === 'R' || data[k] === 'B' || data[k] === 'X';
+    }).length;
+  };
+  window.attTap = function(){
+    alert('לוח הנוכחות מתעדכן אוטומטית מתוך היסטוריות הכוח והריצה. כדי לשנות יום מסוים, ערוך או מחק את האימון או הריצה שנשמרו לאותו תאריך.');
+  };
+  window.renderAtt = function(){
+    var cont = gid('att-cont'); if(!cont) return;
+    var data = window.getAttD() || {};
+    var today = new Date(); today.setHours(0,0,0,0);
+    var DL = ['א','ב','ג','ד','ה','ו','ש'];
+    var out = '';
+    var openMap = read('att_month_open', {}) || {};
+
+    for(var m=-2; m<12; m++){
+      var base = new Date(today.getFullYear(), today.getMonth()+m, 1);
+      var yr = base.getFullYear(), mo = base.getMonth();
+      var key = yr + '-' + pad2(mo+1);
+      var isCurrent = (yr===today.getFullYear() && mo===today.getMonth());
+      var isOpen = isCurrent ? true : !!openMap[key];
+      var dim = new Date(yr, mo+1, 0).getDate();
+      var sdow = new Date(yr, mo, 1).getDay();
+      var tot = 0, dn = 0;
+
+      for(var dd=1; dd<=dim; dd++){
+        var dt = new Date(yr,mo,dd); dt.setHours(0,0,0,0);
+        var kk = yr+'-'+pad2(mo+1)+'-'+pad2(dd);
+        if(dt <= today && !(typeof isRest === 'function' && isRest(kk, data))){
+          tot++;
+          if(data[kk] === 'S' || data[kk] === 'R' || data[kk] === 'B') dn++;
+        }
+      }
+
+      var pct = tot > 0 ? Math.round(dn / tot * 100) : 0;
+      out += '<div class="att-month-card">';
+      out += '<div class="att-month-head"><span class="att-month-title">'+MONTHS[mo]+' '+yr+(isCurrent?' <span style="font-size:.62rem;color:#1a7a4f">(נוכחי)</span>':'')+'</span><div class="att-month-right"><span class="att-month-stats">'+dn+'/'+tot+' | '+pct+'%</span>'+(isCurrent?'':'<button class="att-toggle" onclick="toggleAttMonth(\''+key+'\')">'+(isOpen?'סגור':'פתח')+'</button>')+'</div></div>';
+
+      if(isOpen){
+        out += '<table style="width:100%;border-collapse:collapse;table-layout:fixed"><thead><tr>';
+        for(var h=0; h<7; h++) out += '<th style="font-size:.58rem;font-weight:700;color:#8fa8c0;text-align:center;padding:2px 0;border:none;background:none">'+DL[h]+'</th>';
+        out += '</tr></thead><tbody><tr>';
+        var col = 0;
+        for(var e=0; e<sdow; e++){ out += '<td style="height:44px"></td>'; col++; }
+
+        for(var d2=1; d2<=dim; d2++){
+          if(col>0 && col%7===0) out += '</tr><tr>';
+          var dt2 = new Date(yr,mo,d2); dt2.setHours(0,0,0,0);
+          var k2 = yr+'-'+pad2(mo+1)+'-'+pad2(d2);
+          var v = data[k2];
+          var isFut = dt2 > today;
+          var isTod = dt2.getTime() === today.getTime();
+          var isR = (typeof isRest === 'function') ? isRest(k2, data) : false;
+          var holiday = (typeof getHolidayInfo === 'function') ? getHolidayInfo(dt2) : null;
+          var bg='#ffffff', brd='1px solid #eef3f8', ico='';
+          if(isR){ bg='#f0f4f8'; brd='1px solid #d0dcea'; ico='😴'; }
+          else if(isFut){ bg='#f8fafc'; brd='1px solid #eef3f8'; }
+          else if(v==='B'){ bg='linear-gradient(135deg,#e8f0fa 0%,#e8f4f0 100%)'; brd='1px solid #b9d8cd'; ico='🏋🏃'; }
+          else if(v==='S'){ bg='#e8f0fa'; brd='1px solid #aed6f1'; ico='🏋'; }
+          else if(v==='R'){ bg='#e8f4f0'; brd='1px solid #a9dfbf'; ico='🏃'; }
+          else if(v==='X'){ bg='#fef0f0'; brd='1px solid #f5c0c0'; ico='❌'; }
+          var ol = isTod ? ';outline:2px solid #e8a020;outline-offset:-1px' : '';
+          var ttl = (v==='S' || v==='R' || v==='B') ? ' title="נגזר אוטומטית מתוך ההיסטוריות"' : '';
+          var holidayHtml = holiday ? '<div class="hol-dot" title="'+holiday.name+'">'+holiday.short+'</div>' : '<div style="height:16px"></div>';
+          out += '<td'+ttl+' style="text-align:center;vertical-align:middle;height:44px;border-radius:6px;background:'+bg+';border:'+brd+';cursor:default'+ol+';padding:1px 0">'+holidayHtml+'<div style="font-size:.6rem;font-weight:800;line-height:1.2">'+d2+'</div><div style="font-size:.68rem;line-height:1">'+ico+'</div></td>';
+          col++;
+        }
+        while(col%7!==0){ out += '<td style="height:44px"></td>'; col++; }
+        out += '</tr></tbody></table>';
+      }
+      out += '</div>';
+    }
+
+    out += '<div class="note" style="margin-top:10px">הנוכחות נגזרת אוטומטית מתוך היסטוריות הכוח והריצה. כדי לעדכן יום מסוים, יש לערוך או למחוק את האימון או הריצה שנשמרו לאותו תאריך.</div>';
+    out += '<div class="att-legend">'
+      + '<span style="background:#e8f0fa;border:1px solid #aed6f1;color:#1a4f7a">🏋 כוח</span>'
+      + '<span style="background:#e8f4f0;border:1px solid #a9dfbf;color:#1a7a4f">🏃 ריצה</span>'
+      + '<span class="att-combo" style="padding:3px 8px;border-radius:20px;font-weight:700">🏋🏃 משולב</span>'
+      + '<span style="background:#f0f4f8;border:1px solid #d0dcea;color:#6b7e94">😴 מנוחה</span>'
+      + '<span style="background:#fef0f0;border:1px solid #f5c0c0;color:#aa2222">❌ פספסתי</span>'
+      + '<span class="lg-holiday">🕎/🍷 חג</span>'
+      + '</div>';
+    cont.innerHTML = out;
+  };
+
+  function refreshAttendance(){
+    try{ window.syncAttendanceFromLogs(); }catch(e){}
+    try{ if(typeof window.renderAtt === 'function') window.renderAtt(); }catch(e){}
+    try{ if(typeof window.renderOverallStats === 'function') window.renderOverallStats(); }catch(e){}
+    try{ if(typeof window.renderDataSmartAttendanceDeep === 'function') window.renderDataSmartAttendanceDeep(); }catch(e){}
+    try{ if(typeof window.updatePortalDynamicBits === 'function') window.updatePortalDynamicBits(); }catch(e){}
+    try{ if(typeof window.refreshPortalCardsStatus === 'function') window.refreshPortalCardsStatus(); }catch(e){}
+  }
+  function wrap(name){
+    var orig = window[name];
+    if(typeof orig !== 'function' || orig._oaiAttAutoWrappedFinal) return;
+    window[name] = function(){
+      var res = orig.apply(this, arguments);
+      refreshAttendance();
+      return res;
+    };
+    window[name]._oaiAttAutoWrappedFinal = true;
+  }
+  ['finishWO2','saveRun','saveAutoRunFromTimer','delWO','delRun'].forEach(wrap);
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(refreshAttendance, 0); });
+  else setTimeout(refreshAttendance, 0);
+})();
+</script>
+
+
+
+<script id="oai-v150-run-summary-safe-autosave">
+(function(){
+  var KEY = '__oai_pending_run_summary__';
+
+  function readRuns(){
+    try{
+      if(window.RUNX && typeof RUNX.readRuns === 'function') return RUNX.readRuns();
+    }catch(e){}
+    try{
+      if(typeof window.lsJ === 'function'){
+        var v = lsJ('runs');
+        return Array.isArray(v) ? v : [];
+      }
+    }catch(e){}
+    try{
+      var raw = localStorage.getItem('runs');
+      var parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    }catch(e){}
+    return [];
+  }
+
+  function writeRuns(runs){
+    runs = Array.isArray(runs) ? runs.slice(0,100) : [];
+    try{
+      if(window.RUNX && typeof RUNX.writeRuns === 'function'){
+        RUNX.writeRuns(runs);
+        return;
+      }
+    }catch(e){}
+    try{
+      if(typeof window.lsSJ === 'function'){
+        lsSJ('runs', runs);
+        return;
+      }
+    }catch(e){}
+    try{ localStorage.setItem('runs', JSON.stringify(runs)); }catch(e){}
+  }
+
+  function refreshRunViews(){
+    try{ if(window.RUNX && typeof RUNX.refreshRunViews === 'function') { RUNX.refreshRunViews(); return; } }catch(e){}
+    try{ if(typeof window.renderRunH === 'function') renderRunH(); }catch(e){}
+    try{ if(typeof window.renderRunExtras === 'function') renderRunExtras(); }catch(e){}
+    try{ if(typeof window.syncAttendanceFromLogs === 'function') syncAttendanceFromLogs(); }catch(e){}
+    try{ if(typeof window.renderAtt === 'function') renderAtt(); }catch(e){}
+    try{ if(typeof window.renderOverallStats === 'function') renderOverallStats(); }catch(e){}
+    try{ if(typeof window.renderDataSmartAttendanceDeep === 'function') renderDataSmartAttendanceDeep(); }catch(e){}
+  }
+
+  function makeKey(){
+    return 'runsum_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+  }
+
+  function parseKm(raw){
+    raw = String(raw == null ? '' : raw).trim().replace(',', '.').replace(/[^0-9.]/g,'');
+    if(!raw) return 0;
+    var num = parseFloat(raw);
+    return (isFinite(num) && num > 0) ? num : 0;
+  }
+
+  function formatKm(num){
+    num = parseKm(num);
+    if(!(num > 0)) return '';
+    var out = (num % 1 === 0) ? String(num.toFixed(0)) : (num < 10 ? num.toFixed(2) : num.toFixed(1));
+    return out.replace(/\.00$/, '').replace(/(\.\d*[1-9])0$/, '$1');
+  }
+
+  function normalizePace(raw){
+    raw = String(raw == null ? '' : raw).trim();
+    raw = raw.replace(/[\.\-]/g, ':').replace(/\s+/g, '').replace(/[^0-9:]/g, '');
+    if(!raw) return '';
+    var m = raw.match(/^(\d{1,2})(?::?(\d{1,2}))?$/);
+    if(!m) return '';
+    var min = parseInt(m[1], 10);
+    var sec = (typeof m[2] !== 'undefined' && m[2] !== '') ? parseInt(m[2], 10) : 0;
+    if(!isFinite(min) || !isFinite(sec) || min < 0 || sec < 0 || sec > 59) return '';
+    return String(min) + ':' + String(sec).padStart(2,'0') + " דק'/ק\"מ";
+  }
+
+  function minutesFromEntry(entry){
+    if(!entry) return 0;
+    var raw = entry.totalMin || entry.time || entry.activeMin || '';
+    raw = String(raw == null ? '' : raw).trim().replace(',', '.');
+    var num = parseFloat(raw);
+    return (isFinite(num) && num > 0) ? num : 0;
+  }
+
+  function readDistanceKm(){
+    var input = document.getElementById('runcomp-dist');
+    return parseKm(input ? input.value : '');
+  }
+
+  function readTreadmillPace(){
+    var input = document.getElementById('runcomp-treadmill-pace');
+    return normalizePace(input ? input.value : '');
+  }
+
+  function enrichEntry(entry, includeNotes){
+    entry = entry || {};
+    var km = readDistanceKm();
+    if(km > 0){
+      entry.dist = formatKm(km);
+      var mins = minutesFromEntry(entry);
+      try{
+        if(typeof window.calcPace === 'function' && mins > 0){ entry.pace = calcPace(km, mins); }
+      }catch(e){}
+    }
+    var treadmill = readTreadmillPace();
+    if(treadmill) entry.treadmillPace = treadmill;
+    entry.feel = (window.RUNCOMP ? (parseInt(RUNCOMP.feeling || 0, 10) || 0) : 0);
+    if(includeNotes){
+      var notesEl = document.getElementById('runcomp-notes');
+      entry.notes = notesEl ? String(notesEl.value || '').trim() : (entry.notes || '');
+    }
+    return entry;
+  }
+
+  function buildBaseEntry(){
+    try{
+      if(typeof window.buildEntryFromRunComp === 'function') return buildEntryFromRunComp();
+    }catch(e){}
+    return null;
+  }
+
+  function savePendingMeta(meta){
+    try{ localStorage.setItem(KEY, JSON.stringify(meta || null)); }catch(e){}
+  }
+
+  function readPendingMeta(){
+    try{
+      var raw = localStorage.getItem(KEY);
+      return raw ? JSON.parse(raw) : null;
+    }catch(e){}
+    return null;
+  }
+
+  function clearPendingMeta(){
+    try{ localStorage.removeItem(KEY); }catch(e){}
+  }
+
+  function findRunIndexById(runs, id){
+    for(var i=0;i<runs.length;i++){
+      if(runs[i] && runs[i].oaiPendingId === id) return i;
+    }
+    return -1;
+  }
+
+  function ensurePendingRunSaved(){
+    if(!window.RUNCOMP) return null;
+
+    var runs = readRuns();
+    if(!RUNCOMP.pendingSummaryId) RUNCOMP.pendingSummaryId = makeKey();
+
+    var existingIdx = findRunIndexById(runs, RUNCOMP.pendingSummaryId);
+    if(existingIdx >= 0){
+      savePendingMeta({ id: RUNCOMP.pendingSummaryId, endIso: RUNCOMP.endIso || '', phaseIndex: RUNCOMP.phaseIndex || 0 });
+      return runs[existingIdx];
+    }
+
+    var entry = buildBaseEntry();
+    if(!entry) return null;
+
+    entry = enrichEntry(entry, false);
+    entry.oaiPendingId = RUNCOMP.pendingSummaryId;
+    entry.summaryPending = true;
+    entry.summarySavedAt = new Date().toISOString();
+
+    runs.unshift(entry);
+    writeRuns(runs);
+    savePendingMeta({ id: RUNCOMP.pendingSummaryId, endIso: RUNCOMP.endIso || '', phaseIndex: RUNCOMP.phaseIndex || 0 });
+    refreshRunViews();
+
+    try{
+      if(typeof window.showMsg === 'function') showMsg('msg-run');
+      var msg = document.getElementById('msg-run');
+      if(msg) msg.textContent = 'הריצה נשמרה אוטומטית. אפשר להשלים סיכום עכשיו או אחר כך.';
+    }catch(e){}
+
+    return entry;
+  }
+
+  function updatePendingRun(opts){
+    opts = opts || {};
+    var id = (window.RUNCOMP && RUNCOMP.pendingSummaryId) ? RUNCOMP.pendingSummaryId : '';
+    var meta = readPendingMeta();
+    if(!id && meta && meta.id) id = meta.id;
+    if(!id) return false;
+
+    var runs = readRuns();
+    var idx = findRunIndexById(runs, id);
+
+    if(idx < 0 && meta && meta.endIso){
+      for(var i=0;i<runs.length;i++){
+        if(runs[i] && runs[i].endTimeIso === meta.endIso && runs[i].summaryPending){ idx = i; break; }
+      }
+    }
+    if(idx < 0) return false;
+
+    var entry = runs[idx] || {};
+    entry = enrichEntry(entry, !!opts.includeNotes);
+    if(opts.resolve === true) entry.summaryPending = false;
+    entry.summaryUpdatedAt = new Date().toISOString();
+    runs[idx] = entry;
+    writeRuns(runs);
+    refreshRunViews();
+
+    if(opts.resolve === true){
+      clearPendingMeta();
+      try{ if(window.RUNCOMP) RUNCOMP.pendingSummaryId = ''; }catch(e){}
+    }
+
+    try{
+      if(typeof window.closeRunCompleteModal === 'function') closeRunCompleteModal();
+      else {
+        var overlay = document.getElementById('runcomp-overlay');
+        if(overlay) overlay.classList.remove('show');
+        document.body.style.overflow = '';
+      }
+    }catch(e){}
+
+    try{
+      if(typeof window.showMsg === 'function') showMsg('msg-run');
+      var msg = document.getElementById('msg-run');
+      if(msg){
+        msg.textContent = opts.resolve === true
+          ? (opts.includeNotes ? 'הסיכום נשמר והריצה עודכנה.' : 'הריצה נשמרה בהיסטוריה.')
+          : 'הריצה נשמרה. אפשר להשלים את הסיכום גם אחר כך.';
+      }
+    }catch(e){}
+
+    return true;
+  }
+
+  function patchModalText(){
+    var overlay = document.getElementById('runcomp-overlay');
+    if(!overlay) return;
+    var sub = overlay.querySelector('.runcomp-sub');
+    if(sub) sub.textContent = 'הריצה נשמרת אוטומטית מיד עם פתיחת חלון הסיכום. כאן אפשר רק להשלים תחושה, הערה ונתונים נוספים.';
+    overlay.querySelectorAll('.save-main-native').forEach(function(btn){ btn.textContent = '💾 שמור סיכום'; });
+    overlay.querySelectorAll('.runcomp-btn').forEach(function(btn){
+      var t = (btn.textContent || '').trim();
+      if(t === 'דלג ושמור') btn.textContent = 'סגור לעכשיו';
+    });
+  }
+
+  function bindLiveMirror(){
+    var notesEl = document.getElementById('runcomp-notes');
+    if(notesEl && !notesEl._oaiPendingBound){
+      notesEl.addEventListener('input', function(){
+        try{ updatePendingRun({includeNotes:true, resolve:false}); }catch(e){}
+      });
+      notesEl._oaiPendingBound = true;
+    }
+    var paceEl = document.getElementById('runcomp-treadmill-pace');
+    if(paceEl && !paceEl._oaiPendingBound){
+      paceEl.addEventListener('input', function(){
+        try{ updatePendingRun({includeNotes:false, resolve:false}); }catch(e){}
+      });
+      paceEl._oaiPendingBound = true;
+    }
+    var distEl = document.getElementById('runcomp-dist');
+    if(distEl && !distEl._oaiPendingBound){
+      distEl.addEventListener('input', function(){
+        try{ updatePendingRun({includeNotes:false, resolve:false}); }catch(e){}
+      });
+      distEl._oaiPendingBound = true;
+    }
+    var overlay = document.getElementById('runcomp-overlay');
+    if(overlay){
+      overlay.querySelectorAll('.runcomp-feel').forEach(function(btn){
+        if(btn._oaiPendingBound) return;
+        btn.addEventListener('click', function(){
+          setTimeout(function(){
+            try{ updatePendingRun({includeNotes:false, resolve:false}); }catch(e){}
+          }, 0);
+        });
+        btn._oaiPendingBound = true;
+      });
+    }
+  }
+
+  if(typeof window.openRunCompleteModal === 'function' && !window.openRunCompleteModal._oaiV150Wrapped){
+    var _origOpen = window.openRunCompleteModal;
+    window.openRunCompleteModal = function(payload){
+      try{
+        if(window.RUNCOMP) RUNCOMP.pendingSummaryId = makeKey();
+      }catch(e){}
+      var res = _origOpen.apply(this, arguments);
+      try{ ensurePendingRunSaved(); }catch(e){}
+      try{ patchModalText(); }catch(e){}
+      try{ bindLiveMirror(); }catch(e){}
+      return res;
+    };
+    window.openRunCompleteModal._oaiV150Wrapped = true;
+  }
+
+  window.saveRunCompletionWithNotes = function(){
+    var ok = false;
+    try{ ensurePendingRunSaved(); ok = updatePendingRun({includeNotes:true, resolve:true}); }catch(e){ ok = false; }
+    if(!ok){
+      try{
+        var notesEl = document.getElementById('runcomp-notes');
+        if(window.RUNCOMP) RUNCOMP.notes = notesEl ? String(notesEl.value || '').trim() : '';
+        if(typeof window.closeRunCompleteModal === 'function') closeRunCompleteModal();
+      }catch(e){}
+    }
+  };
+
+  window.saveRunCompletionQuick = function(){
+    var ok = false;
+    try{ ensurePendingRunSaved(); ok = updatePendingRun({includeNotes:false, resolve:false}); }catch(e){ ok = false; }
+    if(!ok){
+      try{ if(typeof window.closeRunCompleteModal === 'function') closeRunCompleteModal(); }catch(e){}
+    }
+  };
+
+  function boot(){
+    try{ patchModalText(); }catch(e){}
+    try{ bindLiveMirror(); }catch(e){}
+    try{ updateManualRunStructurePreview(); }catch(e){}
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function(){ setTimeout(boot, 0); });
+  else setTimeout(boot, 0);
+})();
+</script>
+
+
+
+<script id="oai-v23-manual-run-warmup-and-title-fix">
+(function(){
+  var RUN_TITLE_LABELS = {
+    '1':'אינטרוולים 2:00 / 2:00 × 5',
+    '2':'אינטרוולים 2:00 / 1:30 × 6',
+    '3':'אינטרוולים 2:30 / 1:30 × 6',
+    '4':'אינטרוולים 3:00 / 1:00 × 5',
+    '5':'אינטרוולים 5:00 / 2:00 × 4',
+    '6':'אינטרוולים 8:00 / 2:00 × 3',
+    '7':'ריצה רציפה 20 דק׳',
+    '8':'ריצה רציפה 25 דק׳',
+    '9':'ריצה רציפה 30 דק׳',
+    '10':'5K ראשון / 35 דק׳',
+    '11':'טמפו 25 דק׳ × 2',
+    '12':'5K מהיר / 40 דק׳'
+  };
+  var RUN_STAGE_LABELS = {
+    '1':'שבועות 1–2','2':'שבועות 3–4','3':'שבועות 5–6','4':'שבועות 7–8','5':'שבועות 9–10','6':'שבועות 11–12',
+    '7':'שבועות 13–14','8':'שבועות 15–16','9':'שבועות 17–18','10':'שבועות 19–20','11':'שבועות 21–22','12':'שבועות 23–24'
+  };
+  function gid(id){ return document.getElementById(id); }
+  function getSelectedText(el){ try{ return el && el.options && el.selectedIndex >= 0 ? String(el.options[el.selectedIndex].textContent || '').trim() : ''; }catch(e){ return ''; } }
+  function getManualWarmupMinutes(){
+    var sel = gid('run-warmup');
+    if(!sel) return 0;
+    var v = String(sel.value || '0');
+    if(v === 'custom'){
+      var custom = gid('run-warmup-custom');
+      return custom ? Math.max(0, parseFloat(custom.value || '0') || 0) : 0;
+    }
+    return Math.max(0, parseFloat(v || '0') || 0);
+  }
+  window.getManualWarmupMinutes = getManualWarmupMinutes;
+  window.manualRunWarmupChanged = function(){
+    var sel = gid('run-warmup');
+    var custom = gid('run-warmup-custom');
+    if(custom){
+      var isCustom = !!sel && String(sel.value) === 'custom';
+      custom.style.display = isCustom ? 'block' : 'none';
+    }
+    try{ window.updateManualRunStructurePreview(); }catch(e){}
+  };
+  function syncManualWarmupFromSettings(){
+    var sel = gid('run-warmup');
+    var custom = gid('run-warmup-custom');
+    if(!sel) return;
+    var raw = '';
+    try{ raw = localStorage.getItem('run_warmup_min') || ''; }catch(e){}
+    if(raw === '' && gid('rt-warmup-min')) raw = String(gid('rt-warmup-min').value || '');
+    var val = Math.max(0, parseFloat(raw || '5') || 5);
+    var allowed = ['0','3','5','8'];
+    var asStr = (Math.round(val*10)/10).toString().replace(/\.0$/,'');
+    if(allowed.indexOf(asStr) >= 0){
+      sel.value = asStr;
+      if(custom) custom.value = '';
+    }else{
+      sel.value = 'custom';
+      if(custom) custom.value = asStr;
+    }
+    window.manualRunWarmupChanged();
+  }
+  window.resolveRunStageLabel = function(run){
+    if(run && run.ivlLabel) return String(run.ivlLabel);
+    var ivl = run && run.ivl != null ? String(run.ivl) : '';
+    return RUN_STAGE_LABELS[ivl] || ivl || '';
+  };
+  window.resolveRunTitle = function(run){
+    if(run && run.runTitle) return String(run.runTitle);
+    var ivl = run && run.ivl != null ? String(run.ivl) : '';
+    return RUN_TITLE_LABELS[ivl] || (run && run.structure) || 'ריצה';
+  };
+  window.updateManualRunStructurePreview = function(){
+    var preview = gid('run-structure-preview');
+    var hidden = gid('run-structure');
+    var warm = getManualWarmupMinutes();
+    var built = typeof window.buildManualRunStructure === 'function' ? String(window.buildManualRunStructure() || '').trim() : '';
+    if(hidden) hidden.value = built;
+    if(!preview) return;
+    var parts = [];
+    if(warm > 0) parts.push('חימום ' + (typeof window.formatManualRunMinutes === 'function' ? window.formatManualRunMinutes(warm) : (warm + ' דק׳')));
+    if(built) parts.push(built);
+    preview.textContent = parts.length ? parts.join(' • ') : 'המבנה ייבנה מתוך שלב התוכנית והבחירות שלך';
+    preview.style.color = parts.length ? '#1a2332' : '#5f7589';
+  };
+  window.saveRun = function(){
+    var date = gid('run-date') ? gid('run-date').value : '';
+    if(!date){ alert('בחר תאריך'); return; }
+    var dist = gid('run-dist') ? gid('run-dist').value : '';
+    var time = gid('run-time') ? gid('run-time').value : '';
+    if(!dist && !time){ alert('הזן מרחק או זמן'); return; }
+    var structureEl = gid('run-structure');
+    var treadmillEl = gid('run-treadmill-pace');
+    var warmupEl = gid('run-warmup');
+    var finishEl = gid('run-finish-extra');
+    var ivlEl = gid('run-ivl');
+    var p = typeof window.getManualRunPhase === 'function' ? window.getManualRunPhase() : null;
+    var structure = String((typeof window.buildManualRunStructure === 'function' ? window.buildManualRunStructure() : '') || '').trim();
+    if(structureEl) structureEl.value = structure;
+    var treadmillPace = treadmillEl ? String(treadmillEl.value || '').trim() : '';
+    var warmupMin = getManualWarmupMinutes();
+    var finishExtraMin = finishEl ? (parseInt(finishEl.value || '0', 10) || 0) : 0;
+    var activeMin = p ? window.fmtRunMinutes(window.rtPhaseActiveSec(p)) : (time || '');
+    var runOnlyMin = p ? window.fmtRunMinutes(window.rtPhaseRunSec(p)) : '';
+    var walkOnlyMin = p ? window.fmtRunMinutes(window.rtPhaseWalkSec(p)) : '';
+    var computedTotal = (warmupMin || 0) + (parseFloat(activeMin) || 0) + (finishExtraMin || 0);
+    var dtIso = date + 'T' + new Date().toTimeString().slice(0,8);
+    var ivlValue = ivlEl ? String(ivlEl.value || '') : '';
+    var ivlLabel = ivlEl ? (String(getSelectedText(ivlEl)).split(' (')[0].trim()) : '';
+    var runTitle = RUN_TITLE_LABELS[ivlValue] || ivlLabel || structure || 'ריצה';
+    var run = {
+      date: dtIso,dist: dist,time: time,ivl: ivlValue,ivlLabel: ivlLabel,runTitle: runTitle,
+      hr: gid('run-hr') ? gid('run-hr').value : '',feel: window.RF,notes: gid('run-notes') ? gid('run-notes').value : '',
+      structure: structure,treadmillPace: treadmillPace,pace: typeof window.calcPace === 'function' ? window.calcPace(parseFloat(dist), parseFloat(time)) : '',source: 'manual',
+      warmupMin: warmupMin ? String(warmupMin).replace(/\.0$/,'') : '',endExtraMin: finishExtraMin ? String(finishExtraMin) : '',activeMin: activeMin,runOnlyMin: runOnlyMin,walkOnlyMin: walkOnlyMin,totalMin: (time || (computedTotal ? String(computedTotal).replace(/\.0$/,'') : ''))
+    };
+    var runs = (typeof window.lsJ === 'function' ? window.lsJ('runs') : []) || [];
+    runs.unshift(run); if(runs.length > 100) runs = runs.slice(0,100);
+    if(typeof window.lsSJ === 'function') window.lsSJ('runs', runs);
+    try{ if(typeof window.renderRunH === 'function') window.renderRunH(); }catch(e){}
+    try{ if(typeof window.showMsg === 'function') window.showMsg('msg-run'); }catch(e){}
+    var msg = gid('msg-run'); if(msg) msg.textContent = 'האימון נשמר';
+    if(gid('run-dist')) gid('run-dist').value = '';
+    if(gid('run-time')) gid('run-time').value = '';
+    if(gid('run-hr')) gid('run-hr').value = '';
+    if(gid('run-notes')) gid('run-notes').value = '';
+    if(structureEl) structureEl.value = '';
+    if(treadmillEl) treadmillEl.value = '';
+    if(warmupEl) warmupEl.value = '5';
+    if(gid('run-warmup-custom')) gid('run-warmup-custom').value = '';
+    if(finishEl) finishEl.value = '0';
+    if(gid('pacebox')) gid('pacebox').style.display = 'none';
+    window.RF = 0;
+    for(var i=1;i<=4;i++) if(gid('f'+i)) gid('f'+i).className = 'fbtn';
+    window.manualRunWarmupChanged();
+    try{ if(typeof window.renderRunExtras === 'function') window.renderRunExtras(); }catch(e){}
+  };
+  window.renderRunH = function(){
+    var runs = (typeof window.lsJ === 'function' ? window.lsJ('runs') : []) || [];
+    var el = gid('hist-r'); if(!el) return;
+    if(!runs.length){
+      el.innerHTML = '<div style="background:white;border-radius:12px;padding:18px 16px;box-shadow:0 1px 4px rgba(0,0,0,.07);text-align:center)"><div style="font-size:1.4rem;margin-bottom:8px">🏃</div><div style="font-size:.86rem;font-weight:800;color:#1a2332;margin-bottom:6px">עדיין אין היסטוריית ריצות</div><div style="font-size:.74rem;color:#6b7e94;line-height:1.7">כאן יופיעו הריצות האוטומטיות מהטיימר וגם הריצות שתוסיף ידנית.</div></div>';
+      return;
+    }
+    var FEEL = window.FEEL || ['','😢 קשה','😐 סביר','😊 טוב','💪 מעולה'];
+    var out='';
+    for(var i=0;i<runs.length;i++){
+      var r = runs[i], dtInfo = window.fmtRunDateTime(r.date), isAuto = (r.source === 'auto_timer');
+      var badgeLabel = window.resolveRunStageLabel(r);
+      out += '<div class="runcard"><div class="runhd"><div><div class="hwdt">🏃 ' + dtInfo.day + '</div><div class="runsub">' + dtInfo.time + (isAuto ? ' · נשמר אוטומטית' : ' · נשמר ידנית') + '</div></div><div class="runbadges"><span class="runbadge ' + (isAuto ? 'auto' : '') + '">' + (isAuto ? 'טיימר' : 'ידני') + '</span>' + (badgeLabel ? '<span class="runbadge">' + badgeLabel + '</span>' : '') + '<button class="hwbtn" onclick="delRun(' + i + ')">🗑</button></div></div><div class="runbd">';
+      if(isAuto){
+        out += '<div class="runsts"><div class="runst"><div class="rsv">' + (r.warmupMin || '0') + '</div><div class="rsl">חימום</div></div><div class="runst"><div class="rsv">' + (r.activeMin || r.time || '—') + '</div><div class="rsl">ריצה/הליכה</div></div><div class="runst"><div class="rsv">' + (r.totalMin || r.time || '—') + '</div><div class="rsl">סה"כ דקות</div></div></div><div class="runmeta">';
+        if(r.structure) out += '<div class="runline"><b>מבנה:</b> ' + r.structure + '</div>';
+        if(r.runOnlyMin || r.walkOnlyMin) out += '<div class="runline"><b>פירוק:</b> ריצה ' + (r.runOnlyMin || '0') + ' דק׳ · הליכה ' + (r.walkOnlyMin || '0') + ' דק׳</div>';
+        if(r.treadmillPace || r.pace || r.dist) out += '<div class="runline"><b>סיכום:</b> ' + (r.treadmillPace ? ('קצב הליכון ' + r.treadmillPace) : ('קצב ' + (r.pace || '—'))) + (r.dist ? (' · ' + r.dist + ' ק"מ') : '') + '</div>';
+        if(r.feel) out += '<div class="runline"><b>תחושה:</b> ' + FEEL[r.feel] + '</div>';
+        if(r.notes) out += '<div class="runline"><b>הערות:</b> ' + r.notes + '</div>';
+      }else{
+        if(r.structure) out += '<div class="runline"><b>מבנה:</b> ' + r.structure + '</div>';
+        out += '<div class="runsts"><div class="runst"><div class="rsv">' + (r.feel ? FEEL[r.feel] : '—') + '</div><div class="rsl">תחושה</div></div><div class="runst"><div class="rsv">' + (r.time || r.totalMin || '—') + '</div><div class="rsl">דקות</div></div><div class="runst"><div class="rsv">' + (r.treadmillPace || r.pace || '—') + '</div><div class="rsl">קצב</div></div></div><div class="runmeta">';
+        if(r.warmupMin) out += '<div class="runline"><b>חימום:</b> ' + r.warmupMin + ' דק׳</div>';
+        if(r.hr) out += '<div class="runline"><b>דופק:</b> ' + r.hr + ' bpm</div>';
+        if(r.treadmillPace || r.pace || r.dist) out += '<div class="runline"><b>סיכום:</b> ' + (r.treadmillPace ? ('קצב הליכון ' + r.treadmillPace) : ('קצב ' + (r.pace || '—'))) + (r.dist ? (' · ' + r.dist + ' ק"מ') : '') + '</div>';
+        if(r.endExtraMin) out += '<div class="runline"><b>שארית בסיום:</b> ' + r.endExtraMin + ' דק׳</div>';
+        if(r.notes) out += '<div class="runline"><b>הערות:</b> ' + r.notes + '</div>';
+      }
+      out += '</div></div></div>';
+    }
+    el.innerHTML = out;
+  };
+  window.runTitle = function(r){ return window.resolveRunTitle(r); };
+  function init(){ syncManualWarmupFromSettings(); try{ window.updateManualRunStructurePreview(); }catch(e){} try{ window.renderRunH(); }catch(e){} }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else setTimeout(init, 0);
+})();
+</script>
+
+
+
+<style id="oai-v200-run-history-modal-clean-style">
+#run-history-rebuild-shell{display:none !important}
+#run-adv-history-card .run-fold,
+#run-adv-history-card .run-history-rebuild,
+#run-adv-history-card .run-merged-inner,
+#run-adv-history-card #hist-r,
+#run-adv-history-card .run-hist-toolbar{display:none !important}
+.run-popup-launcher{display:flex;flex-direction:column;gap:10px;background:#fbfdff;border:1px solid #e3ebf4;border-radius:14px;padding:13px}
+.run-popup-launcher .run-popup-note{font-size:.73rem;color:#5f7589;line-height:1.7}
+.run-popup-launcher .run-popup-open-btn{width:100%;border:none;border-radius:12px;background:#0d1b2a;color:#fff;font-family:'Heebo',sans-serif;font-size:.82rem;font-weight:800;padding:11px 14px;cursor:pointer}
+.run-popup-preview-list{display:flex;flex-direction:column;gap:10px}
+.run-popup-preview-item{background:#f8fbff;border:1px solid #e2ebf4;border-radius:12px;padding:11px 12px}
+.run-popup-preview-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.run-popup-preview-title{font-size:.8rem;font-weight:800;color:#10243a;line-height:1.35}
+.run-popup-preview-date{font-size:.64rem;color:#6b7e94;line-height:1.5;margin-top:3px}
+.run-popup-preview-meta{font-size:.64rem;color:#35516b;line-height:1.5;margin-top:5px}
+.run-popup-preview-tag{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:3px 8px;font-size:.58rem;font-weight:900;white-space:nowrap;background:#eef5fc;color:#1a4f7a;border:1px solid #d8e8f6}
+.run-popup-preview-tag.auto{background:#eef8f3;color:#0f6e56;border-color:#d9efe3}
+.run-popup-preview-more{font-size:.67rem;color:#6b7e94;font-weight:700;text-align:center;padding-top:2px}
+#run-hist-modal-clean .modal-box,#run-hist-edit-modal-clean .modal-box,#run-hist-delete-modal-clean .modal-box{max-width:360px;width:92%}
+.run-hist-modal-scroll{max-height:80vh;overflow-y:auto}
+.run-hist-modebar{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#f7fafc;border:1px solid #e3ebf4;border-radius:12px;padding:9px 10px;margin-bottom:10px}
+.run-hist-modebar .txt{font-size:.72rem;color:#5f7589;line-height:1.5}
+.run-hist-modebar .chip{display:inline-flex;align-items:center;justify-content:center;padding:4px 9px;border-radius:999px;font-size:.62rem;font-weight:800;background:#eef5fc;color:#1a4f7a}
+.run-hist-modebar .chip.edit{background:#fff4e0;color:#7a5000}
+.run-hist-modebar button{border:none;border-radius:10px;background:#0d1b2a;color:#fff;font-family:'Heebo',sans-serif;font-size:.72rem;font-weight:800;padding:8px 12px;cursor:pointer;white-space:nowrap}
+.run-hist-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #f0f4f8}
+.run-hist-row:last-child{border-bottom:none}
+.run-hist-main{min-width:0;flex:1}
+.run-hist-title{font-size:.8rem;font-weight:800;color:#0d1b2a;line-height:1.35}
+.run-hist-date{font-size:.64rem;color:#6b7e94;line-height:1.5;margin-top:2px}
+.run-hist-meta{font-size:.64rem;color:#35516b;line-height:1.5;margin-top:3px}
+.run-hist-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.run-hist-tag{font-size:.6rem;font-weight:800;padding:3px 8px;border-radius:999px;background:#eef5fc;color:#1a4f7a}
+.run-hist-tag.auto{background:#eef8f3;color:#0f6e56}
+.run-hist-edit-btn{border:none;border-radius:10px;background:#fff4e0;color:#7a5000;font-family:'Heebo',sans-serif;font-size:.68rem;font-weight:800;padding:7px 10px;cursor:pointer}
+.run-hist-del-icon{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:10px;background:#fff1f0;color:#c0392b;font-family:'Heebo',sans-serif;font-size:.95rem;font-weight:900;cursor:pointer;box-shadow:inset 0 0 0 1px #f0b7b2}
+.run-hist-empty{background:#fbfdff;border:1px solid #e3ebf4;border-radius:12px;padding:16px;text-align:center;font-size:.76rem;color:#6b7e94;line-height:1.8}
+.run-edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px}
+.run-edit-feel{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:6px}
+.run-edit-feel .btn{border:1px solid #d0dcea;border-radius:10px;background:#f8fafc;padding:9px 6px;font-family:'Heebo',sans-serif;font-size:.7rem;font-weight:800;color:#44546a;cursor:pointer}
+.run-edit-feel .btn.on{background:#0d1b2a;color:#fff;border-color:#0d1b2a}
+.run-edit-actions{display:flex;gap:8px;margin-top:14px}
+.run-edit-actions button{flex:1;padding:10px;border-radius:10px;font-family:'Heebo',sans-serif;font-size:.8rem;font-weight:800;cursor:pointer}
+.run-edit-cancel{border:1px solid #d0dcea;background:#f0f4f8;color:#6b7e94}
+.run-edit-save{border:none;background:#0d1b2a;color:#fff}
+.run-delete-title{font-size:.95rem;font-weight:800;color:#0d1b2a;margin-bottom:8px;text-align:center}
+.run-delete-text{font-size:.76rem;color:#6b7e94;line-height:1.6;text-align:center;margin-bottom:16px}
+.run-delete-actions{display:flex;gap:8px}
+.run-delete-actions button{flex:1;padding:10px;border-radius:10px;font-family:'Heebo',sans-serif;font-size:.8rem;font-weight:800;cursor:pointer}
+.run-delete-cancel{border:1px solid #d0dcea;background:#f0f4f8;color:#6b7e94}
+.run-delete-confirm{border:none;background:#c0392b;color:#fff}
+</style>
+
+<script id="oai-v200-run-history-modal-clean-script">
+(function(){
+  var runHistoryModalEditMode = false;
+  var runEditIndex = null;
+  var runDeleteIndex = null;
+  var RUN_FEEL = window.FEEL || ['','😢 קשה','😐 סביר','😊 טוב','💪 מעולה'];
+  function gid(id){ return document.getElementById(id); }
+  function esc(v){ return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+  function readRuns(){ try{ return (typeof window.lsJ==='function' ? (window.lsJ('runs')||[]) : JSON.parse(localStorage.getItem('runs')||'[]')||[]).slice(); }catch(e){ return []; } }
+  function saveRuns(runs){ try{ if(typeof window.lsSJ==='function') window.lsSJ('runs', runs||[]); else localStorage.setItem('runs', JSON.stringify(runs||[])); }catch(e){} }
+  function fmtDateTime(dateIso){ try{ if(typeof window.fmtRunDateTime==='function') return window.fmtRunDateTime(dateIso); }catch(e){} var d=new Date(dateIso||Date.now()); return {day:d.toLocaleDateString('he-IL'),time:d.toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})}; }
+  function runTitle(r){ try{ if(r && r.runTitle) return String(r.runTitle); if(typeof window.resolveRunTitle==='function') return window.resolveRunTitle(r); }catch(e){} return (r && r.source==='auto_timer') ? 'ריצת טיימר' : 'ריצה ידנית'; }
+  function stageLabel(r){ try{ if(typeof window.resolveRunStageLabel==='function') return window.resolveRunStageLabel(r) || ''; }catch(e){} return r && (r.ivl || r.structureLabel || r.programStageLabel) || ''; }
+  function feelsHtml(selected){ var out=''; for(var i=1;i<=4;i++){ out += '<button type="button" class="btn'+(selected===i?' on':'')+'" data-feel-btn="'+i+'">'+RUN_FEEL[i]+'</button>'; } return out; }
+  function ensureModals(){
+    if(!gid('run-hist-modal-clean')){
+      var wrap=document.createElement('div');
+      wrap.innerHTML=''
+      + '<div class="modal" id="run-hist-modal-clean"><div class="modal-box run-hist-modal-scroll"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><div style="font-size:.93rem;font-weight:800;color:#0d1b2a">🏃 היסטוריית ריצות</div><button type="button" onclick="closeRunHistoryClean()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:#6b7e94">✕</button></div><div id="run-hist-list-clean"></div></div></div>'
+      + '<div class="modal" id="run-hist-edit-modal-clean"><div class="modal-box run-hist-modal-scroll"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><div style="font-size:.93rem;font-weight:800;color:#0d1b2a">✏ עריכת ריצה</div><button type="button" onclick="closeRunEditClean()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:#6b7e94">✕</button></div><div id="run-hist-edit-body-clean"></div></div></div>'
+      + '<div class="modal" id="run-hist-delete-modal-clean"><div class="modal-box"><div class="run-delete-title">למחוק את הריצה הזו?</div><div class="run-delete-text">הפעולה תמחק את הריצה מההיסטוריה ולא ניתן יהיה לשחזר אותה.</div><div class="run-delete-actions"><button type="button" class="run-delete-cancel" onclick="closeRunDeleteClean()">ביטול</button><button type="button" class="run-delete-confirm" onclick="confirmRunDeleteClean()">אישור מחיקה</button></div></div></div>';
+      while(wrap.firstChild) document.body.appendChild(wrap.firstChild);
+      gid('run-hist-modal-clean').addEventListener('click', function(ev){ if(ev.target===this) window.closeRunHistoryClean(); });
+      gid('run-hist-edit-modal-clean').addEventListener('click', function(ev){ if(ev.target===this) window.closeRunEditClean(); });
+      gid('run-hist-delete-modal-clean').addEventListener('click', function(ev){ if(ev.target===this) window.closeRunDeleteClean(); });
+    }
+  }
+  function renderLauncher(){
+    var card=gid('run-adv-history-card');
+    if(!card) return;
+    var body=card.querySelector('.run-adv-embed-body');
+    if(!body) return;
+    var fold=card.querySelector('.run-fold'); if(fold) fold.style.display='none';
+    var old=gid('run-history-rebuild-shell'); if(old) old.style.display='none';
+    var note=body.querySelector('.run-adv-embed-note'); if(note) note.style.display='none';
+    var title=card.querySelector('h3'); if(title) title.textContent='היסטוריית ריצות';
+    var badge=card.querySelector('.run-adv-badge'); if(badge) badge.textContent='היסטוריה';
+    var shell=gid('run-history-clean-launcher');
+    if(!shell){ shell=document.createElement('div'); shell.id='run-history-clean-launcher'; shell.className='run-popup-launcher'; body.innerHTML=''; body.appendChild(shell); }
+    var runs=readRuns().slice().sort(function(a,b){ return new Date(b&&b.date||0)-new Date(a&&a.date||0); });
+    var latest=runs.slice(0,4);
+    var html='';
+    html += '<div class="run-popup-note">כאן אפשר לצפות מיד ב-4 הריצות האחרונות, ולפתוח חלון צף בדיוק בסגנון היסטוריית משקל כדי לראות עוד ריצות ולנהל אותן מכפתור עריכה מרכזי.</div>';
+    if(!latest.length){
+      html += '<div class="run-hist-empty">עדיין אין ריצות שמורות בהיסטוריה. ריצות מהטיימר וריצות ידניות יופיעו כאן אוטומטית.</div>';
+    }else{
+      html += '<div class="run-popup-preview-list">';
+      latest.forEach(function(r){
+        var dt=fmtDateTime(r && r.date);
+        var auto=!!(r && r.source==='auto_timer');
+        var meta=[];
+        if(r && (r.dist || r.time || r.totalMin)) meta.push((r.dist? esc(r.dist)+' ק"מ':'' ) + ((r.dist && (r.time||r.totalMin))?' · ':'') + (r.time||r.totalMin? esc(r.time||r.totalMin)+' דק׳':''));
+        if(r && (r.treadmillPace || r.pace)) meta.push('קצב ' + esc(r.treadmillPace || r.pace));
+        var stage=stageLabel(r);
+        html += '<div class="run-popup-preview-item"><div class="run-popup-preview-top"><div><div class="run-popup-preview-title">'+esc(runTitle(r))+'</div><div class="run-popup-preview-date">'+esc(dt.day)+' · '+esc(dt.time)+'</div></div><span class="run-popup-preview-tag'+(auto?' auto':'')+'">'+(auto?'טיימר':'ידני')+'</span></div><div class="run-popup-preview-meta">'+(stage? esc(stage)+' · ':'')+(meta.join(' · ') || 'ללא נתונים נוספים')+'</div></div>';
+      });
+      html += '</div>';
+      if(runs.length>4) html += '<div class="run-popup-preview-more">ועוד '+(runs.length-4)+' ריצות נוספות זמינות בחלון המלא</div>';
+    }
+    html += '<button type="button" class="run-popup-open-btn" onclick="openRunHistoryClean()">פתח היסטוריית ריצות' + (runs.length ? ' ('+runs.length+')' : '') + '</button>';
+    shell.innerHTML=html;
+  }
+  function rowHtml(r, idx){
+    var dt=fmtDateTime(r && r.date);
+    var auto=!!(r && r.source==='auto_timer');
+    var meta=[];
+    if(r && (r.dist || r.time || r.totalMin)) meta.push((r.dist? esc(r.dist)+' ק"מ':'' ) + ((r.dist && (r.time||r.totalMin))?' · ':'') + (r.time||r.totalMin? esc(r.time||r.totalMin)+' דק׳':''));
+    if(r && (r.treadmillPace || r.pace)) meta.push('קצב ' + esc(r.treadmillPace || r.pace));
+    var stage=stageLabel(r);
+    return '<div class="run-hist-row">'
+      + '<div class="run-hist-main">'
+      +   '<div class="run-hist-title">'+esc(runTitle(r))+'</div>'
+      +   '<div class="run-hist-date">'+esc(dt.day)+' · '+esc(dt.time)+(auto?' · טיימר':' · ידני')+'</div>'
+      +   '<div class="run-hist-meta">'+(stage? esc(stage)+' · ':'')+(meta.join(' · ') || 'ללא נתונים נוספים')+'</div>'
+      + '</div>'
+      + '<div class="run-hist-actions">'
+      +   (runHistoryModalEditMode
+            ? '<button type="button" class="run-hist-edit-btn" onclick="openRunEditClean('+idx+')">ערוך</button><button type="button" class="run-hist-del-icon" onclick="askRunDeleteClean('+idx+')">🗑</button>'
+            : '<span class="run-hist-tag'+(auto?' auto':'')+'">'+(auto?'טיימר':'ידני')+'</span>')
+      + '</div>'
+      + '</div>';
+  }
+  function renderRunHistoryModal(){
+    ensureModals();
+    var list=gid('run-hist-list-clean'); if(!list) return;
+    var runs=readRuns();
+    if(!runs.length){
+      list.innerHTML='<div class="run-hist-modebar"><div><div class="chip">מצב צפייה</div><div class="txt">אין כרגע ריצות שמורות לעריכה.</div></div><button type="button" onclick="toggleRunHistoryCleanEdit()">ערוך רשומות</button></div><div class="run-hist-empty">עדיין אין ריצות שמורות בהיסטוריה. ריצות מהטיימר וריצות ידניות יופיעו כאן אוטומטית.</div>';
+      return;
+    }
+    var html='';
+    html += '<div class="run-hist-modebar"><div><div class="chip'+(runHistoryModalEditMode?' edit':'')+'">'+(runHistoryModalEditMode?'מצב עריכה':'מצב צפייה')+'</div><div class="txt">'+(runHistoryModalEditMode?'כעת אפשר לערוך או למחוק ריצות בודדות מההיסטוריה.':'הרשומות מוצגות בלבד. לחץ על ערוך רשומות כדי לאפשר עריכה.')+'</div></div><button type="button" onclick="toggleRunHistoryCleanEdit()">'+(runHistoryModalEditMode?'חזור לצפייה':'ערוך רשומות')+'</button></div>';
+    runs.slice().sort(function(a,b){ return new Date(b.date||0)-new Date(a.date||0); }).forEach(function(r){ html += rowHtml(r, runs.indexOf(r)); });
+    list.innerHTML=html;
+  }
+  function currentRun(){ var runs=readRuns(); return (runEditIndex==null? null : runs[runEditIndex]) || null; }
+  function openEdit(idx){
+    ensureModals();
+    runEditIndex = idx;
+    var r=currentRun(); if(!r) return;
+    var body=gid('run-hist-edit-body-clean'); if(!body) return;
+    body.innerHTML=''
+      + '<div class="run-edit-grid">'
+      +   '<div><div class="flbl">שם ריצה</div><input id="run-edit-title-clean" class="finput" type="text" value="'+esc(r.runTitle || '')+'"></div>'
+      +   '<div><div class="flbl">תאריך ושעה</div><input id="run-edit-date-clean" class="finput" type="datetime-local" value="'+esc(toDateInput(r.date))+'"></div>'
+      + '</div>'
+      + '<div class="run-edit-grid">'
+      +   '<div><div class="flbl">מרחק (ק"מ)</div><input id="run-edit-dist-clean" class="finput" type="text" value="'+esc(r.dist || '')+'"></div>'
+      +   '<div><div class="flbl">זמן / דקות</div><input id="run-edit-time-clean" class="finput" type="text" value="'+esc(r.time || r.totalMin || '')+'"></div>'
+      + '</div>'
+      + '<div class="run-edit-grid">'
+      +   '<div><div class="flbl">קצב</div><input id="run-edit-pace-clean" class="finput" type="text" value="'+esc(r.pace || '')+'"></div>'
+      +   '<div><div class="flbl">קצב מההליכון</div><input id="run-edit-treadmill-clean" class="finput" type="text" value="'+esc(r.treadmillPace || '')+'"></div>'
+      + '</div>'
+      + '<div class="run-edit-grid">'
+      +   '<div><div class="flbl">חימום</div><input id="run-edit-warmup-clean" class="finput" type="text" value="'+esc(r.warmupMin || '')+'"></div>'
+      +   '<div><div class="flbl">שארית בסיום</div><input id="run-edit-finish-clean" class="finput" type="text" value="'+esc(r.endExtraMin || '')+'"></div>'
+      + '</div>'
+      + '<div class="run-edit-grid">'
+      +   '<div><div class="flbl">דופק</div><input id="run-edit-hr-clean" class="finput" type="text" value="'+esc(r.hr || '')+'"></div>'
+      +   '<div><div class="flbl">שלב / סוג</div><input id="run-edit-stage-clean" class="finput" type="text" value="'+esc(r.ivl || stageLabel(r) || '')+'"></div>'
+      + '</div>'
+      + '<div style="margin-bottom:10px"><div class="flbl">תחושה</div><div class="run-edit-feel" id="run-edit-feel-clean">'+feelsHtml(parseInt(r.feel||0,10))+'</div></div>'
+      + '<div style="margin-bottom:10px"><div class="flbl">הערות</div><textarea id="run-edit-notes-clean" class="finput" rows="3" style="resize:none">'+esc(r.notes || '')+'</textarea></div>'
+      + '<div class="run-edit-actions"><button type="button" class="run-edit-cancel" onclick="closeRunEditClean()">ביטול</button><button type="button" class="run-edit-save" onclick="saveRunEditClean()">שמור שינוי</button></div>';
+    body.querySelectorAll('[data-feel-btn]').forEach(function(btn){ btn.addEventListener('click', function(){ body.querySelectorAll('[data-feel-btn]').forEach(function(b){ b.classList.remove('on'); }); btn.classList.add('on'); body.dataset.feel = btn.getAttribute('data-feel-btn'); }); });
+    body.dataset.feel = String(parseInt(r.feel||0,10) || '');
+    gid('run-hist-edit-modal-clean').style.display='flex';
+  }
+  function toDateInput(v){ if(!v) return ''; var d=new Date(v); if(isNaN(d.getTime())) return ''; var pad=function(n){ return String(n).padStart(2,'0'); }; return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes()); }
+  function fromDateInput(v, fallback){ if(!v) return fallback || new Date().toISOString(); var d=new Date(v); return isNaN(d.getTime()) ? (fallback || new Date().toISOString()) : d.toISOString(); }
+  function saveEdit(){
+    var runs=readRuns(); if(runEditIndex==null || !runs[runEditIndex]) return;
+    var r=runs[runEditIndex];
+    var title=gid('run-edit-title-clean').value.trim();
+    var stage=gid('run-edit-stage-clean').value.trim();
+    r.runTitle = title || r.runTitle || '';
+    r.date = fromDateInput(gid('run-edit-date-clean').value, r.date);
+    r.dist = gid('run-edit-dist-clean').value.trim();
+    r.time = gid('run-edit-time-clean').value.trim();
+    if(r.totalMin!=null && r.time) r.totalMin = r.time;
+    r.pace = gid('run-edit-pace-clean').value.trim();
+    r.treadmillPace = gid('run-edit-treadmill-clean').value.trim();
+    r.warmupMin = gid('run-edit-warmup-clean').value.trim();
+    r.endExtraMin = gid('run-edit-finish-clean').value.trim();
+    r.hr = gid('run-edit-hr-clean').value.trim();
+    r.ivl = stage;
+    r.feel = parseInt((gid('run-hist-edit-body-clean').dataset.feel || r.feel || 0),10) || '';
+    r.notes = gid('run-edit-notes-clean').value.trim();
+    saveRuns(runs);
+    try{ if(typeof window.renderRunH==='function') window.renderRunH(); }catch(e){}
+    try{ if(typeof window.renderRunExtras==='function') window.renderRunExtras(); }catch(e){}
+    renderLauncher();
+    renderRunHistoryModal();
+    closeRunEditClean();
+  }
+  function askDelete(idx){ runDeleteIndex=idx; ensureModals(); gid('run-hist-delete-modal-clean').style.display='flex'; }
+  function confirmDelete(){
+    var runs=readRuns(); if(runDeleteIndex==null || !runs[runDeleteIndex]) return closeRunDeleteClean();
+    runs.splice(runDeleteIndex,1);
+    saveRuns(runs);
+    runDeleteIndex=null;
+    closeRunDeleteClean();
+    try{ if(typeof window.renderRunH==='function') window.renderRunH(); }catch(e){}
+    try{ if(typeof window.renderRunExtras==='function') window.renderRunExtras(); }catch(e){}
+    renderLauncher();
+    renderRunHistoryModal();
+  }
+  window.openRunHistoryClean=function(){ ensureModals(); renderLauncher(); renderRunHistoryModal(); gid('run-hist-modal-clean').style.display='flex'; };
+  window.closeRunHistoryClean=function(){ var m=gid('run-hist-modal-clean'); if(m) m.style.display='none'; };
+  window.toggleRunHistoryCleanEdit=function(){ runHistoryModalEditMode=!runHistoryModalEditMode; renderRunHistoryModal(); };
+  window.openRunEditClean=function(idx){ openEdit(idx); };
+  window.closeRunEditClean=function(){ var m=gid('run-hist-edit-modal-clean'); if(m) m.style.display='none'; runEditIndex=null; };
+  window.saveRunEditClean=function(){ saveEdit(); };
+  window.askRunDeleteClean=function(idx){ askDelete(idx); };
+  window.closeRunDeleteClean=function(){ var m=gid('run-hist-delete-modal-clean'); if(m) m.style.display='none'; runDeleteIndex=null; };
+  window.confirmRunDeleteClean=function(){ confirmDelete(); };
+  function wrap(name){ var orig=window[name]; if(typeof orig!=='function' || orig._runHistoryCleanWrap) return; window[name]=function(){ var res=orig.apply(this, arguments); setTimeout(function(){ renderLauncher(); if(gid('run-hist-modal-clean') && gid('run-hist-modal-clean').style.display==='flex') renderRunHistoryModal(); }, 0); return res; }; window[name]._runHistoryCleanWrap=true; }
+  function boot(){ ensureModals(); renderLauncher(); ['saveRun','saveAutoRunFromTimer','delRun','renderRunH','renderRunExtras','initRunTab','runSubSw','sw','openRunArea','openRunHubScreen'].forEach(wrap); setTimeout(renderLauncher,100); setTimeout(renderLauncher,500); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
 </script>
