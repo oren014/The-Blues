@@ -1,4 +1,4 @@
-const CACHE_NAME = 'the-blues-github-ready-no-library-v2';
+const CACHE_NAME = 'the-blues-github-ready-no-library-v3';
 const URLS_TO_CACHE = [
   "./",
   "./index.html",
@@ -10,7 +10,8 @@ const URLS_TO_CACHE = [
   "./apple-touch-icon.png",
   "./main-img.png",
   "./assets/stageA_shared_visual_2.png",
-  "./assets/stageA_shared_visual_2_focus.webp"
+  "./assets/stageA_shared_visual_2_focus.webp",
+  "./assets/wake-fallback.mp4"
 ];
 
 self.addEventListener('install', event => {

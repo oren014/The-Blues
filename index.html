@@ -30097,3 +30097,181 @@ body.portal-mode .portal-hero::after{
 }
 body.portal-mode .portal-hero > *{position:relative !important; z-index:2 !important;}
 </style>
+
+<script id="tb-wake-compat-final">
+(function(){
+  if(window.__tbWakeCompatPatched) return;
+  window.__tbWakeCompatPatched = true;
+  var WAKE_KEY = 'wl_desired';
+  var nativeLock = null;
+  var fallbackVideo = null;
+  var fallbackReady = false;
+
+  function gid(id){ return document.getElementById(id); }
+  function lsGet(key){ try{return localStorage.getItem(key);}catch(e){return null;} }
+  function lsSet(key,val){ try{localStorage.setItem(key,String(val));}catch(e){} }
+  function desired(){ return lsGet(WAKE_KEY) === '1'; }
+  function setDesired(v){ lsSet(WAKE_KEY, v ? '1' : '0'); }
+  function toast(msg){ try{ if(typeof window.showWakeToast === 'function') return window.showWakeToast(msg); }catch(e){} try{ if(typeof window.showToast === 'function') return window.showToast(msg); }catch(e){} }
+
+  function setWakeUI(state, mode){
+    var active = !!state;
+    var useCompat = mode === 'fallback';
+    [['wake-btn','wake-icon'],['top-wake-btn','top-wake-icon']].forEach(function(pair){
+      var btn = gid(pair[0]);
+      var icon = gid(pair[1]);
+      if(!btn) return;
+      if(active){
+        btn.style.background = 'rgba(29,158,117,.28)';
+        btn.style.borderColor = '#1D9E75';
+        btn.style.color = '#d7f8ea';
+        btn.title = useCompat ? 'המסך יישאר פעיל (מצב תאימות)' : 'המסך יישאר פעיל';
+        if(icon) icon.textContent = '🟢';
+      } else {
+        btn.style.background = 'rgba(255,255,255,.06)';
+        btn.style.borderColor = 'rgba(255,255,255,.12)';
+        btn.style.color = '#8fa8c0';
+        btn.title = 'מניעת כיבוי מסך';
+        if(icon) icon.textContent = '📵';
+      }
+    });
+    var cb = gid('set-screen-awake');
+    if(cb) cb.checked = active || desired();
+    try{
+      if(typeof window.updateStateStrip === 'function') window.updateStateStrip();
+    }catch(e){}
+  }
+  window.updateWakeUI = function(state){ setWakeUI(state === 'on' || state === true, state === 'fallback' ? 'fallback' : 'native'); };
+
+  function ensureFallbackVideo(){
+    if(fallbackVideo && document.body.contains(fallbackVideo)) return fallbackVideo;
+    fallbackVideo = gid('tb-wake-fallback-video');
+    if(!fallbackVideo){
+      fallbackVideo = document.createElement('video');
+      fallbackVideo.id = 'tb-wake-fallback-video';
+      fallbackVideo.setAttribute('muted','');
+      fallbackVideo.muted = true;
+      fallbackVideo.setAttribute('playsinline','');
+      fallbackVideo.setAttribute('webkit-playsinline','');
+      fallbackVideo.setAttribute('preload','auto');
+      fallbackVideo.setAttribute('loop','');
+      fallbackVideo.loop = true;
+      fallbackVideo.src = './assets/wake-fallback.mp4';
+      fallbackVideo.style.cssText = 'position:fixed;right:0;bottom:0;width:1px;height:1px;opacity:0;pointer-events:none;z-index:-1;background:transparent;';
+      document.body.appendChild(fallbackVideo);
+    }
+    return fallbackVideo;
+  }
+
+  async function startFallback(){
+    try{
+      var v = ensureFallbackVideo();
+      v.currentTime = 0;
+      var p = v.play();
+      if(p && typeof p.then === 'function') await p;
+      fallbackReady = !v.paused;
+      if(fallbackReady){
+        setWakeUI(true,'fallback');
+        return true;
+      }
+    }catch(e){}
+    fallbackReady = false;
+    return false;
+  }
+
+  async function stopFallback(){
+    try{
+      var v = ensureFallbackVideo();
+      v.pause();
+      v.currentTime = 0;
+    }catch(e){}
+    fallbackReady = false;
+  }
+
+  async function releaseNative(){
+    try{ if(nativeLock) await nativeLock.release(); }catch(e){}
+    nativeLock = null;
+  }
+
+  async function acquirePreferred(fromUserGesture){
+    if('wakeLock' in navigator && window.isSecureContext){
+      try{
+        nativeLock = await navigator.wakeLock.request('screen');
+        nativeLock.addEventListener('release', function(){
+          nativeLock = null;
+          if(desired() && document.visibilityState === 'visible'){
+            setTimeout(function(){ acquirePreferred(false); }, 180);
+          } else {
+            setWakeUI(false);
+          }
+        });
+        setWakeUI(true,'native');
+        return true;
+      }catch(e){}
+    }
+    var ok = await startFallback();
+    if(ok) return true;
+    if(fromUserGesture) toast('שמירת מסך דורשת פתיחה מהדפדפן או תמיכת מכשיר');
+    setWakeUI(false);
+    return false;
+  }
+
+  async function disableWake(clearDesired){
+    if(clearDesired !== false) setDesired(false);
+    await releaseNative();
+    await stopFallback();
+    setWakeUI(false);
+  }
+
+  window.resumeWakeIfNeeded = async function(){
+    if(!desired()){
+      setWakeUI(false);
+      return false;
+    }
+    if(document.visibilityState && document.visibilityState !== 'visible') return false;
+    if(nativeLock) {
+      setWakeUI(true,'native');
+      return true;
+    }
+    if(fallbackReady){
+      setWakeUI(true,'fallback');
+      return true;
+    }
+    return acquirePreferred(false);
+  };
+
+  window.toggleWake = async function(ev){
+    if(ev && ev.preventDefault) ev.preventDefault();
+    if(desired() || nativeLock || fallbackReady){
+      await disableWake(true);
+      toast('שמירת המסך כבויה');
+      return false;
+    }
+    setDesired(true);
+    var ok = await acquirePreferred(true);
+    if(ok) toast(nativeLock ? 'המסך יישאר פעיל' : 'המסך יישאר פעיל (מצב תאימות)');
+    return false;
+  };
+
+  var origSave = window.saveAppSettingsFromUI;
+  window.saveAppSettingsFromUI = async function(){
+    var wantAwake = !!((gid('set-screen-awake')||{}).checked);
+    var out = typeof origSave === 'function' ? origSave.apply(this, arguments) : undefined;
+    try{ if(out && typeof out.then === 'function') await out; }catch(e){}
+    setDesired(wantAwake);
+    if(wantAwake) {
+      await acquirePreferred(true);
+    } else {
+      await disableWake(false);
+    }
+    var cb = gid('set-screen-awake');
+    if(cb) cb.checked = wantAwake;
+    return out;
+  };
+
+  document.addEventListener('visibilitychange', function(){ if(document.visibilityState === 'visible') window.resumeWakeIfNeeded(); });
+  window.addEventListener('pageshow', function(){ window.resumeWakeIfNeeded(); });
+  window.addEventListener('focus', function(){ window.resumeWakeIfNeeded(); });
+  window.addEventListener('load', function(){ setTimeout(function(){ if(desired()) window.resumeWakeIfNeeded(); else setWakeUI(false); }, 60); });
+})();
+</script>
