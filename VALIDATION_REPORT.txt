@@ -1,25 +1,17 @@
-The Blues — validated bundle report
+The Blues — validated cache-fix bundle
 
-Validated before packaging:
+Build version shown in app:
+v42.1 | 2026-04-15
+
+Changes made:
+- service-worker CACHE_NAME updated to: the-blues-v42-cachefix-2026-04-15-01
+- index.html gets a small fixed visible build badge
+- backup-export.html shows the same build and cache info
+
+Validated:
 - manifest.json start_url -> ./index.html
 - manifest.json icons -> icon-192.png, icon-512.png, icon.png
-- service-worker.js cache list -> all files exist in this bundle
-- index.html local asset refs -> all files exist in this bundle
-- backup-export.html local asset refs -> all files exist in this bundle
-- library2.html included as uploaded
-- stable app HTML also included as backup copy
-
-Bundle root files:
-- index.html
-- library2.html
-- backup-export.html
-- manifest.json
-- service-worker.js
-- apple-touch-icon.png
-- icon.png
-- icon-192.png
-- icon-512.png
-- main-img.png
-- assets/stageA_shared_visual_2.png
-- assets/stageA_shared_visual_2_focus.webp
-- assets/wake-fallback.mp4
+- service-worker cache list -> all files exist in this bundle
+- index.html local referenced assets included
+- backup-export.html local referenced assets included
+- assets folder included

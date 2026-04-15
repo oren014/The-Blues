@@ -1,4 +1,4 @@
-const CACHE_NAME = 'the-blues-github-ready-no-library-v3';
+const CACHE_NAME = 'the-blues-v42-cachefix-2026-04-15-01';
 const URLS_TO_CACHE = [
   "./",
   "./index.html",
