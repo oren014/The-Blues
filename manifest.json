@@ -1,8 +1,8 @@
 {
   "name": "The Blues",
   "short_name": "The Blues",
-  "id": "./",
-  "start_url": "./index.html",
+  "id": "./?v=2026-04-19-v133",
+  "start_url": "./index.html?v=2026-04-19-v133",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0d1b2a",
@@ -11,19 +11,19 @@
   "dir": "rtl",
   "icons": [
     {
-      "src": "./icon-192.png",
+      "src": "./icon-192.png?v=2026-04-19-v133",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icon-512.png",
+      "src": "./icon-512.png?v=2026-04-19-v133",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icon.png",
+      "src": "./icon.png?v=2026-04-19-v133",
       "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "any"

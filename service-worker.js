@@ -1,17 +1,14 @@
-const CACHE_NAME = 'the-blues-v42-cachefix-2026-04-15-01';
+const CACHE_NAME = 'the-blues-2026-04-19-v133';
 const URLS_TO_CACHE = [
   "./",
   "./index.html",
-  "./backup-export.html",
   "./manifest.json",
   "./icon.png",
   "./icon-192.png",
   "./icon-512.png",
   "./apple-touch-icon.png",
   "./main-img.png",
-  "./assets/stageA_shared_visual_2.png",
-  "./assets/stageA_shared_visual_2_focus.webp",
-  "./assets/wake-fallback.mp4"
+  "./wake-fallback.mp4"
 ];
 
 self.addEventListener('install', event => {
@@ -30,12 +27,24 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   event.respondWith((async () => {
-    const cached = await caches.match(event.request);
-    if (cached) return cached;
+    const requestUrl = new URL(event.request.url);
+
+    // Normalize versioned local requests back to file paths for cache matching.
+    const normalizedPath = requestUrl.origin === self.location.origin
+      ? requestUrl.pathname.replace(self.location.pathname.replace(/[^/]+$/, ''), './')
+      : null;
+
+    const directMatch = await caches.match(event.request, {ignoreSearch: true});
+    if (directMatch) return directMatch;
+
+    if (normalizedPath) {
+      const normalizedMatch = await caches.match(normalizedPath, {ignoreSearch: true});
+      if (normalizedMatch) return normalizedMatch;
+    }
+
     try {
       const response = await fetch(event.request);
-      const url = new URL(event.request.url);
-      if (response && response.ok && url.origin === location.origin) {
+      if (response && response.ok && requestUrl.origin === self.location.origin) {
         const cache = await caches.open(CACHE_NAME);
         cache.put(event.request, response.clone());
       }
