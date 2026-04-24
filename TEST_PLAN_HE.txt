@@ -1,13 +1,11 @@
 אבחון שמירת ריצות
 
+VERSION:
+2026-04-19-v144-run-save-diagnostic-visible-version
+
 1. פתח ריצה
 2. בחר 🧪 תוכנית טסט
 3. הרץ עד סיום
 4. לאחר הסיום חזור למסך הריצה
-5. בקופסה הצהובה יופיעו שורות אבחון:
-   - localStorage available
-   - phase
-   - runs before
-   - runs after
-   - autosave success / write error / autosave fatal
-6. שלח צילום מסך של הקופסה הצהובה
+5. בקופסה הצהובה יופיעו שורות אבחון
+6. שלח צילום מסך של הקופסה + צילום שמראה את ה-VERSION בתחתית

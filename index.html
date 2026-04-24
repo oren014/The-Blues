@@ -10,7 +10,7 @@
 <meta name="application-name" content="The Blues">
 <meta name="apple-mobile-web-app-title" content="The Blues">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="manifest" href="manifest.json?v=2026-04-19-v143-run-save-diagnostic">
+<link rel="manifest" href="manifest.json?v=2026-04-19-v144-run-save-diagnostic-visible-version">
 <link rel="icon" type="image/png" sizes="1024x1024" href="icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
@@ -8220,6 +8220,36 @@ header{
     font-size:.6rem !important;
     padding:5px 9px !important;
   }
+}
+</style>
+
+
+<style id="oai-v144-version-badge-style">
+#tb-version-badge{
+  position:fixed !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+  bottom:10px !important;
+  z-index:2147483647 !important;
+  display:flex !important;
+  align-items:center !important;
+  gap:6px !important;
+  padding:6px 10px !important;
+  border-radius:999px !important;
+  background:rgba(7,17,30,.88) !important;
+  color:#d8e7f5 !important;
+  border:1px solid rgba(126,200,248,.18) !important;
+  box-shadow:0 10px 22px rgba(0,0,0,.24) !important;
+  font-family:'Heebo',sans-serif !important;
+  font-size:.64rem !important;
+  font-weight:800 !important;
+  letter-spacing:.15px !important;
+  backdrop-filter:blur(8px) !important;
+  pointer-events:none !important;
+}
+#tb-version-badge b{color:#ffffff !important;font-weight:900 !important;}
+@media (max-width:460px){
+  #tb-version-badge{bottom:8px !important;font-size:.6rem !important;padding:5px 9px !important;}
 }
 </style>
 
@@ -20042,7 +20072,7 @@ function renderAtt(){
 <script id="the-blues-sw-register">
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   window.addEventListener('load', function () {
-    navigator.serviceWorker.register('service-worker.js?v=2026-04-19-v143-run-save-diagnostic').catch(function (err) {
+    navigator.serviceWorker.register('service-worker.js?v=2026-04-19-v144-run-save-diagnostic-visible-version').catch(function (err) {
       console.warn('Service worker registration failed:', err);
     });
   });
@@ -34277,6 +34307,43 @@ document.addEventListener('click', function(e){
       return out;
     };
     window.openPortal._oaiV141Wrapped = true;
+  }
+})();
+</script>
+
+
+
+<script id="oai-v144-version-badge-script">
+(function(){
+  function ensureVersionBadge(){
+    try {
+      var el = document.getElementById('tb-version-badge');
+      if(!el){
+        el = document.createElement('div');
+        el.id = 'tb-version-badge';
+        el.innerHTML = '<span>VERSION</span><b>2026-04-19-v144-run-save-diagnostic-visible-version</b>';
+        document.body.appendChild(el);
+      }
+      el.style.display = 'flex';
+      el.style.visibility = 'visible';
+      el.style.opacity = '1';
+    } catch(e) {}
+  }
+  document.addEventListener('DOMContentLoaded', ensureVersionBadge);
+  window.addEventListener('load', ensureVersionBadge);
+  window.addEventListener('pageshow', ensureVersionBadge);
+  setTimeout(ensureVersionBadge, 0);
+  setTimeout(ensureVersionBadge, 250);
+  setTimeout(ensureVersionBadge, 900);
+  if(typeof window.openPortal === 'function' && !window.openPortal._oaiV144Wrapped){
+    var orig = window.openPortal;
+    window.openPortal = function(){
+      var out = orig.apply(this, arguments);
+      setTimeout(ensureVersionBadge, 0);
+      setTimeout(ensureVersionBadge, 200);
+      return out;
+    };
+    window.openPortal._oaiV144Wrapped = true;
   }
 })();
 </script>
