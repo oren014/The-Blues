@@ -1,0 +1,13 @@
+אבחון שמירת ריצות
+
+1. פתח ריצה
+2. בחר 🧪 תוכנית טסט
+3. הרץ עד סיום
+4. לאחר הסיום חזור למסך הריצה
+5. בקופסה הצהובה יופיעו שורות אבחון:
+   - localStorage available
+   - phase
+   - runs before
+   - runs after
+   - autosave success / write error / autosave fatal
+6. שלח צילום מסך של הקופסה הצהובה
