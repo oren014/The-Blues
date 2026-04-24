@@ -10,11 +10,11 @@
 <meta name="application-name" content="The Blues">
 <meta name="apple-mobile-web-app-title" content="The Blues">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="manifest" href="manifest.json?v=2026-04-19-v133">
-<link rel="icon" type="image/png" sizes="1024x1024" href="icon.png?v=2026-04-19-v133">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=2026-04-19-v133">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v=2026-04-19-v133">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2026-04-19-v133">
+<link rel="manifest" href="manifest.json?v=2026-04-19-v141-footer-real-fix">
+<link rel="icon" type="image/png" sizes="1024x1024" href="icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--navy:#0d1b2a;--blue:#1a4f7a;--accent:#e8a020;--light:#f0f4f8;--green:#1D9E75;--red:#c0392b;--text:#1a2332;--muted:#6b7e94}
@@ -8186,6 +8186,43 @@ header{
 }
 </style>
 
+
+<style id="oai-v141-footer-version-style">
+#tb-footer-version{
+  position:fixed !important;
+  left:50% !important;
+  transform:translateX(-50%) !important;
+  bottom:10px !important;
+  z-index:2147483647 !important;
+  display:flex !important;
+  align-items:center !important;
+  gap:6px !important;
+  padding:6px 10px !important;
+  border-radius:999px !important;
+  background:rgba(7,17,30,.86) !important;
+  color:#d8e7f5 !important;
+  border:1px solid rgba(126,200,248,.18) !important;
+  box-shadow:0 10px 22px rgba(0,0,0,.24) !important;
+  font-family:'Heebo',sans-serif !important;
+  font-size:.64rem !important;
+  font-weight:800 !important;
+  letter-spacing:.15px !important;
+  backdrop-filter:blur(8px) !important;
+  pointer-events:none !important;
+}
+#tb-footer-version b{
+  color:#ffffff !important;
+  font-weight:900 !important;
+}
+@media (max-width:460px){
+  #tb-footer-version{
+    bottom:8px !important;
+    font-size:.6rem !important;
+    padding:5px 9px !important;
+  }
+}
+</style>
+
 </head>
 <body class="portal-mode">
 
@@ -8491,6 +8528,7 @@ header{
           <option value="8">שבועות 17–18</option><option value="9">שבועות 19–20</option>
           <option value="10">שבועות 21–22</option><option value="11">שבועות 23–24</option>
           <option value="12">🚶 הליכה פשוטה</option>
+          <option value="13">🧪 תוכנית טסט</option>
         </select>
       </div>
       <div id="rt-phase-info" style="font-size:.68rem;color:rgba(255,255,255,.7);margin-bottom:8px;text-align:center"></div>
@@ -9146,7 +9184,8 @@ var RT_PHASES=[
   {run:2100,walk:0,reps:1,label:'שבועות 19–20',goal:'🏅 5K ראשון!',type:'continuous',tag:'pt-4',tagTxt:'שלב 4'},
   {run:1500,walk:0,reps:2,label:'שבועות 21–22',goal:'טמפו — קצב גבוה 25 דק\'×2',type:'continuous',tag:'pt-5',tagTxt:'שלב 5'},
   {run:2400,walk:0,reps:1,label:'שבועות 23–24',goal:'🏆 5K מתחת 35 דקות',type:'continuous',tag:'pt-5',tagTxt:'שלב 5'},
-  {run:0,walk:0,reps:1,label:'הליכה פשוטה',goal:'מדידת זמן ומרחק בהליכה בצורה חופשית ופשוטה',type:'free_walk',tag:'pt-walk',tagTxt:'הליכה'}
+  {run:0,walk:0,reps:1,label:'הליכה פשוטה',goal:'מדידת זמן ומרחק בהליכה בצורה חופשית ופשוטה',type:'free_walk',tag:'pt-walk',tagTxt:'הליכה'},
+  {run:10,walk:5,reps:2,label:'תוכנית טסט',goal:'בדיקת טיימר ושמירה מהירה — 10 שנ׳ ריצה / 5 שנ׳ הליכה × 2',type:'interval',tag:'pt-test',tagTxt:'טסט'}
 ];
 function buildPlanTable(){
   var cont=document.getElementById('run-program-accordion'); if(!cont) return;
@@ -9175,6 +9214,9 @@ function buildPlanTable(){
     ]},
     {tag:'pt-walk', chip:'הליכה', title:'הליכה פשוטה', weeks:'זמין תמיד', meta:'התחל וסיים מתי שתרצה', goal:'מיועדת למדידת הליכה ברחוב, בפארק או על הליכון בצורה חופשית ופשוטה, עם זמן ומרחק בלבד.', phases:[
       {idx:12,label:'הליכה פשוטה',detail:'מדידה חופשית של זמן ומרחק'}
+    ]},
+    {tag:'pt-test', chip:'טסט', title:'תוכנית טסט', weeks:'בדיקה מהירה', meta:'אימון מינימלי לצורך בדיקות', goal:'מיועדת לבדוק מהר את הטיימר, הסיום והשמירה בלי לבצע אימון ארוך.', phases:[
+      {idx:13,label:'תוכנית טסט',detail:'10 שנ׳ ריצה / 5 שנ׳ הליכה × 2'}
     ]}
   ];
   var open = window.RUN_PLAN_OPEN || 0, out='';
@@ -20000,7 +20042,7 @@ function renderAtt(){
 <script id="the-blues-sw-register">
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   window.addEventListener('load', function () {
-    navigator.serviceWorker.register('service-worker.js?v=2026-04-19-v133').catch(function (err) {
+    navigator.serviceWorker.register('service-worker.js?v=2026-04-19-v141-footer-real-fix').catch(function (err) {
       console.warn('Service worker registration failed:', err);
     });
   });
@@ -34199,4 +34241,43 @@ document.addEventListener('click', function(e){
 </script>
 
 
-<script id="tb-release-version">window.__TB_RELEASE__ = "2026-04-19-v133";</script>
+
+<script id="oai-v141-footer-version-script">
+(function(){
+  function ensureFooterVersion(){
+    try {
+      var el = document.getElementById('tb-footer-version');
+      if(!el){
+        el = document.createElement('div');
+        el.id = 'tb-footer-version';
+        el.innerHTML = '<span>VERSION</span><b>2026-04-19-v141-footer-real-fix</b>';
+        document.body.appendChild(el);
+      }
+      el.style.display = 'flex';
+      el.style.visibility = 'visible';
+      el.style.opacity = '1';
+    } catch(e) {}
+  }
+
+  document.addEventListener('DOMContentLoaded', ensureFooterVersion);
+  window.addEventListener('load', ensureFooterVersion);
+  window.addEventListener('pageshow', ensureFooterVersion);
+  setTimeout(ensureFooterVersion, 0);
+  setTimeout(ensureFooterVersion, 250);
+  setTimeout(ensureFooterVersion, 900);
+  setInterval(ensureFooterVersion, 3000);
+
+  if(typeof window.openPortal === 'function' && !window.openPortal._oaiV141Wrapped){
+    var origOpenPortal = window.openPortal;
+    window.openPortal = function(){
+      var out = origOpenPortal.apply(this, arguments);
+      setTimeout(ensureFooterVersion, 0);
+      setTimeout(ensureFooterVersion, 200);
+      setTimeout(ensureFooterVersion, 700);
+      return out;
+    };
+    window.openPortal._oaiV141Wrapped = true;
+  }
+})();
+</script>
+
